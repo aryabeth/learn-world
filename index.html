@@ -1655,13 +1655,6 @@ function drawTraceGuide() {
   const ctx = menulisState.ctx, size = menulisState.canvasSize, char = menulisState.char;
   ctx.clearRect(0, 0, size, size);
   ctx.save();
-  ctx.globalAlpha = 0.08;
-  ctx.fillStyle = '#495057';
-  ctx.font = traceFont(size);
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText(char, size/2, size/2 + size*0.02);
-  ctx.restore();
-  ctx.save();
   ctx.setLineDash([size*0.045, size*0.035]);
   ctx.lineWidth = Math.max(6, size * 0.05);
   ctx.lineCap = 'round';
