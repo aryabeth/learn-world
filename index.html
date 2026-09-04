@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Aplikasi belajar membaca dan menghitung untuk anak usia 5 tahun. Dwibahasa Indonesia/English dengan suara.">
+<meta name="theme-color" content="#FFFCF5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Dunia Belajar">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#129417;</text></svg>">
+<style>
+  *{ box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { color-scheme: light; background: #FFFCF5; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<title>Dunia Belajar</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap">
+
+<style>
+:root {
+  --sky: #4DABF7; --sky-soft: #D0EBFF;
+  --sun: #FFD43B; --sun-deep: #F59F00;
+  --leaf: #40C057; --leaf-soft: #D3F9D8;
+  --berry: #FF6B6B; --berry-deep: #E03131;
+  --lavender: #B197FC; --lavender-deep: #7950F2; --lavender-soft: #E5DBFF;
+  --ground: #FFFCF5; --card: #FFFFFF;
+  --text: #2B3A4E; --text-soft: #6B7C93;
+  --shadow-sm: 0 2px 8px rgba(43,58,78,0.07);
+  --shadow-md: 0 4px 20px rgba(43,58,78,0.10);
+  --shadow-lg: 0 8px 32px rgba(43,58,78,0.13);
+  --radius: 22px; --radius-sm: 14px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+  background: var(--ground); color: var(--text);
+  min-height: 100vh; overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent; user-select: none;
+}
+.app { max-width: 520px; margin: 0 auto; padding: 16px 20px 80px; min-height: 100vh; }
+
+/* ── Header ──────────────────────── */
+.screen-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding: 4px 0; }
+.back-btn {
+  width: 44px; height: 44px; border-radius: 50%; border: none;
+  background: var(--card); box-shadow: var(--shadow-sm);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 20px; color: var(--text); flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+.back-btn:active { transform: scale(0.92); }
+.screen-title { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 22px; flex: 1; }
+.star-badge {
+  display: flex; align-items: center; gap: 5px;
+  background: linear-gradient(135deg, #FFF3BF, #FFE066);
+  padding: 6px 14px; border-radius: 20px;
+  font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 16px;
+  color: #E67700; box-shadow: var(--shadow-sm); flex-shrink: 0;
+}
+
+/* ── Home ────────────────────────── */
+.home-hero { text-align: center; padding: 28px 0 8px; position: relative; }
+.home-mascot { font-size: 72px; line-height: 1; display: inline-block; animation: mascotBob 3s ease-in-out infinite; cursor: pointer; }
+@keyframes mascotBob { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-8px); } }
+.home-greeting {
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 28px; margin-top: 12px;
+  background: linear-gradient(135deg, var(--sky), var(--lavender-deep));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.home-sub { font-size: 15px; color: var(--text-soft); margin-top: 4px; font-weight: 600; }
+.home-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+.home-card {
+  background: var(--card); border-radius: var(--radius); padding: 28px 16px 24px;
+  text-align: center; cursor: pointer; box-shadow: var(--shadow-md);
+  transition: transform 0.2s ease; border: 3px solid transparent;
+  position: relative; overflow: hidden;
+}
+.home-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; }
+.home-card--read { border-color: var(--sky-soft); }
+.home-card--read::before { background: linear-gradient(90deg, var(--sky), #74C0FC); }
+.home-card--count { border-color: var(--lavender-soft); }
+.home-card--count::before { background: linear-gradient(90deg, var(--lavender), var(--lavender-deep)); }
+.home-card:active { transform: scale(0.96); }
+.home-card__icon { font-size: 48px; line-height: 1; display: block; margin-bottom: 12px; }
+.home-card__label { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 18px; }
+.home-card__desc { font-size: 13px; color: var(--text-soft); margin-top: 4px; font-weight: 600; }
+
+/* ── Language toggle ─────────────── */
+.lang-toggle { display: flex; justify-content: center; margin-top: 24px; }
+.lang-pill {
+  display: flex; background: var(--card); border-radius: 28px;
+  box-shadow: var(--shadow-md); overflow: hidden; border: 2px solid #E9ECEF;
+}
+.lang-opt {
+  padding: 10px 20px; border: none; background: transparent;
+  font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 15px;
+  color: var(--text-soft); cursor: pointer; display: flex; align-items: center; gap: 6px;
+  transition: all 0.2s ease; border-radius: 26px;
+}
+.lang-opt.active { background: var(--sky); color: white; box-shadow: 0 2px 10px rgba(77,171,247,0.3); }
+.lang-opt:active { transform: scale(0.95); }
+
+/* ── Floating stars ──────────────── */
+.stars-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+.star-float { position: absolute; font-size: 18px; opacity: 0.25; animation: floatUp linear infinite; }
+@keyframes floatUp {
+  0%{ transform: translateY(100vh) rotate(0deg); opacity: 0.15; }
+  10%{ opacity: 0.3; } 90%{ opacity: 0.3; }
+  100%{ transform: translateY(-50px) rotate(360deg); opacity: 0; }
+}
+
+/* ── Menu cards ──────────────────── */
+.menu-grid { display: flex; flex-direction: column; gap: 14px; }
+.menu-card {
+  background: var(--card); border-radius: var(--radius); padding: 20px;
+  display: flex; align-items: center; gap: 16px; cursor: pointer;
+  box-shadow: var(--shadow-sm); transition: transform 0.15s ease;
+  border: 2px solid transparent;
+}
+.menu-card:active { transform: scale(0.97); box-shadow: var(--shadow-md); }
+.menu-card__icon {
+  width: 56px; height: 56px; border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; flex-shrink: 0;
+}
+.menu-card__text { flex: 1; }
+.menu-card__title { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 17px; }
+.menu-card__desc { font-size: 13px; color: var(--text-soft); font-weight: 600; margin-top: 2px; }
+.menu-card__arrow { font-size: 18px; color: var(--text-soft); flex-shrink: 0; }
+
+.mc-huruf .menu-card__icon { background: var(--sky-soft); }
+.mc-suku .menu-card__icon { background: #FFF3BF; }
+.mc-tebak .menu-card__icon { background: var(--leaf-soft); }
+.mc-angka .menu-card__icon { background: var(--lavender-soft); }
+.mc-hitung .menu-card__icon { background: #FFD8D8; }
+.mc-tambah .menu-card__icon { background: #D0EBFF; }
+
+/* ── Speaker & mute buttons ──────── */
+.speak-btn {
+  width: 52px; height: 52px; border-radius: 50%;
+  border: 3px solid var(--sky-soft); background: var(--card);
+  font-size: 24px; cursor: pointer; display: inline-flex;
+  align-items: center; justify-content: center;
+  transition: all 0.2s ease; box-shadow: var(--shadow-sm);
+  flex-shrink: 0; line-height: 1;
+}
+.speak-btn:active { transform: scale(0.9); }
+.speak-btn.speaking { border-color: var(--sky); background: var(--sky-soft); animation: speakPulse 0.5s ease infinite; }
+@keyframes speakPulse { 0%,100%{ transform: scale(1); } 50%{ transform: scale(1.1); } }
+
+.mute-btn {
+  position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px;
+  border-radius: 50%; border: none; background: var(--card);
+  box-shadow: var(--shadow-md); font-size: 22px; cursor: pointer; z-index: 50;
+  transition: transform 0.15s ease; display: flex; align-items: center;
+  justify-content: center; line-height: 1;
+}
+.mute-btn:active { transform: scale(0.9); }
+.mute-btn.muted { opacity: 0.5; }
+
+/* ── Vowels ──────────────────────── */
+.vowel-display {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow-md); padding: 32px 20px 28px;
+  text-align: center; margin-bottom: 20px;
+}
+.vowel-letter {
+  font-family: 'Fredoka', sans-serif; font-weight: 700;
+  font-size: 96px; line-height: 1; color: var(--sky); transition: color 0.3s ease;
+}
+.vowel-example { margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.vowel-emoji { font-size: 40px; }
+.vowel-word { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 24px; color: var(--text); }
+.vowel-word em { font-style: normal; color: var(--sky); }
+.vowel-speak-row { display: flex; justify-content: center; margin-top: 16px; }
+.vowel-grid { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.vowel-btn {
+  width: 60px; height: 60px; border-radius: 16px;
+  border: 3px solid var(--sky-soft); background: var(--card);
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 28px;
+  color: var(--sky); cursor: pointer; transition: all 0.15s ease;
+}
+.vowel-btn.active {
+  background: var(--sky); color: white; border-color: var(--sky);
+  transform: scale(1.08); box-shadow: 0 4px 16px rgba(77,171,247,0.35);
+}
+.vowel-btn:active { transform: scale(0.94); }
+
+/* ── Syllables ───────────────────── */
+.consonant-scroll {
+  display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 12px;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.consonant-scroll::-webkit-scrollbar { display: none; }
+.consonant-chip {
+  padding: 8px 16px; border-radius: 12px; border: 2px solid #FFE066;
+  background: var(--card); font-family: 'Fredoka', sans-serif;
+  font-weight: 600; font-size: 18px; color: var(--sun-deep);
+  cursor: pointer; flex-shrink: 0; transition: all 0.15s ease;
+}
+.consonant-chip.active {
+  background: var(--sun); border-color: var(--sun); color: #744210;
+  box-shadow: 0 3px 12px rgba(255,212,59,0.4);
+}
+.syllable-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 8px; }
+.syllable-btn {
+  aspect-ratio: 1; border-radius: var(--radius-sm); border: 2px solid #FFF3BF;
+  background: var(--card); font-family: 'Fredoka', sans-serif;
+  font-weight: 600; font-size: 22px; color: var(--text); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s ease; box-shadow: var(--shadow-sm);
+}
+.syllable-btn:active { transform: scale(0.92); background: #FFF3BF; }
+.syllable-popup {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(43,58,78,0.5); display: flex; align-items: center;
+  justify-content: center; z-index: 100; animation: fadeIn 0.2s ease;
+}
+.syllable-popup__inner {
+  position: relative;
+  background: var(--card); border-radius: var(--radius);
+  padding: 40px 48px; text-align: center; box-shadow: var(--shadow-lg);
+  animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+}
+.syllable-popup__text {
+  font-family: 'Fredoka', sans-serif; font-weight: 700;
+  font-size: 72px; color: var(--sun-deep);
+}
+.syllable-popup__close {
+  position: absolute; top: 12px; right: 12px;
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 2px solid #E9ECEF; background: var(--card);
+  font-size: 17px; color: var(--text-soft); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s ease; line-height: 1;
+}
+.syllable-popup__close:active { transform: scale(0.9); background: #F1F3F5; }
+
+/* ── Quiz ────────────────────────── */
+.quiz-area { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+.quiz-prompt {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow-md); padding: 32px; text-align: center; width: 100%;
+}
+.quiz-emoji { font-size: 64px; line-height: 1.1; display: block; }
+.quiz-question { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 18px; margin-top: 12px; color: var(--text-soft); }
+.quiz-options { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+.quiz-opt {
+  padding: 16px 20px; border-radius: var(--radius-sm); border: 3px solid #E9ECEF;
+  background: var(--card); font-family: 'Fredoka', sans-serif;
+  font-weight: 600; font-size: 20px; color: var(--text); cursor: pointer;
+  transition: all 0.15s ease; text-align: center; box-shadow: var(--shadow-sm);
+}
+.quiz-opt:active { transform: scale(0.97); }
+.quiz-opt.correct { background: var(--leaf-soft); border-color: var(--leaf); color: #2B8A3E; animation: popCorrect 0.4s ease; }
+.quiz-opt.wrong { background: #FFE3E3; border-color: var(--berry); color: var(--berry-deep); animation: shake 0.4s ease; }
+.quiz-score { text-align: center; font-size: 14px; color: var(--text-soft); font-weight: 700; }
+
+/* ── Count / Number ──────────────── */
+.count-objects { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 24px; min-height: 120px; align-items: center; }
+.count-obj { font-size: 36px; animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) backwards; }
+.number-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
+.number-opt {
+  padding: 18px; border-radius: var(--radius-sm); border: 3px solid #E9ECEF;
+  background: var(--card); font-family: 'Fredoka', sans-serif;
+  font-weight: 700; font-size: 28px; color: var(--text); cursor: pointer;
+  transition: all 0.15s ease; text-align: center; box-shadow: var(--shadow-sm);
+}
+.number-opt:active { transform: scale(0.95); }
+.number-opt.correct { background: var(--leaf-soft); border-color: var(--leaf); color: #2B8A3E; animation: popCorrect 0.4s ease; }
+.number-opt.wrong { background: #FFE3E3; border-color: var(--berry); animation: shake 0.4s ease; }
+
+.addition-visual { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; padding: 16px 0; }
+.addition-group { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.addition-group span { font-size: 32px; }
+.addition-op { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 32px; color: var(--lavender-deep); }
+
+.number-display { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow-md); padding: 28px 20px 24px; text-align: center; margin-bottom: 16px; }
+.number-big { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 96px; line-height: 1; color: var(--lavender-deep); }
+.number-word { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 22px; color: var(--text-soft); margin-top: 4px; }
+.number-objects { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 16px; font-size: 32px; }
+.number-speak-row { display: flex; justify-content: center; margin-top: 16px; }
+
+.nav-arrows { display: flex; justify-content: center; gap: 16px; }
+.nav-arrow {
+  width: 56px; height: 56px; border-radius: 50%;
+  border: 3px solid var(--lavender-soft); background: var(--card);
+  font-size: 22px; cursor: pointer; display: flex; align-items: center;
+  justify-content: center; transition: all 0.15s ease;
+  color: var(--lavender-deep); box-shadow: var(--shadow-sm);
+}
+.nav-arrow:active { transform: scale(0.92); }
+.nav-arrow:disabled { opacity: 0.3; cursor: default; }
+
+/* ── Feedback ────────────────────── */
+.feedback { position: fixed; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; z-index: 200; pointer-events: none; }
+.feedback__stars { font-size: 48px; animation: starBurst 0.8s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+@keyframes starBurst { 0%{ transform: scale(0) rotate(-30deg); opacity: 0; } 50%{ transform: scale(1.3) rotate(10deg); opacity: 1; } 100%{ transform: scale(1) rotate(0); opacity: 0; } }
+
+/* ── Complete card ───────────────── */
+.complete-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow-lg); padding: 40px 24px; text-align: center; }
+.complete-card__emoji { font-size: 64px; display: block; }
+.complete-card__title { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 26px; margin-top: 12px; color: var(--leaf); }
+.complete-card__score { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 18px; color: var(--text-soft); margin-top: 8px; }
+.complete-card__btn {
+  display: inline-block; margin-top: 20px; padding: 14px 32px;
+  border-radius: 16px; border: none;
+  background: linear-gradient(135deg, var(--sky), #74C0FC); color: white;
+  font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 17px;
+  cursor: pointer; box-shadow: 0 4px 16px rgba(77,171,247,0.3);
+  transition: transform 0.15s ease;
+}
+.complete-card__btn:active { transform: scale(0.95); }
+
+/* ── Animations ──────────────────── */
+@keyframes fadeIn { from{ opacity:0; } to{ opacity:1; } }
+@keyframes popIn { 0%{ transform: scale(0.5); opacity:0; } 100%{ transform: scale(1); opacity:1; } }
+@keyframes popCorrect { 0%{ transform: scale(1); } 50%{ transform: scale(1.06); } 100%{ transform: scale(1); } }
+@keyframes shake { 0%,100%{ transform: translateX(0); } 25%{ transform: translateX(-6px); } 75%{ transform: translateX(6px); } }
+@keyframes slideIn { from{ opacity:0; transform: translateY(16px); } to{ opacity:1; transform: translateY(0); } }
+.screen { animation: slideIn 0.3s ease; }
+
+@media (max-width: 380px) {
+  .home-greeting { font-size: 24px; }
+  .vowel-letter { font-size: 72px; }
+  .number-big { font-size: 72px; }
+  .syllable-btn { font-size: 18px; }
+  .syllable-grid { gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,*::before,*::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- HOME -->
+  <div id="screen-home" class="screen">
+    <div class="stars-bg" id="starsBg"></div>
+    <div class="home-hero" style="position:relative;z-index:1">
+      <span class="home-mascot" onclick="speakMascot()">🦉</span>
+      <h1 class="home-greeting" id="homeGreeting">Dunia Belajar</h1>
+      <p class="home-sub" id="homeSub">Hai! Mau belajar apa hari ini?</p>
+    </div>
+    <div class="home-cards" style="position:relative;z-index:1">
+      <div class="home-card home-card--read" onclick="go('membaca-menu')">
+        <span class="home-card__icon">📖</span>
+        <div class="home-card__label" id="homeReadLabel">Membaca</div>
+        <div class="home-card__desc" id="homeReadDesc">Huruf &amp; kata</div>
+      </div>
+      <div class="home-card home-card--count" onclick="go('menghitung-menu')">
+        <span class="home-card__icon">🔢</span>
+        <div class="home-card__label" id="homeCountLabel">Menghitung</div>
+        <div class="home-card__desc" id="homeCountDesc">Angka &amp; hitung</div>
+      </div>
+    </div>
+    <div class="lang-toggle" style="position:relative;z-index:1">
+      <div class="lang-pill">
+        <button class="lang-opt active" id="langId" onclick="setLang('id')">🇮🇩 Indonesia</button>
+        <button class="lang-opt" id="langEn" onclick="setLang('en')">🇬🇧 English</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEMBACA MENU -->
+  <div id="screen-membaca-menu" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('home')">‹</button>
+      <h2 class="screen-title" id="menuReadTitle">📖 Membaca</h2>
+    </div>
+    <div class="menu-grid" id="menuReadGrid"></div>
+  </div>
+
+  <!-- MENGHITUNG MENU -->
+  <div id="screen-menghitung-menu" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('home')">‹</button>
+      <h2 class="screen-title" id="menuCountTitle">🔢 Menghitung</h2>
+    </div>
+    <div class="menu-grid" id="menuCountGrid"></div>
+  </div>
+
+  <!-- HURUF VOKAL -->
+  <div id="screen-huruf" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('membaca-menu')">‹</button>
+      <h2 class="screen-title" id="hurufTitle">Huruf Vokal</h2>
+    </div>
+    <div class="vowel-display">
+      <span class="vowel-letter" id="vowelLetter">A</span>
+      <div class="vowel-example">
+        <span class="vowel-emoji" id="vowelEmoji">🍎</span>
+        <span class="vowel-word" id="vowelWord"><em>A</em>pel</span>
+      </div>
+      <div class="vowel-speak-row">
+        <button class="speak-btn" id="vowelSpeakBtn" onclick="speakVowelCurrent()">🔊</button>
+      </div>
+    </div>
+    <div class="vowel-grid" id="vowelGrid"></div>
+  </div>
+
+  <!-- SUKU KATA -->
+  <div id="screen-sukukata" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('membaca-menu')">‹</button>
+      <h2 class="screen-title" id="sukuTitle">Suku Kata</h2>
+    </div>
+    <div class="consonant-scroll" id="consonantScroll"></div>
+    <div class="syllable-grid" id="syllableGrid"></div>
+    <div id="syllablePopup" hidden></div>
+  </div>
+
+  <!-- TEBAK KATA -->
+  <div id="screen-tebak" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('membaca-menu')">‹</button>
+      <h2 class="screen-title" id="tebakTitle">Tebak Kata</h2>
+      <div class="star-badge" id="tebakStars">⭐ 0</div>
+    </div>
+    <div id="tebakContent"></div>
+  </div>
+
+  <!-- KENAL ANGKA -->
+  <div id="screen-angka" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('menghitung-menu')">‹</button>
+      <h2 class="screen-title" id="angkaTitle">Kenal Angka</h2>
+    </div>
+    <div id="angkaContent"></div>
+  </div>
+
+  <!-- HITUNG BENDA -->
+  <div id="screen-hitung" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('menghitung-menu')">‹</button>
+      <h2 class="screen-title" id="hitungTitle">Hitung Benda</h2>
+      <div class="star-badge" id="hitungStars">⭐ 0</div>
+    </div>
+    <div id="hitungContent"></div>
+  </div>
+
+  <!-- PENJUMLAHAN -->
+  <div id="screen-tambah" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('menghitung-menu')">‹</button>
+      <h2 class="screen-title" id="tambahTitle">Penjumlahan</h2>
+      <div class="star-badge" id="tambahStars">⭐ 0</div>
+    </div>
+    <div id="tambahContent"></div>
+  </div>
+</div>
+
+<div class="feedback" id="feedbackOverlay" hidden>
+  <div class="feedback__stars" id="feedbackText"></div>
+</div>
+<button class="mute-btn" id="muteBtn" onclick="toggleMute()">🔊</button>
+
+<script>
+/* ═══════════════════════════════════════
+   BILINGUAL TEXT
+   ═══════════════════════════════════════ */
+
+let lang = 'id';
+
+const T = {
+  id: {
+    greeting: 'Dunia Belajar',
+    sub: 'Hai! Mau belajar apa hari ini?',
+    mascot: 'Hai! Selamat datang di Dunia Belajar! Mau belajar apa hari ini?',
+    reading: 'Membaca', readingDesc: 'Huruf & kata',
+    counting: 'Menghitung', countingDesc: 'Angka & hitung',
+    menuRead: '📖 Membaca', menuCount: '🔢 Menghitung',
+    vowels: 'Huruf Vokal', vowelsDesc: 'Belajar A, I, U, E, O',
+    syllables: 'Suku Kata', syllablesDesc: 'Gabungkan huruf jadi suku kata',
+    wordGuess: 'Tebak Kata', wordGuessDesc: 'Cocokkan gambar dengan kata',
+    numbers: 'Kenal Angka', numbersDesc: 'Belajar angka 1 sampai 10',
+    countObj: 'Hitung Benda', countObjDesc: 'Hitung berapa banyak benda',
+    addition: 'Penjumlahan', additionDesc: 'Belajar menambah angka',
+    whatPic: 'Gambar apakah ini?',
+    howMany: 'Ada berapa',
+    qOf: 'dari', qLabel: 'Soal',
+    correct: 'Benar!', tryAgain: 'Coba lagi!',
+    perfect: 'Sempurna!', great: 'Hebat sekali!', good: 'Bagus!', retry: 'Ayo coba lagi!',
+    score: 'Skor:', stars: 'bintang', back: 'Kembali',
+    numLabel: 'Angka', plus: 'tambah', equals: 'sama dengan', there: 'Ada',
+    youGot: 'Kamu dapat',
+    startWord: 'Tebak kata!', startCount: 'Hitung benda!', startAdd: 'Penjumlahan!',
+    addQ: '= berapa?',
+    speechLang: 'id-ID',
+  },
+  en: {
+    greeting: 'Learning World',
+    sub: 'Hi! What do you want to learn today?',
+    mascot: 'Hi! Welcome to Learning World! What do you want to learn today?',
+    reading: 'Reading', readingDesc: 'Letters & words',
+    counting: 'Counting', countingDesc: 'Numbers & count',
+    menuRead: '📖 Reading', menuCount: '🔢 Counting',
+    vowels: 'Vowels', vowelsDesc: 'Learn A, I, U, E, O',
+    syllables: 'Syllables', syllablesDesc: 'Combine letters into syllables',
+    wordGuess: 'Word Guess', wordGuessDesc: 'Match pictures with words',
+    numbers: 'Know Numbers', numbersDesc: 'Learn numbers 1 to 10',
+    countObj: 'Count Objects', countObjDesc: 'Count how many objects',
+    addition: 'Addition', additionDesc: 'Learn to add numbers',
+    whatPic: 'What is this picture?',
+    howMany: 'How many',
+    qOf: 'of', qLabel: 'Question',
+    correct: 'Correct!', tryAgain: 'Try again!',
+    perfect: 'Perfect!', great: 'Awesome!', good: 'Good job!', retry: 'Try again!',
+    score: 'Score:', stars: 'stars', back: 'Back',
+    numLabel: 'Number', plus: 'plus', equals: 'equals', there: 'There are',
+    youGot: 'You got',
+    startWord: 'Guess the word!', startCount: 'Count the objects!', startAdd: 'Addition!',
+    addQ: '= how many?',
+    speechLang: 'en-US',
+  }
+};
+
+function t(key) { return T[lang][key] || T.id[key] || key; }
+
+/* ═══════════════════════════════════════
+   PHONETIC RESPELLING (Indonesian)
+
+   When the device has no Indonesian voice, an English engine reads
+   Indonesian text with English phonetics ("Bola" → "BOH-lah" becomes
+   "boh-luh"). These respellings steer an English voice toward
+   Indonesian pronunciation: a→ah, i→ee, u→oo, e→eh, o→oh, c→ch.
+   Used only as a fallback — a real Indonesian voice always wins.
+   ═══════════════════════════════════════ */
+
+const PH = {
+  correct: 'beh-nar!', tryAgain: 'choh-bah lah-ghee!',
+  perfect: 'sem-poor-nah!', great: 'heh-baht seh-kah-lee!',
+  good: 'bah-goos!', retry: 'ah-yoh choh-bah lah-ghee!',
+  numLabel: 'ahng-kah', plus: 'tahm-bah', equals: 'sah-mah dehng-ahn',
+  there: 'ah-dah', youGot: 'kah-moo dah-paht', stars: 'been-tahng',
+  startWord: 'teh-bahk kah-tah!', startCount: 'hee-toong ben-dah!',
+  startAdd: 'pen-joom-lah-hahn!',
+  mascot: 'high! seh-lah-maht dah-tahng dee doo-nee-ah beh-lah-jar! mah-oo beh-lah-jar ah-pah hah-ree ee-nee?',
+};
+
+/* Indonesian letter names, respelled for an English engine */
+const LETTER_PH = {
+  A:'ah', B:'beh', C:'cheh', D:'deh', E:'eh', G:'gheh', H:'hah',
+  I:'ee', J:'jeh', K:'kah', L:'ell', M:'em', N:'en', O:'oh',
+  P:'peh', R:'air', S:'ess', T:'teh', U:'oo',
+};
+
+/* ── The mirror case ──────────────────────
+   Damayanti is an Indonesian voice. Reading raw English through it
+   turns "CANDY" into "chan-dee" and "COFFEE" into "chof-feh", because
+   Indonesian reads c as "ch" and every vowel long. These respellings
+   write English words the Indonesian way so they come out English.
+   Used only when an Indonesian voice is reading English. */
+
+const PH_EN = {
+  correct: 'korek!', tryAgain: 'trai agen!',
+  perfect: 'porfek!', great: 'osem!', good: 'gud job!', retry: 'trai agen!',
+  numLabel: 'namber', plus: 'plas', equals: 'ikwals',
+  there: 'der ar', youGot: 'yu got', stars: 'stars',
+  startWord: 'ges de word!', startCount: 'kaunt de objek!',
+  startAdd: 'adisyen!',
+  mascot: 'hai! welkam tu lerning world! wat du yu won tu lern tudei?',
+};
+
+/* English letter names, respelled for an Indonesian engine */
+const LETTER_PH_EN = {
+  A:'ei', B:'bi', C:'si', D:'di', E:'i', G:'ji', H:'eic',
+  I:'ai', J:'jei', K:'kei', L:'el', M:'em', N:'en', O:'ou',
+  P:'pi', R:'ar', S:'es', T:'ti', U:'yu',
+};
+
+const NUM_PH_EN = ['','wan','tu','sri','for','faiv','siks','seven','eit','nain','ten'];
+
+/* Building blocks for generated syllables (Ba, Bi, Bu, Be, Bo …) */
+const CONS_PH = { B:'b', C:'ch', D:'d', G:'gh', H:'h', J:'j', K:'k',
+                  L:'l', M:'m', N:'n', P:'p', R:'r', S:'s', T:'t' };
+const VOW_PH  = { a:'ah', i:'ee', u:'oo', e:'eh', o:'oh' };
+
+const NUM_PH = ['','sah-too','doo-ah','tee-gah','em-paht','lee-mah',
+                'eh-nahm','too-jooh','deh-lah-pahn','sem-bee-lahn','seh-poo-looh'];
+
+/* What kind of voice the device actually gave us */
+let voiceIsIndonesian = false;
+let hasNativeVoice = false;
+
+/* Indonesian text going through a non-Indonesian voice */
+function phoneticMode() { return lang === 'id' && !voiceIsIndonesian; }
+/* English text going through an Indonesian voice (e.g. Damayanti) */
+function enPhoneticMode() { return lang === 'en' && voiceIsIndonesian; }
+
+/* Spoken form of a UI phrase */
+function ts(key) {
+  if (phoneticMode()   && PH[key])    return PH[key];
+  if (enPhoneticMode() && PH_EN[key]) return PH_EN[key];
+  return t(key);
+}
+
+/* Spoken form of a syllable such as "Ba" */
+function sylPh(syl) {
+  if (!phoneticMode()) return syl;
+  const c = syl[0].toUpperCase(), v = syl[1] ? syl[1].toLowerCase() : '';
+  return (CONS_PH[c] || c.toLowerCase()) + (VOW_PH[v] || v);
+}
+
+/* Spoken form of a single letter */
+function letterPh(L) {
+  if (phoneticMode())   return LETTER_PH[L] || L;
+  if (enPhoneticMode()) return LETTER_PH_EN[L] || L;
+  return L;
+}
+
+/* ═══════════════════════════════════════
+   BILINGUAL DATA
+   ═══════════════════════════════════════ */
+
+const VOWELS_DATA = {
+  id: [
+    { letter:'A', emoji:'🍎', hl:'<em>A</em>pel',  sp:'A, seperti Apel',  ph:'ah, seh-pehr-tee ah-pel' },
+    { letter:'I', emoji:'🐟', hl:'<em>I</em>kan',  sp:'I, seperti Ikan',  ph:'ee, seh-pehr-tee ee-kahn' },
+    { letter:'U', emoji:'🐛', hl:'<em>U</em>lat',  sp:'U, seperti Ulat',  ph:'oo, seh-pehr-tee oo-laht' },
+    { letter:'E', emoji:'🪣', hl:'<em>E</em>mber', sp:'E, seperti Ember', ph:'eh, seh-pehr-tee em-behr' },
+    { letter:'O', emoji:'🐪', hl:'<em>O</em>nta',  sp:'O, seperti Onta',  ph:'oh, seh-pehr-tee ohn-tah' },
+  ],
+  en: [
+    { letter:'A', emoji:'🍎', hl:'<em>A</em>pple',    sp:'A, like Apple',    ph:'ei, laik epel' },
+    { letter:'I', emoji:'🏠', hl:'<em>I</em>gloo',    sp:'I, like Igloo',    ph:'ai, laik iglu' },
+    { letter:'U', emoji:'☂️', hl:'<em>U</em>mbrella', sp:'U, like Umbrella', ph:'yu, laik ambrela' },
+    { letter:'E', emoji:'🐘', hl:'<em>E</em>lephant', sp:'E, like Elephant', ph:'i, laik elifen' },
+    { letter:'O', emoji:'🍊', hl:'<em>O</em>range',   sp:'O, like Orange',   ph:'ou, laik orinj' },
+  ],
+};
+
+const WORDS_DATA = {
+  id: [
+    {w:'BOLA', e:'⚽', s:'Bola',  p:'boh-lah'},
+    {w:'BUKU', e:'📚', s:'Buku',  p:'boo-koo'},
+    {w:'IKAN', e:'🐟', s:'Ikan',  p:'ee-kahn'},
+    {w:'KUDA', e:'🐴', s:'Kuda',  p:'koo-dah'},
+    {w:'SAPI', e:'🐄', s:'Sapi',  p:'sah-pee'},
+    {w:'ROTI', e:'🍞', s:'Roti',  p:'roh-tee'},
+    {w:'SUSU', e:'🥛', s:'Susu',  p:'soo-soo'},
+    {w:'TOPI', e:'🎩', s:'Topi',  p:'toh-pee'},
+    {w:'GULA', e:'🍬', s:'Gula',  p:'goo-lah'},
+    {w:'APEL', e:'🍎', s:'Apel',  p:'ah-pel'},
+    {w:'MATA', e:'👁️', s:'Mata',  p:'mah-tah'},
+    {w:'PADI', e:'🌾', s:'Padi',  p:'pah-dee'},
+    {w:'KOPI', e:'☕', s:'Kopi',  p:'koh-pee'},
+    {w:'NASI', e:'🍚', s:'Nasi',  p:'nah-see'},
+    {w:'DADU', e:'🎲', s:'Dadu',  p:'dah-doo'},
+    {w:'BULAN',e:'🌙', s:'Bulan', p:'boo-lahn'},
+  ],
+  en: [
+    {w:'BALL',  e:'⚽', s:'Ball',   p:'bol'},
+    {w:'BOOK',  e:'📚', s:'Book',   p:'buk'},
+    {w:'FISH',  e:'🐟', s:'Fish',   p:'fisy'},
+    {w:'HORSE', e:'🐴', s:'Horse',  p:'hors'},
+    {w:'COW',   e:'🐄', s:'Cow',    p:'kaw'},
+    {w:'BREAD', e:'🍞', s:'Bread',  p:'bred'},
+    {w:'MILK',  e:'🥛', s:'Milk',   p:'milk'},
+    {w:'HAT',   e:'🎩', s:'Hat',    p:'het'},
+    {w:'CANDY', e:'🍬', s:'Candy',  p:'kendi'},
+    {w:'APPLE', e:'🍎', s:'Apple',  p:'epel'},
+    {w:'EYE',   e:'👁️', s:'Eye',    p:'ai'},
+    {w:'RICE',  e:'🌾', s:'Rice',   p:'rais'},
+    {w:'COFFEE',e:'☕', s:'Coffee', p:'kofi'},
+    {w:'MOON',  e:'🌙', s:'Moon',   p:'mun'},
+    {w:'DICE',  e:'🎲', s:'Dice',   p:'dais'},
+    {w:'STAR',  e:'⭐', s:'Star',   p:'star'},
+  ],
+};
+
+const NUM_WORDS = {
+  id: ['','Satu','Dua','Tiga','Empat','Lima','Enam','Tujuh','Delapan','Sembilan','Sepuluh'],
+  en: ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'],
+};
+
+function vowels()  { return VOWELS_DATA[lang]; }
+function words()   { return WORDS_DATA[lang]; }
+function numWord(n){ return NUM_WORDS[lang][n]; }
+
+/* Spoken form of a number word */
+function numSpeak(n) {
+  if (phoneticMode())   return NUM_PH[n]    || NUM_WORDS.id[n];
+  if (enPhoneticMode()) return NUM_PH_EN[n] || NUM_WORDS.en[n];
+  return numWord(n);
+}
+/* Spoken form of a vocabulary word */
+function wordSpeak(entry) {
+  return ((phoneticMode() || enPhoneticMode()) && entry.p) ? entry.p : entry.s;
+}
+/* Spoken form of a vowel example */
+function vowelSpeak(v) {
+  return ((phoneticMode() || enPhoneticMode()) && v.ph) ? v.ph : v.sp;
+}
+
+const CONSONANTS = ['B','C','D','G','H','J','K','L','M','N','P','R','S','T'];
+const VOWEL_LIST = ['A','I','U','E','O'];
+const COUNT_EMOJI = ['⭐','🍎','🌸','🦋','🐱','🐸','🎈','🍦','🚗','🌈','🍊','🐧','🌻','🎀','🍉'];
+const TOTAL_QUIZ = 8;
+
+/* ═══════════════════════════════════════
+   SPEECH SYNTHESIS
+   ═══════════════════════════════════════ */
+
+let isMuted = false;
+let selectedVoice = null;
+let resolvedLang = 'id-ID';
+
+function initVoice() {
+  if (!('speechSynthesis' in window)) return;
+  pickVoice();
+  if (speechSynthesis.onvoiceschanged !== undefined)
+    speechSynthesis.onvoiceschanged = pickVoice;
+  /* Some browsers populate the voice list lazily */
+  setTimeout(pickVoice, 500);
+  setTimeout(pickVoice, 1500);
+}
+
+function isIndonesianVoice(v) {
+  const L = (v.lang || '').toLowerCase();
+  return L.startsWith('id') || L.startsWith('in-') || L === 'in' || L.startsWith('ms');
+}
+
+function isGoogle(v) { return /google/i.test(v.name || ''); }
+
+function pickVoice() {
+  if (!('speechSynthesis' in window)) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+
+  const target = t('speechLang');
+  let found = null;
+
+  if (lang === 'id') {
+    const indo = voices.filter(isIndonesianVoice);
+    found =
+      /* Google's Indonesian voice is the best-sounding option — prefer it.
+         Chrome desktop names it "Google Bahasa Indonesia"; Android's Google
+         TTS reports id-ID voices such as id-id-x-idc-local. */
+      indo.find(v => isGoogle(v) && v.lang.toLowerCase().startsWith('id')) ||
+      voices.find(v => /google/i.test(v.name) && /bahasa indonesia|indonesian/i.test(v.name)) ||
+      indo.find(v => isGoogle(v)) ||
+      /* Any other Indonesian voice */
+      indo.find(v => v.lang === 'id-ID') ||
+      indo.find(v => v.lang.toLowerCase().startsWith('id')) ||
+      /* 'in' is the legacy ISO code for Indonesian, still used by some Android TTS */
+      indo.find(v => v.lang.toLowerCase().startsWith('in')) ||
+      /* Malay shares Indonesian phonetics closely enough to sound right */
+      indo.find(v => v.lang.toLowerCase().startsWith('ms')) ||
+      voices.find(v => /indonesi|bahasa|melayu|malay/i.test(v.name)) ||
+      null;
+  } else {
+    /* English mode uses Damayanti (id-ID) by choice. English words are
+       respelled the Indonesian way so they still come out sounding English. */
+    found =
+      voices.find(v => /damayanti/i.test(v.name)) ||
+      voices.find(v => v.lang === 'en-US' && isGoogle(v)) ||
+      voices.find(v => (v.lang||'').toLowerCase().startsWith('en') && isGoogle(v)) ||
+      voices.find(v => v.lang === target) ||
+      voices.find(v => (v.lang||'').toLowerCase().startsWith('en')) ||
+      null;
+  }
+
+  selectedVoice = found;
+  resolvedLang = found ? found.lang : target;
+
+  voiceIsIndonesian = !!(found && isIndonesianVoice(found));
+  hasNativeVoice = lang === 'id' ? voiceIsIndonesian : !!found;
+
+  /* An engine reading respelled text must be told the language it is
+     actually pronouncing, or the hint pulls it back to the wrong phonetics. */
+  if (lang === 'id' && !voiceIsIndonesian) resolvedLang = found ? found.lang : 'en-US';
+  if (lang === 'en' && voiceIsIndonesian)  resolvedLang = found.lang;
+}
+
+function speak(text, onEnd) {
+  if (isMuted || !('speechSynthesis' in window)) { if (onEnd) setTimeout(onEnd, 100); return; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = resolvedLang;
+  u.pitch = 1.5;
+  u.rate = (phoneticMode() || enPhoneticMode()) ? 0.75 : 0.82;   /* respelled text reads better slower */
+  u.volume = 1.0;
+  if (selectedVoice) u.voice = selectedVoice;
+  if (onEnd) u.onend = onEnd;
+  speechSynthesis.speak(u);
+}
+
+function speakBtn(text, btnId) {
+  const btn = btnId && document.getElementById(btnId);
+  if (btn) btn.classList.add('speaking');
+  speak(text, () => { if (btn) btn.classList.remove('speaking'); });
+}
+
+function toggleMute() {
+  isMuted = !isMuted;
+  const b = document.getElementById('muteBtn');
+  b.textContent = isMuted ? '🔇' : '🔊';
+  b.classList.toggle('muted', isMuted);
+  if (isMuted && 'speechSynthesis' in window) speechSynthesis.cancel();
+}
+
+/* ═══════════════════════════════════════
+   LANGUAGE SWITCH
+   ═══════════════════════════════════════ */
+
+function setLang(l) {
+  lang = l;
+  sfxTap();
+  document.getElementById('langId').classList.toggle('active', l === 'id');
+  document.getElementById('langEn').classList.toggle('active', l === 'en');
+  pickVoice();
+  refreshUI();
+}
+
+function refreshUI() {
+  document.getElementById('homeGreeting').textContent = t('greeting');
+  document.getElementById('homeSub').textContent = t('sub');
+  document.getElementById('homeReadLabel').textContent = t('reading');
+  document.getElementById('homeReadDesc').textContent = t('readingDesc');
+  document.getElementById('homeCountLabel').textContent = t('counting');
+  document.getElementById('homeCountDesc').textContent = t('countingDesc');
+
+  document.getElementById('menuReadTitle').textContent = t('menuRead');
+  document.getElementById('menuCountTitle').textContent = t('menuCount');
+
+  buildReadMenu();
+  buildCountMenu();
+
+  document.getElementById('hurufTitle').textContent = t('vowels');
+  document.getElementById('sukuTitle').textContent = t('syllables');
+  document.getElementById('tebakTitle').textContent = t('wordGuess');
+  document.getElementById('angkaTitle').textContent = t('numbers');
+  document.getElementById('hitungTitle').textContent = t('countObj');
+  document.getElementById('tambahTitle').textContent = t('addition');
+
+  currentVowel = 0;
+  initHuruf();
+  const v = vowels()[0];
+  document.getElementById('vowelLetter').textContent = v.letter;
+  document.getElementById('vowelLetter').style.color = '#4DABF7';
+  document.getElementById('vowelEmoji').textContent = v.emoji;
+  document.getElementById('vowelWord').innerHTML = v.hl;
+}
+
+function buildReadMenu() {
+  document.getElementById('menuReadGrid').innerHTML = `
+    <div class="menu-card mc-huruf" onclick="go('huruf');speakVowelCurrent();">
+      <div class="menu-card__icon">🔤</div>
+      <div class="menu-card__text">
+        <div class="menu-card__title">${t('vowels')}</div>
+        <div class="menu-card__desc">${t('vowelsDesc')}</div>
+      </div><span class="menu-card__arrow">›</span>
+    </div>
+    <div class="menu-card mc-suku" onclick="go('sukukata')">
+      <div class="menu-card__icon">🧩</div>
+      <div class="menu-card__text">
+        <div class="menu-card__title">${t('syllables')}</div>
+        <div class="menu-card__desc">${t('syllablesDesc')}</div>
+      </div><span class="menu-card__arrow">›</span>
+    </div>
+    <div class="menu-card mc-tebak" onclick="startTebakKata()">
+      <div class="menu-card__icon">🎯</div>
+      <div class="menu-card__text">
+        <div class="menu-card__title">${t('wordGuess')}</div>
+        <div class="menu-card__desc">${t('wordGuessDesc')}</div>
+      </div><span class="menu-card__arrow">›</span>
+    </div>`;
+}
+
+function buildCountMenu() {
+  document.getElementById('menuCountGrid').innerHTML = `
+    <div class="menu-card mc-angka" onclick="startKenalAngka()">
+      <div class="menu-card__icon">🔵</div>
+      <div class="menu-card__text">
+        <div class="menu-card__title">${t('numbers')}</div>
+        <div class="menu-card__desc">${t('numbersDesc')}</div>
+      </div><span class="menu-card__arrow">›</span>
+    </div>
+    <div class="menu-card mc-hitung" onclick="startHitungBenda()">
+      <div class="menu-card__icon">🐻</div>
+      <div class="menu-card__text">
+        <div class="menu-card__title">${t('countObj')}</div>
+        <div class="menu-card__desc">${t('countObjDesc')}</div>
+      </div><span class="menu-card__arrow">›</span>
+    </div>
+    <div class="menu-card mc-tambah" onclick="startPenjumlahan()">
+      <div class="menu-card__icon">➕</div>
+      <div class="menu-card__text">
+        <div class="menu-card__title">${t('addition')}</div>
+        <div class="menu-card__desc">${t('additionDesc')}</div>
+      </div><span class="menu-card__arrow">›</span>
+    </div>`;
+}
+
+/* ═══════════════════════════════════════
+   SOUND EFFECTS
+   ═══════════════════════════════════════ */
+
+let audioCtx;
+function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+function playTone(f,d,tp='sine',v=0.2) {
+  if (isMuted) return;
+  try { initAudio(); const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+    o.type=tp; o.frequency.value=f; g.gain.setValueAtTime(v,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+d);
+    o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+d);
+  } catch(e){}
+}
+function sfxTap()     { playTone(600,0.08); }
+function sfxCorrect() { playTone(523,0.12); setTimeout(()=>playTone(659,0.12),80); setTimeout(()=>playTone(784,0.25),160); }
+function sfxWrong()   { playTone(220,0.25,'triangle',0.15); }
+
+/* ═══════════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════════ */
+
+function go(screen) {
+  sfxTap();
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  document.querySelectorAll('.screen').forEach(s => s.hidden = true);
+  const el = document.getElementById('screen-' + screen);
+  if (el) { el.hidden = false; el.style.animation = 'none'; el.offsetHeight; el.style.animation = ''; }
+}
+
+/* ═══════════════════════════════════════
+   HOME
+   ═══════════════════════════════════════ */
+
+function initStars() {
+  const bg = document.getElementById('starsBg');
+  const ic = ['⭐','✨','🌟','💫'];
+  for (let i = 0; i < 8; i++) {
+    const s = document.createElement('span'); s.className = 'star-float';
+    s.textContent = ic[i%ic.length];
+    s.style.left = (8+Math.random()*84)+'%';
+    s.style.animationDuration = (12+Math.random()*10)+'s';
+    s.style.animationDelay = (Math.random()*12)+'s';
+    s.style.fontSize = (14+Math.random()*10)+'px';
+    bg.appendChild(s);
+  }
+}
+
+function speakMascot() { speak(ts('mascot')); }
+
+function showFeedback(text) {
+  const el = document.getElementById('feedbackOverlay');
+  document.getElementById('feedbackText').textContent = text;
+  el.hidden = false;
+  const inner = document.getElementById('feedbackText');
+  inner.style.animation = 'none'; inner.offsetHeight; inner.style.animation = '';
+  setTimeout(() => { el.hidden = true; }, 800);
+}
+
+/* ═══════════════════════════════════════
+   HURUF VOKAL
+   ═══════════════════════════════════════ */
+
+let currentVowel = 0;
+
+function initHuruf() {
+  const grid = document.getElementById('vowelGrid');
+  grid.innerHTML = '';
+  vowels().forEach((v,i) => {
+    const btn = document.createElement('button');
+    btn.className = 'vowel-btn' + (i===0?' active':'');
+    btn.textContent = v.letter;
+    btn.onclick = () => selectVowel(i);
+    grid.appendChild(btn);
+  });
+}
+
+function selectVowel(i) {
+  sfxTap(); currentVowel = i;
+  const v = vowels()[i];
+  const colors = ['#4DABF7','#51CF66','#CC5DE8','#FF922B','#FF6B6B'];
+  document.getElementById('vowelLetter').textContent = v.letter;
+  document.getElementById('vowelLetter').style.color = colors[i];
+  document.getElementById('vowelEmoji').textContent = v.emoji;
+  document.getElementById('vowelWord').innerHTML = v.hl;
+  document.querySelectorAll('.vowel-btn').forEach((b,j) => {
+    b.classList.toggle('active', j===i);
+    b.style.background = j===i ? colors[i] : '';
+  });
+  speakBtn(vowelSpeak(v), 'vowelSpeakBtn');
+}
+
+function speakVowelCurrent() { speakBtn(vowelSpeak(vowels()[currentVowel]), 'vowelSpeakBtn'); }
+
+/* ═══════════════════════════════════════
+   SUKU KATA
+   ═══════════════════════════════════════ */
+
+let currentConsonant = 0;
+
+function initSukuKata() {
+  const scroll = document.getElementById('consonantScroll');
+  scroll.innerHTML = '';
+  CONSONANTS.forEach((c,i) => {
+    const chip = document.createElement('button');
+    chip.className = 'consonant-chip' + (i===0?' active':'');
+    chip.textContent = c;
+    chip.onclick = () => selectConsonant(i);
+    scroll.appendChild(chip);
+  });
+  renderSyllables(0);
+}
+
+function selectConsonant(i) {
+  sfxTap(); currentConsonant = i;
+  document.querySelectorAll('.consonant-chip').forEach((c,j) => c.classList.toggle('active', j===i));
+  renderSyllables(i);
+  speak(letterPh(CONSONANTS[i]));
+}
+
+function renderSyllables(ci) {
+  const grid = document.getElementById('syllableGrid');
+  const c = CONSONANTS[ci];
+  grid.innerHTML = '';
+  VOWEL_LIST.forEach((v,vi) => {
+    const syl = c + v.toLowerCase();
+    const btn = document.createElement('button');
+    btn.className = 'syllable-btn';
+    btn.textContent = syl;
+    btn.style.animation = 'popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) backwards';
+    btn.style.animationDelay = (vi*0.06)+'s';
+    btn.onclick = () => showSyllablePopup(syl);
+    grid.appendChild(btn);
+  });
+}
+
+function showSyllablePopup(text) {
+  sfxTap();
+  const popup = document.getElementById('syllablePopup');
+  popup.hidden = false; popup.className = 'syllable-popup';
+  popup.innerHTML = `<div class="syllable-popup__inner">
+    <button class="syllable-popup__close" onclick="event.stopPropagation();closeSyllablePopup()">✕</button>
+    <div class="syllable-popup__text">${text}</div>
+    <button class="speak-btn" id="sylSpeakBtn" onclick="event.stopPropagation();speakSyllable('${text}')">🔊</button>
+  </div>`;
+  popup.onclick = (e) => { if (e.target === popup) closeSyllablePopup(); };
+  speakSyllable(text);
+}
+
+function speakSyllable(text) { speakBtn(sylPh(text), 'sylSpeakBtn'); }
+
+function closeSyllablePopup() {
+  sfxTap();
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  document.getElementById('syllablePopup').hidden = true;
+}
+
+/* ═══════════════════════════════════════
+   TEBAK KATA
+   ═══════════════════════════════════════ */
+
+let tebakState = { score:0, round:0, used:[] };
+
+function startTebakKata() {
+  tebakState = { score:0, round:0, used:[] };
+  go('tebak');
+  speak(ts('startWord'));
+  nextTebakRound();
+}
+
+function nextTebakRound() {
+  if (tebakState.round >= TOTAL_QUIZ) { showComplete('tebak', tebakState.score, 'membaca-menu'); return; }
+  const wl = words();
+  const avail = wl.filter((_,i) => !tebakState.used.includes(i));
+  const ci = Math.floor(Math.random()*avail.length);
+  const cIdx = wl.indexOf(avail[ci]);
+  tebakState.used.push(cIdx);
+  const correct = wl[cIdx];
+  let opts = [correct];
+  const others = wl.filter((_,i) => i!==cIdx);
+  while (opts.length < 3) { const r = others[Math.floor(Math.random()*others.length)]; if (!opts.includes(r)) opts.push(r); }
+  opts = shuffle(opts);
+  document.getElementById('tebakStars').textContent = '⭐ ' + tebakState.score;
+  document.getElementById('tebakContent').innerHTML = `
+    <div class="quiz-area">
+      <div class="quiz-prompt">
+        <span class="quiz-emoji">${correct.e}</span>
+        <div class="quiz-question">${t('whatPic')}</div>
+      </div>
+      <div class="quiz-options" id="tebakOptions">
+        ${opts.map(o => `<button class="quiz-opt" data-w="${o.w}" onclick="checkTebak(this,'${correct.w}',${cIdx})">${o.w}</button>`).join('')}
+      </div>
+      <div class="quiz-score">${t('qLabel')} ${tebakState.round+1} ${t('qOf')} ${TOTAL_QUIZ}</div>
+    </div>`;
+}
+
+function checkTebak(btn, cw, cIdx) {
+  if (btn.classList.contains('correct')||btn.classList.contains('wrong')) return;
+  if (btn.dataset.w === cw) {
+    sfxCorrect(); btn.classList.add('correct');
+    tebakState.score++; tebakState.round++;
+    document.getElementById('tebakStars').textContent = '⭐ '+tebakState.score;
+    showFeedback('⭐');
+    const entry = words()[cIdx];
+    setTimeout(() => speak(ts('correct') + ' ' + wordSpeak(entry)), 300);
+    document.querySelectorAll('#tebakOptions .quiz-opt').forEach(b => b.style.pointerEvents='none');
+    setTimeout(nextTebakRound, 1400);
+  } else {
+    sfxWrong(); btn.classList.add('wrong');
+    speak(ts('tryAgain'));
+    setTimeout(() => btn.classList.remove('wrong'), 500);
+  }
+}
+
+/* ═══════════════════════════════════════
+   KENAL ANGKA
+   ═══════════════════════════════════════ */
+
+let angkaIdx = 1;
+
+function startKenalAngka() {
+  angkaIdx = 1; go('angka'); renderAngka();
+  setTimeout(() => speakNumber(), 300);
+}
+
+function renderAngka() {
+  const emoji = COUNT_EMOJI[angkaIdx % COUNT_EMOJI.length];
+  const objs = Array(angkaIdx).fill(emoji).map((e,i) =>
+    `<span style="animation:popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) backwards;animation-delay:${i*0.06}s">${e}</span>`
+  ).join(' ');
+  document.getElementById('angkaContent').innerHTML = `
+    <div class="number-display">
+      <div class="number-big">${angkaIdx}</div>
+      <div class="number-word">${numWord(angkaIdx)}</div>
+      <div class="number-objects">${objs}</div>
+      <div class="number-speak-row">
+        <button class="speak-btn" id="angkaSpeakBtn" onclick="speakNumber()">🔊</button>
+      </div>
+    </div>
+    <div class="nav-arrows">
+      <button class="nav-arrow" onclick="angkaNav(-1)" ${angkaIdx<=1?'disabled':''}>‹</button>
+      <button class="nav-arrow" onclick="angkaNav(1)" ${angkaIdx>=10?'disabled':''}>›</button>
+    </div>`;
+}
+
+/* Speak the number word, never the digit — an English engine would
+   read "1" as "one" even in Indonesian mode. */
+function speakNumber() { speakBtn(ts('numLabel') + ' ' + numSpeak(angkaIdx), 'angkaSpeakBtn'); }
+
+function angkaNav(dir) {
+  sfxTap(); angkaIdx = Math.max(1, Math.min(10, angkaIdx+dir));
+  renderAngka(); setTimeout(() => speakNumber(), 150);
+}
+
+/* ═══════════════════════════════════════
+   HITUNG BENDA
+   ═══════════════════════════════════════ */
+
+let hitungState = { score:0, round:0 };
+
+function startHitungBenda() {
+  hitungState = { score:0, round:0 };
+  go('hitung'); speak(ts('startCount')); nextHitungRound();
+}
+
+function nextHitungRound() {
+  if (hitungState.round >= TOTAL_QUIZ) { showComplete('hitung', hitungState.score, 'menghitung-menu'); return; }
+  const count = 2+Math.floor(Math.random()*9);
+  const emoji = COUNT_EMOJI[Math.floor(Math.random()*COUNT_EMOJI.length)];
+  const objs = Array(count).fill(null).map((_,i) => `<span class="count-obj" style="animation-delay:${i*0.07}s">${emoji}</span>`).join('');
+  let opts = generateOptions(count, 1, 10);
+  document.getElementById('hitungStars').textContent = '⭐ '+hitungState.score;
+  document.getElementById('hitungContent').innerHTML = `
+    <div class="quiz-area">
+      <div class="quiz-prompt">
+        <div class="count-objects">${objs}</div>
+        <div class="quiz-question">${t('howMany')} ${emoji} ?</div>
+      </div>
+      <div class="number-options" id="hitungOptions">
+        ${opts.map(n => `<button class="number-opt" data-val="${n}" onclick="checkHitung(this,${count})">${n}</button>`).join('')}
+      </div>
+      <div class="quiz-score">${t('qLabel')} ${hitungState.round+1} ${t('qOf')} ${TOTAL_QUIZ}</div>
+    </div>`;
+}
+
+function checkHitung(btn, correct) {
+  if (btn.classList.contains('correct')||btn.classList.contains('wrong')) return;
+  if (parseInt(btn.dataset.val) === correct) {
+    sfxCorrect(); btn.classList.add('correct');
+    hitungState.score++; hitungState.round++;
+    document.getElementById('hitungStars').textContent = '⭐ '+hitungState.score;
+    showFeedback('⭐');
+    setTimeout(() => speak(ts('correct')+' '+ts('there')+' '+numSpeak(correct)), 300);
+    document.querySelectorAll('#hitungOptions .number-opt').forEach(b => b.style.pointerEvents='none');
+    setTimeout(nextHitungRound, 1400);
+  } else {
+    sfxWrong(); btn.classList.add('wrong');
+    speak(ts('tryAgain'));
+    setTimeout(() => btn.classList.remove('wrong'), 500);
+  }
+}
+
+/* ═══════════════════════════════════════
+   PENJUMLAHAN
+   ═══════════════════════════════════════ */
+
+let tambahState = { score:0, round:0 };
+
+function startPenjumlahan() {
+  tambahState = { score:0, round:0 };
+  go('tambah'); speak(ts('startAdd')); nextTambahRound();
+}
+
+function nextTambahRound() {
+  if (tambahState.round >= TOTAL_QUIZ) { showComplete('tambah', tambahState.score, 'menghitung-menu'); return; }
+  const a = 1+Math.floor(Math.random()*5);
+  const b = 1+Math.floor(Math.random()*(Math.min(5,10-a)));
+  const sum = a+b;
+  const emoji = COUNT_EMOJI[Math.floor(Math.random()*COUNT_EMOJI.length)];
+  const gA = Array(a).fill(`<span>${emoji}</span>`).join('');
+  const gB = Array(b).fill(`<span>${emoji}</span>`).join('');
+  let opts = generateOptions(sum, 2, 10);
+  document.getElementById('tambahStars').textContent = '⭐ '+tambahState.score;
+  document.getElementById('tambahContent').innerHTML = `
+    <div class="quiz-area">
+      <div class="quiz-prompt">
+        <div class="addition-visual">
+          <div class="addition-group">${gA}</div>
+          <span class="addition-op">+</span>
+          <div class="addition-group">${gB}</div>
+          <span class="addition-op">=</span>
+          <span class="addition-op">?</span>
+        </div>
+        <div class="quiz-question">${a} + ${b} ${t('addQ')}</div>
+      </div>
+      <div class="number-options" id="tambahOptions">
+        ${opts.map(n => `<button class="number-opt" data-val="${n}" onclick="checkTambah(this,${sum},${a},${b})">${n}</button>`).join('')}
+      </div>
+      <div class="quiz-score">${t('qLabel')} ${tambahState.round+1} ${t('qOf')} ${TOTAL_QUIZ}</div>
+    </div>`;
+}
+
+function checkTambah(btn, correct, a, b) {
+  if (btn.classList.contains('correct')||btn.classList.contains('wrong')) return;
+  if (parseInt(btn.dataset.val) === correct) {
+    sfxCorrect(); btn.classList.add('correct');
+    tambahState.score++; tambahState.round++;
+    document.getElementById('tambahStars').textContent = '⭐ '+tambahState.score;
+    showFeedback('⭐');
+    setTimeout(() => speak(
+      ts('correct')+' '+numSpeak(a)+' '+ts('plus')+' '+numSpeak(b)+' '+ts('equals')+' '+numSpeak(correct)
+    ), 300);
+    document.querySelectorAll('#tambahOptions .number-opt').forEach(x => x.style.pointerEvents='none');
+    setTimeout(nextTambahRound, 2000);
+  } else {
+    sfxWrong(); btn.classList.add('wrong');
+    speak(ts('tryAgain'));
+    setTimeout(() => btn.classList.remove('wrong'), 500);
+  }
+}
+
+/* ═══════════════════════════════════════
+   COMPLETION
+   ═══════════════════════════════════════ */
+
+function showComplete(id, score, backTo) {
+  const pct = Math.round((score/TOTAL_QUIZ)*100);
+  const emoji = pct===100?'🏆':pct>=75?'🌟':pct>=50?'👏':'💪';
+  const key = pct===100?'perfect':pct>=75?'great':pct>=50?'good':'retry';
+  document.getElementById(id+'Content').innerHTML = `
+    <div class="complete-card">
+      <span class="complete-card__emoji">${emoji}</span>
+      <div class="complete-card__title">${t(key)}</div>
+      <div class="complete-card__score">${t('score')} ${score} ${t('qOf')} ${TOTAL_QUIZ} ⭐</div>
+      <button class="complete-card__btn" onclick="go('${backTo}')">${t('back')}</button>
+    </div>`;
+  if (pct >= 75) showFeedback('🎉');
+  setTimeout(() => speak(
+    ts(key) + ' ' + ts('youGot') + ' ' + numSpeak(score) + ' ' + ts('stars') + '!'
+  ), 400);
+}
+
+/* ═══════════════════════════════════════
+   HELPERS
+   ═══════════════════════════════════════ */
+
+function shuffle(arr) {
+  const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a;
+}
+
+function generateOptions(correct, min, max) {
+  const opts = new Set([correct]); let tries=0;
+  while(opts.size<4&&tries<50) {
+    let n; if(Math.random()<0.6) n=correct+(Math.random()<0.5?1:-1)*(1+Math.floor(Math.random()*2));
+    else n=min+Math.floor(Math.random()*(max-min+1));
+    if(n>=min&&n<=max&&n!==correct) opts.add(n); tries++;
+  }
+  while(opts.size<4){ for(let n=min;n<=max&&opts.size<4;n++) if(n!==correct) opts.add(n); }
+  return shuffle([...opts]);
+}
+
+/* ═══════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════ */
+
+initVoice();
+initStars();
+initHuruf();
+initSukuKata();
+buildReadMenu();
+buildCountMenu();
+</script>
+</body>
+</html>
