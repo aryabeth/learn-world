@@ -163,6 +163,7 @@ body {
 .mc-tambah .menu-card__icon { background: #D0EBFF; }
 .mc-konsonan .menu-card__icon { background: #FFD8D8; }
 .mc-susun .menu-card__icon { background: var(--lavender-soft); }
+.mc-tulis .menu-card__icon { background: #FFF3BF; }
 
 .menu-card__best { font-size: 12px; color: var(--leaf); font-weight: 700; margin-top: 3px; }
 
@@ -314,6 +315,31 @@ body {
 }
 .spell-level { text-align: center; font-size: 13px; color: var(--text-soft); font-weight: 700; margin-top: 2px; }
 .spell-wrong { animation: shake 0.4s ease; }
+
+/* ── Menulis (letter/number tracing) ─ */
+.trace-hint { text-align: center; font-size: 14px; color: var(--text-soft); font-weight: 700; margin: 2px 0 14px; }
+.trace-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.trace-canvas {
+  width: 100%; max-width: 280px; aspect-ratio: 1 / 1; touch-action: none;
+  background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow-md);
+  border: 3px solid var(--sky-soft); cursor: crosshair;
+}
+.trace-progress {
+  width: 100%; max-width: 280px; height: 12px; border-radius: 8px;
+  background: #E9ECEF; overflow: hidden;
+}
+.trace-progress__fill {
+  height: 100%; width: 0%; border-radius: 8px;
+  background: linear-gradient(90deg, var(--leaf), var(--sky)); transition: width 0.2s ease;
+}
+.trace-actions { display: flex; justify-content: center; gap: 12px; margin-top: 18px; }
+.trace-btn {
+  font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 15px;
+  padding: 10px 18px; border-radius: 20px; border: 2px solid #E9ECEF;
+  background: var(--card); color: var(--text); cursor: pointer;
+  box-shadow: var(--shadow-sm); transition: transform 0.15s ease;
+}
+.trace-btn:active { transform: scale(0.95); }
 
 /* ── Count / Number ──────────────── */
 .count-objects { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 24px; min-height: 120px; align-items: center; }
@@ -516,6 +542,16 @@ body {
     <div id="susunContent"></div>
   </div>
 
+  <!-- MENULIS (letter/number tracing) -->
+  <div id="screen-menulis" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go(menulisBackTo)">‹</button>
+      <h2 class="screen-title" id="menulisTitle">Menulis Huruf</h2>
+      <div class="star-badge" id="menulisStars">⭐ 0</div>
+    </div>
+    <div id="menulisContent"></div>
+  </div>
+
   <!-- KENAL ANGKA -->
   <div id="screen-angka" class="screen" hidden>
     <div class="screen-header">
@@ -571,9 +607,11 @@ const T = {
     syllables: 'Suku Kata', syllablesDesc: 'Gabungkan huruf jadi suku kata',
     wordGuess: 'Tebak Kata', wordGuessDesc: 'Cocokkan gambar dengan kata',
     spellWord: 'Susun Kata', spellWordDesc: 'Susun huruf jadi kata',
+    writeLetters: 'Menulis Huruf', writeLettersDesc: 'Ikuti garis putus-putus',
     numbers: 'Kenal Angka', numbersDesc: 'Belajar angka 1 sampai 10',
     countObj: 'Hitung Benda', countObjDesc: 'Hitung berapa banyak benda',
     addition: 'Penjumlahan', additionDesc: 'Belajar menambah angka',
+    writeNumbers: 'Menulis Angka', writeNumbersDesc: 'Ikuti garis putus-putus',
     whatPic: 'Gambar apakah ini?',
     howMany: 'Ada berapa',
     qOf: 'dari', qLabel: 'Soal', lettersLabel: 'huruf',
@@ -583,7 +621,8 @@ const T = {
     numLabel: 'Angka', plus: 'tambah', equals: 'sama dengan', there: 'Ada',
     youGot: 'Kamu dapat',
     startWord: 'Tebak kata!', startCount: 'Hitung benda!', startAdd: 'Penjumlahan!',
-    startSpell: 'Susun kata!',
+    startSpell: 'Susun kata!', startWriteL: 'Menulis huruf!', startWriteN: 'Menulis angka!',
+    traceHint: 'Ikuti garis putus-putus!', clearBtn: 'Hapus', skipBtn: 'Lewati',
     addQ: '= berapa?',
     speechLang: 'id-ID',
   },
@@ -599,9 +638,11 @@ const T = {
     syllables: 'Syllables', syllablesDesc: 'Combine letters into syllables',
     wordGuess: 'Word Guess', wordGuessDesc: 'Match pictures with words',
     spellWord: 'Spell the Word', spellWordDesc: 'Arrange letters into words',
+    writeLetters: 'Write Letters', writeLettersDesc: 'Trace the dotted line',
     numbers: 'Know Numbers', numbersDesc: 'Learn numbers 1 to 10',
     countObj: 'Count Objects', countObjDesc: 'Count how many objects',
     addition: 'Addition', additionDesc: 'Learn to add numbers',
+    writeNumbers: 'Write Numbers', writeNumbersDesc: 'Trace the dotted line',
     whatPic: 'What is this picture?',
     howMany: 'How many',
     qOf: 'of', qLabel: 'Question', lettersLabel: 'letters',
@@ -611,7 +652,8 @@ const T = {
     numLabel: 'Number', plus: 'plus', equals: 'equals', there: 'There are',
     youGot: 'You got',
     startWord: 'Guess the word!', startCount: 'Count the objects!', startAdd: 'Addition!',
-    startSpell: 'Spell the word!',
+    startSpell: 'Spell the word!', startWriteL: 'Write letters!', startWriteN: 'Write numbers!',
+    traceHint: 'Trace the dotted line!', clearBtn: 'Clear', skipBtn: 'Skip',
     addQ: '= how many?',
     speechLang: 'en-US',
   }
@@ -637,14 +679,16 @@ const PH = {
   there: 'ah-dah', youGot: 'kah-moo dah-paht', stars: 'been-tahng',
   startWord: 'teh-bahk kah-tah!', startCount: 'hee-toong ben-dah!',
   startAdd: 'pen-joom-lah-hahn!', startSpell: 'soo-soon kah-tah!',
+  startWriteL: 'meh-noo-lees hoo-roof!', startWriteN: 'meh-noo-lees ahng-kah!',
   mascot: 'high! seh-lah-maht dah-tahng dee doo-nee-ah beh-lah-jar! mah-oo beh-lah-jar ah-pah hah-ree ee-nee?',
 };
 
 /* Indonesian letter names, respelled for an English engine */
 const LETTER_PH = {
-  A:'ah', B:'beh', C:'cheh', D:'deh', E:'eh', G:'gheh', H:'hah',
+  A:'ah', B:'beh', C:'cheh', D:'deh', E:'eh', F:'ef', G:'gheh', H:'hah',
   I:'ee', J:'jeh', K:'kah', L:'ell', M:'em', N:'en', O:'oh',
-  P:'peh', R:'air', S:'ess', T:'teh', U:'oo',
+  P:'peh', Q:'kee', R:'air', S:'ess', T:'teh', U:'oo', V:'veh', W:'weh',
+  X:'eks', Y:'yeh', Z:'zet',
 };
 
 /* ── The mirror case ──────────────────────
@@ -661,24 +705,26 @@ const PH_EN = {
   there: 'der ar', youGot: 'yu got', stars: 'stars',
   startWord: 'ges de word!', startCount: 'kaunt de objek!',
   startAdd: 'adisyen!', startSpell: 'spel de word!',
+  startWriteL: 'rait leters!', startWriteN: 'rait namberz!',
   mascot: 'hai! welkam tu lerning world! wat du yu won tu lern tudei?',
 };
 
 /* English letter names, respelled for an Indonesian engine */
 const LETTER_PH_EN = {
-  A:'ei', B:'bi', C:'si', D:'di', E:'i', G:'ji', H:'eic',
+  A:'ei', B:'bi', C:'si', D:'di', E:'i', F:'ef', G:'ji', H:'eic',
   I:'ai', J:'jei', K:'kei', L:'el', M:'em', N:'en', O:'ou',
-  P:'pi', R:'ar', S:'es', T:'ti', U:'yu',
+  P:'pi', Q:'kyu', R:'ar', S:'es', T:'ti', U:'yu', V:'vi', W:'dabolyu',
+  X:'eks', Y:'wai', Z:'zi',
 };
 
-const NUM_PH_EN = ['','wan','tu','sri','for','faiv','siks','seven','eit','nain','ten'];
+const NUM_PH_EN = ['ziro','wan','tu','sri','for','faiv','siks','seven','eit','nain','ten'];
 
 /* Building blocks for generated syllables (Ba, Bi, Bu, Be, Bo …) */
 const CONS_PH = { B:'b', C:'ch', D:'d', G:'gh', H:'h', J:'j', K:'k',
                   L:'l', M:'m', N:'n', P:'p', R:'r', S:'s', T:'t' };
 const VOW_PH  = { a:'ah', i:'ee', u:'oo', e:'eh', o:'oh' };
 
-const NUM_PH = ['','sah-too','doo-ah','tee-gah','em-paht','lee-mah',
+const NUM_PH = ['nohl','sah-too','doo-ah','tee-gah','em-paht','lee-mah',
                 'eh-nahm','too-jooh','deh-lah-pahn','sem-bee-lahn','seh-poo-looh'];
 
 /* What kind of voice the device actually gave us */
@@ -811,8 +857,8 @@ const WORDS_DATA = {
 };
 
 const NUM_WORDS = {
-  id: ['','Satu','Dua','Tiga','Empat','Lima','Enam','Tujuh','Delapan','Sembilan','Sepuluh'],
-  en: ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'],
+  id: ['Nol','Satu','Dua','Tiga','Empat','Lima','Enam','Tujuh','Delapan','Sembilan','Sepuluh'],
+  en: ['Zero','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'],
 };
 
 function vowels()     { return VOWELS_DATA[lang]; }
@@ -974,6 +1020,7 @@ function refreshUI() {
   document.getElementById('sukuTitle').textContent = t('syllables');
   document.getElementById('tebakTitle').textContent = t('wordGuess');
   document.getElementById('susunTitle').textContent = t('spellWord');
+  document.getElementById('menulisTitle').textContent = menulisState.mode === 'angka' ? t('writeNumbers') : t('writeLetters');
   document.getElementById('angkaTitle').textContent = t('numbers');
   document.getElementById('hitungTitle').textContent = t('countObj');
   document.getElementById('tambahTitle').textContent = t('addition');
@@ -1033,6 +1080,14 @@ function buildReadMenu() {
         <div class="menu-card__desc">${t('spellWordDesc')}</div>
         ${bestLine('susun')}
       </div><span class="menu-card__arrow">›</span>
+    </div>
+    <div class="menu-card mc-tulis" onclick="startMenulis('huruf')">
+      <div class="menu-card__icon">📝</div>
+      <div class="menu-card__text">
+        <div class="menu-card__title">${t('writeLetters')}</div>
+        <div class="menu-card__desc">${t('writeLettersDesc')}</div>
+        ${bestLine('tulis-huruf')}
+      </div><span class="menu-card__arrow">›</span>
     </div>`;
 }
 
@@ -1059,6 +1114,14 @@ function buildCountMenu() {
         <div class="menu-card__title">${t('addition')}</div>
         <div class="menu-card__desc">${t('additionDesc')}</div>
         ${bestLine('tambah')}
+      </div><span class="menu-card__arrow">›</span>
+    </div>
+    <div class="menu-card mc-tulis" onclick="startMenulis('angka')">
+      <div class="menu-card__icon">📝</div>
+      <div class="menu-card__text">
+        <div class="menu-card__title">${t('writeNumbers')}</div>
+        <div class="menu-card__desc">${t('writeNumbersDesc')}</div>
+        ${bestLine('tulis-angka')}
       </div><span class="menu-card__arrow">›</span>
     </div>`;
 }
@@ -1479,6 +1542,220 @@ function checkSusun() {
       renderSusun();
     }, 700);
   }
+}
+
+/* ═══════════════════════════════════════
+   MENULIS (letter/number tracing)
+   ═══════════════════════════════════════ */
+
+const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const DIGITS = '0123456789'.split('');
+const TRACE_COLORS = ['#4DABF7','#FF6B6B','#40C057','#F59F00','#B197FC','#20C997'];
+const TRACE_COVER_THRESHOLD = 0.65;
+
+let menulisState = { mode:'huruf', used:[], score:0, round:0, char:null, samplePoints:[], drawing:false, completed:false };
+let menulisBackTo = 'membaca-menu';
+
+function traceCharPool() { return menulisState.mode === 'angka' ? DIGITS : ALPHABET; }
+
+function startMenulis(mode) {
+  menulisState = { mode, used:[], score:0, round:0, char:null, samplePoints:[], drawing:false, completed:false };
+  menulisBackTo = mode === 'angka' ? 'menghitung-menu' : 'membaca-menu';
+  document.getElementById('menulisTitle').textContent = mode === 'angka' ? t('writeNumbers') : t('writeLetters');
+  go('menulis');
+  speak(mode === 'angka' ? ts('startWriteN') : ts('startWriteL'));
+  nextTraceChar();
+}
+
+function renderMenulisShell() {
+  document.getElementById('menulisContent').innerHTML = `
+    <div class="trace-hint">${t('traceHint')}</div>
+    <div class="trace-wrap">
+      <canvas id="traceCanvas" class="trace-canvas"></canvas>
+      <div class="trace-progress"><div class="trace-progress__fill" id="traceProgressFill"></div></div>
+    </div>
+    <div class="trace-actions">
+      <button class="trace-btn" onclick="clearTrace()">🧹 ${t('clearBtn')}</button>
+      <button class="trace-btn" onclick="skipTrace()">${t('skipBtn')} ›</button>
+    </div>
+    <div class="quiz-score">${t('qLabel')} ${menulisState.round+1} ${t('qOf')} ${TOTAL_QUIZ}</div>`;
+}
+
+function nextTraceChar() {
+  if (menulisState.round >= TOTAL_QUIZ) { finishMenulis(); return; }
+  const pool = traceCharPool();
+  const avail = pool.map((_,i) => i).filter(i => !menulisState.used.includes(i));
+  const i = avail[Math.floor(Math.random() * avail.length)];
+  menulisState.used.push(i);
+  menulisState.char = pool[i];
+  menulisState.completed = false;
+  document.getElementById('menulisStars').textContent = '⭐ '+menulisState.score;
+  renderMenulisShell();
+  setupTraceCanvas();
+}
+
+function finishMenulis() {
+  const progressId = menulisState.mode === 'angka' ? 'tulis-angka' : 'tulis-huruf';
+  const score = menulisState.score;
+  saveProgress(progressId, score);
+  const pct = Math.round((score/TOTAL_QUIZ)*100);
+  const emoji = pct===100?'🏆':pct>=75?'🌟':pct>=50?'👏':'💪';
+  const key = pct===100?'perfect':pct>=75?'great':pct>=50?'good':'retry';
+  document.getElementById('menulisContent').innerHTML = `
+    <div class="complete-card">
+      <span class="complete-card__emoji">${emoji}</span>
+      <div class="complete-card__title">${t(key)}</div>
+      <div class="complete-card__score">${t('score')} ${score} ${t('qOf')} ${TOTAL_QUIZ} ⭐</div>
+      <button class="complete-card__btn" onclick="go('${menulisBackTo}')">${t('back')}</button>
+    </div>`;
+  if (pct >= 75) showFeedback('🎉');
+  setTimeout(() => speak(
+    ts(key) + ' ' + ts('youGot') + ' ' + numSpeak(score) + ' ' + ts('stars') + '!'
+  ), 400);
+}
+
+function setupTraceCanvas() {
+  const canvas = document.getElementById('traceCanvas');
+  const size = Math.round(canvas.clientWidth || 280);
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = size * dpr; canvas.height = size * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  menulisState.ctx = ctx;
+  menulisState.canvasSize = size;
+  menulisState.samplePoints = computeGuidePoints(menulisState.char, size);
+  drawTraceGuide();
+  updateTraceProgress(0);
+  initTraceDrawing(canvas);
+}
+
+function traceFont(size) { return `bold ${Math.floor(size*0.72)}px 'Fredoka', sans-serif`; }
+
+function computeGuidePoints(char, size) {
+  const off = document.createElement('canvas');
+  off.width = size; off.height = size;
+  const octx = off.getContext('2d');
+  octx.font = traceFont(size);
+  octx.textAlign = 'center'; octx.textBaseline = 'middle';
+  octx.lineWidth = Math.max(6, size * 0.05);
+  octx.strokeStyle = '#000';
+  octx.strokeText(char, size/2, size/2 + size*0.02);
+  const data = octx.getImageData(0, 0, size, size).data;
+  const pts = [];
+  const step = Math.max(3, Math.round(size / 60));
+  for (let y = 0; y < size; y += step) {
+    for (let x = 0; x < size; x += step) {
+      if (data[(y*size+x)*4+3] > 80) pts.push({ x, y, covered:false });
+    }
+  }
+  return pts;
+}
+
+function drawTraceGuide() {
+  const ctx = menulisState.ctx, size = menulisState.canvasSize, char = menulisState.char;
+  ctx.clearRect(0, 0, size, size);
+  ctx.save();
+  ctx.globalAlpha = 0.08;
+  ctx.fillStyle = '#495057';
+  ctx.font = traceFont(size);
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(char, size/2, size/2 + size*0.02);
+  ctx.restore();
+  ctx.save();
+  ctx.setLineDash([size*0.045, size*0.035]);
+  ctx.lineWidth = Math.max(6, size * 0.05);
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = '#ADB5BD';
+  ctx.font = traceFont(size);
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.strokeText(char, size/2, size/2 + size*0.02);
+  ctx.restore();
+}
+
+function tracePointFromEvent(e, canvas) {
+  const rect = canvas.getBoundingClientRect();
+  return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+}
+
+function drawTraceSegment(x0, y0, x1, y1) {
+  const ctx = menulisState.ctx, size = menulisState.canvasSize;
+  ctx.save();
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.lineWidth = Math.max(8, size * 0.06);
+  ctx.strokeStyle = TRACE_COLORS[menulisState.round % TRACE_COLORS.length];
+  ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+  ctx.restore();
+}
+
+function markTraceCovered(x, y) {
+  const R = menulisState.canvasSize * 0.05;
+  let changed = false;
+  menulisState.samplePoints.forEach(p => {
+    if (!p.covered && Math.hypot(p.x - x, p.y - y) <= R) { p.covered = true; changed = true; }
+  });
+  if (!changed) return;
+  const total = menulisState.samplePoints.length;
+  const covered = menulisState.samplePoints.filter(p => p.covered).length;
+  const pct = total ? covered / total : 0;
+  updateTraceProgress(pct);
+  if (pct >= TRACE_COVER_THRESHOLD && !menulisState.completed) {
+    menulisState.completed = true;
+    completeTraceChar();
+  }
+}
+
+function updateTraceProgress(pct) {
+  document.getElementById('traceProgressFill').style.width = Math.round(pct*100) + '%';
+}
+
+function initTraceDrawing(canvas) {
+  const start = (e) => {
+    if (menulisState.completed) return;
+    e.preventDefault();
+    menulisState.drawing = true;
+    const p = tracePointFromEvent(e, canvas);
+    menulisState.lastX = p.x; menulisState.lastY = p.y;
+    markTraceCovered(p.x, p.y);
+  };
+  const move = (e) => {
+    if (!menulisState.drawing) return;
+    e.preventDefault();
+    const p = tracePointFromEvent(e, canvas);
+    drawTraceSegment(menulisState.lastX, menulisState.lastY, p.x, p.y);
+    markTraceCovered(p.x, p.y);
+    menulisState.lastX = p.x; menulisState.lastY = p.y;
+  };
+  const end = () => { menulisState.drawing = false; };
+  canvas.addEventListener('pointerdown', start);
+  canvas.addEventListener('pointermove', move);
+  canvas.addEventListener('pointerup', end);
+  canvas.addEventListener('pointerleave', end);
+  canvas.addEventListener('pointercancel', end);
+}
+
+function completeTraceChar() {
+  sfxCorrect(); showFeedback('⭐');
+  menulisState.score++; menulisState.round++;
+  document.getElementById('menulisStars').textContent = '⭐ '+menulisState.score;
+  const char = menulisState.char;
+  const spoken = menulisState.mode === 'angka' ? numSpeak(parseInt(char, 10)) : letterPh(char);
+  setTimeout(() => speak(ts('correct') + ' ' + spoken), 300);
+  setTimeout(nextTraceChar, 1400);
+}
+
+function clearTrace() {
+  if (!menulisState.samplePoints.length) return;
+  sfxTap();
+  menulisState.samplePoints.forEach(p => p.covered = false);
+  menulisState.completed = false;
+  drawTraceGuide();
+  updateTraceProgress(0);
+}
+
+function skipTrace() {
+  sfxTap();
+  menulisState.round++;
+  nextTraceChar();
 }
 
 /* ═══════════════════════════════════════
