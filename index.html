@@ -272,14 +272,22 @@ body {
   color: var(--text); cursor: pointer; transition: all 0.15s ease;
 }
 .spell-slot.filled { border-style: solid; border-color: var(--leaf-soft); background: var(--leaf-soft); }
+.spell-slot.drag-over { border-style: solid; border-color: var(--sky); background: var(--sky-soft); transform: scale(1.08); }
 .spell-tiles { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 24px; }
 .spell-tile {
   width: 52px; height: 52px; border-radius: 14px; border: 3px solid var(--lavender-soft);
   background: var(--card); font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 24px;
-  color: var(--lavender-deep); cursor: pointer; transition: all 0.15s ease; box-shadow: var(--shadow-sm);
+  color: var(--lavender-deep); cursor: grab; transition: all 0.15s ease; box-shadow: var(--shadow-sm);
+  touch-action: none; user-select: none;
 }
 .spell-tile:active { transform: scale(0.92); }
 .spell-tile.used { visibility: hidden; }
+.spell-tile.dragging { opacity: 0.3; }
+.spell-tile--ghost {
+  position: fixed; pointer-events: none; z-index: 9999; opacity: 0.95;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25); transform: scale(1.1);
+}
+.spell-level { text-align: center; font-size: 13px; color: var(--text-soft); font-weight: 700; margin-top: 2px; }
 .spell-wrong { animation: shake 0.4s ease; }
 
 /* ── Count / Number ──────────────── */
@@ -537,7 +545,7 @@ const T = {
     addition: 'Penjumlahan', additionDesc: 'Belajar menambah angka',
     whatPic: 'Gambar apakah ini?',
     howMany: 'Ada berapa',
-    qOf: 'dari', qLabel: 'Soal',
+    qOf: 'dari', qLabel: 'Soal', lettersLabel: 'huruf',
     correct: 'Benar!', tryAgain: 'Coba lagi!',
     perfect: 'Sempurna!', great: 'Hebat sekali!', good: 'Bagus!', retry: 'Ayo coba lagi!',
     score: 'Skor:', stars: 'bintang', back: 'Kembali', best: 'Terbaik',
@@ -565,7 +573,7 @@ const T = {
     addition: 'Addition', additionDesc: 'Learn to add numbers',
     whatPic: 'What is this picture?',
     howMany: 'How many',
-    qOf: 'of', qLabel: 'Question',
+    qOf: 'of', qLabel: 'Question', lettersLabel: 'letters',
     correct: 'Correct!', tryAgain: 'Try again!',
     perfect: 'Perfect!', great: 'Awesome!', good: 'Good job!', retry: 'Try again!',
     score: 'Score:', stars: 'stars', back: 'Back', best: 'Best',
@@ -746,6 +754,8 @@ const WORDS_DATA = {
     {w:'NASI', e:'🍚', s:'Nasi',  p:'nah-see'},
     {w:'DADU', e:'🎲', s:'Dadu',  p:'dah-doo'},
     {w:'BULAN',e:'🌙', s:'Bulan', p:'boo-lahn'},
+    {w:'GAJAH', e:'🐘', s:'Gajah',  p:'gah-jah'},
+    {w:'SEPEDA',e:'🚲', s:'Sepeda', p:'seh-peh-dah'},
   ],
   en: [
     {w:'BALL',  e:'⚽', s:'Ball',   p:'bol'},
@@ -764,6 +774,8 @@ const WORDS_DATA = {
     {w:'MOON',  e:'🌙', s:'Moon',   p:'mun'},
     {w:'DICE',  e:'🎲', s:'Dice',   p:'dais'},
     {w:'STAR',  e:'⭐', s:'Star',   p:'star'},
+    {w:'ELEPHANT', e:'🐘', s:'Elephant', p:'elefant'},
+    {w:'BICYCLE',  e:'🚲', s:'Bicycle',  p:'baisikel'},
   ],
 };
 
@@ -1282,12 +1294,24 @@ function startSusunKata() {
   nextSusunRound();
 }
 
+/* Progressively favor longer words as rounds advance (round 0 = shortest, last round = longest). */
+function pickWordForRound(r) {
+  const wl = words();
+  const avail = wl.map((_,i) => i).filter(i => !susunState.used.includes(i));
+  const lens = wl.map(w => w.w.length);
+  const minLen = Math.min(...lens), maxLen = Math.max(...lens);
+  const progress = TOTAL_QUIZ > 1 ? r / (TOTAL_QUIZ - 1) : 0;
+  const targetLen = Math.round(minLen + progress * (maxLen - minLen));
+  let pool = avail.filter(i => wl[i].w.length === targetLen);
+  if (!pool.length) pool = avail.filter(i => wl[i].w.length <= targetLen);
+  if (!pool.length) pool = avail;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
 function nextSusunRound() {
   if (susunState.round >= TOTAL_QUIZ) { showComplete('susun', susunState.score, 'membaca-menu'); return; }
   const wl = words();
-  const avail = wl.filter((_,i) => !susunState.used.includes(i));
-  const ci = Math.floor(Math.random()*avail.length);
-  const cIdx = wl.indexOf(avail[ci]);
+  const cIdx = pickWordForRound(susunState.round);
   susunState.used.push(cIdx);
   const entry = wl[cIdx];
   susunState.word = entry;
@@ -1309,27 +1333,85 @@ function renderSusun() {
         <span class="quiz-emoji">${entry.e}</span>
         <div class="quiz-question">${t('whatPic')}</div>
         <div class="spell-slots" id="spellSlots">
-          ${susunState.slots.map((c,i) => `<div class="spell-slot ${c?'filled':''}" onclick="removeSlot(${i})">${c||''}</div>`).join('')}
+          ${susunState.slots.map((c,i) => `<div class="spell-slot ${c?'filled':''}" data-idx="${i}" onclick="removeSlot(${i})">${c||''}</div>`).join('')}
         </div>
       </div>
       <div class="spell-tiles" id="spellTiles">
-        ${susunState.tiles.map((tl,j) => `<button class="spell-tile ${tl.used?'used':''}" onclick="placeTile(${j})" ${tl.used?'disabled':''}>${tl.char}</button>`).join('')}
+        ${susunState.tiles.map((tl,j) => `<button class="spell-tile ${tl.used?'used':''}" data-idx="${j}" ${tl.used?'disabled':''}>${tl.char}</button>`).join('')}
       </div>
       <div class="quiz-score">${t('qLabel')} ${susunState.round+1} ${t('qOf')} ${TOTAL_QUIZ}</div>
+      <div class="spell-level">🔤 ${entry.w.length} ${t('lettersLabel')}</div>
     </div>`;
 }
 
-function placeTile(j) {
+function placeTile(j, slotIdx) {
   const tile = susunState.tiles[j];
-  if (tile.used) return;
-  const idx = susunState.slots.findIndex(c => c===null);
-  if (idx===-1) return;
+  if (!tile || tile.used) return;
+  if (slotIdx == null) slotIdx = susunState.slots.findIndex(c => c===null);
+  if (slotIdx === -1 || susunState.slots[slotIdx] !== null) return;
   sfxTap();
-  susunState.slots[idx] = tile.char;
-  susunState.mapping[idx] = j;
+  susunState.slots[slotIdx] = tile.char;
+  susunState.mapping[slotIdx] = j;
   tile.used = true;
   renderSusun();
   if (susunState.slots.every(c => c!==null)) checkSusun();
+}
+
+/* ── Drag & drop (pointer events, mouse + touch) ── */
+let spellDrag = null;
+
+function initSusunDrag() {
+  document.getElementById('susunContent').addEventListener('pointerdown', (e) => {
+    const tileBtn = e.target.closest('.spell-tile');
+    if (!tileBtn || tileBtn.disabled) return;
+    const j = parseInt(tileBtn.dataset.idx, 10);
+    if (!susunState.tiles[j] || susunState.tiles[j].used) return;
+    e.preventDefault();
+    const rect = tileBtn.getBoundingClientRect();
+    const ghost = tileBtn.cloneNode(true);
+    ghost.classList.add('spell-tile--ghost');
+    ghost.style.left = rect.left + 'px';
+    ghost.style.top = rect.top + 'px';
+    ghost.style.width = rect.width + 'px';
+    ghost.style.height = rect.height + 'px';
+    document.body.appendChild(ghost);
+    tileBtn.classList.add('dragging');
+    spellDrag = {
+      j, tileBtn, ghost, moved: false,
+      startX: e.clientX, startY: e.clientY,
+      offX: e.clientX - rect.left, offY: e.clientY - rect.top,
+    };
+    document.addEventListener('pointermove', onSpellDragMove);
+    document.addEventListener('pointerup', onSpellDragEnd, { once: true });
+  });
+}
+
+function onSpellDragMove(e) {
+  if (!spellDrag) return;
+  if (Math.abs(e.clientX - spellDrag.startX) > 4 || Math.abs(e.clientY - spellDrag.startY) > 4) spellDrag.moved = true;
+  spellDrag.ghost.style.left = (e.clientX - spellDrag.offX) + 'px';
+  spellDrag.ghost.style.top = (e.clientY - spellDrag.offY) + 'px';
+  document.querySelectorAll('.spell-slot.drag-over').forEach(s => s.classList.remove('drag-over'));
+  const under = document.elementFromPoint(e.clientX, e.clientY);
+  const slot = under && under.closest('.spell-slot');
+  if (slot && !slot.classList.contains('filled')) slot.classList.add('drag-over');
+}
+
+function onSpellDragEnd(e) {
+  document.removeEventListener('pointermove', onSpellDragMove);
+  if (!spellDrag) return;
+  const { j, tileBtn, ghost, moved } = spellDrag;
+  document.querySelectorAll('.spell-slot.drag-over').forEach(s => s.classList.remove('drag-over'));
+  ghost.remove();
+  spellDrag = null;
+  const under = document.elementFromPoint(e.clientX, e.clientY);
+  const slotEl = under && under.closest('.spell-slot');
+  if (slotEl && susunState.slots[parseInt(slotEl.dataset.idx,10)] === null) {
+    placeTile(j, parseInt(slotEl.dataset.idx, 10));
+    return;
+  }
+  if (tileBtn) tileBtn.classList.remove('dragging');
+  if (!moved) placeTile(j);
 }
 
 function removeSlot(i) {
@@ -1601,6 +1683,7 @@ initStars();
 initHuruf();
 initKons();
 initSukuKata();
+initSusunDrag();
 buildReadMenu();
 buildCountMenu();
 updateHomeStars();
