@@ -35,11 +35,30 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
-  background: var(--ground); color: var(--text);
+  background: linear-gradient(160deg, #EAF7FF 0%, var(--ground) 40%, #FFF3E4 72%, #F6EEFF 100%);
+  color: var(--text);
   min-height: 100vh; overflow-x: hidden;
   -webkit-tap-highlight-color: transparent; user-select: none;
 }
-.app { max-width: 520px; margin: 0 auto; padding: 16px 20px 80px; min-height: 100vh; }
+.app { max-width: 520px; margin: 0 auto; padding: 16px 20px 80px; min-height: 100vh; position: relative; }
+
+/* ── Background decoration ───────── */
+.bg-blobs { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.bg-blob {
+  position: absolute; border-radius: 50%; filter: blur(50px);
+  animation: blobDrift 22s ease-in-out infinite alternate;
+}
+.bg-blob--a { width: 240px; height: 240px; top: -70px; left: -60px; background: var(--sky-soft); opacity: 0.55; animation-duration: 20s; }
+.bg-blob--b { width: 280px; height: 280px; top: 30%; right: -90px; background: var(--lavender-soft); opacity: 0.5; animation-duration: 26s; animation-delay: -6s; }
+.bg-blob--c { width: 220px; height: 220px; bottom: -60px; left: 10%; background: #FFE8A3; opacity: 0.45; animation-duration: 24s; animation-delay: -3s; }
+.bg-blob--d { width: 200px; height: 200px; bottom: 12%; right: 8%; background: var(--leaf-soft); opacity: 0.4; animation-duration: 28s; animation-delay: -12s; }
+@keyframes blobDrift {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(18px, -22px) scale(1.08); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bg-blob { animation: none; }
+}
 
 /* ── Header ──────────────────────── */
 .screen-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding: 4px 0; }
@@ -83,6 +102,9 @@ body {
 .home-card--count { border-color: var(--lavender-soft); }
 .home-card--count::before { background: linear-gradient(90deg, var(--lavender), var(--lavender-deep)); }
 .home-card:active { transform: scale(0.96); }
+@media (hover: hover) {
+  .home-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+}
 .home-card__icon { font-size: 48px; line-height: 1; display: block; margin-bottom: 12px; }
 .home-card__label { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 18px; }
 .home-card__desc { font-size: 13px; color: var(--text-soft); margin-top: 4px; font-weight: 600; }
@@ -120,6 +142,9 @@ body {
   border: 2px solid transparent;
 }
 .menu-card:active { transform: scale(0.97); box-shadow: var(--shadow-md); }
+@media (hover: hover) {
+  .menu-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+}
 .menu-card__icon {
   width: 56px; height: 56px; border-radius: 16px;
   display: flex; align-items: center; justify-content: center;
@@ -368,6 +393,12 @@ body {
 </head>
 <body>
 <div class="app" id="app">
+  <div class="bg-blobs" aria-hidden="true">
+    <span class="bg-blob bg-blob--a"></span>
+    <span class="bg-blob bg-blob--b"></span>
+    <span class="bg-blob bg-blob--c"></span>
+    <span class="bg-blob bg-blob--d"></span>
+  </div>
 
   <!-- HOME -->
   <div id="screen-home" class="screen">
