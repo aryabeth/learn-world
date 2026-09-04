@@ -136,6 +136,10 @@ body {
 .mc-angka .menu-card__icon { background: var(--lavender-soft); }
 .mc-hitung .menu-card__icon { background: #FFD8D8; }
 .mc-tambah .menu-card__icon { background: #D0EBFF; }
+.mc-konsonan .menu-card__icon { background: #FFD8D8; }
+.mc-susun .menu-card__icon { background: var(--lavender-soft); }
+
+.menu-card__best { font-size: 12px; color: var(--leaf); font-weight: 700; margin-top: 3px; }
 
 /* ── Speaker & mute buttons ──────── */
 .speak-btn {
@@ -259,6 +263,25 @@ body {
 .quiz-opt.wrong { background: #FFE3E3; border-color: var(--berry); color: var(--berry-deep); animation: shake 0.4s ease; }
 .quiz-score { text-align: center; font-size: 14px; color: var(--text-soft); font-weight: 700; }
 
+/* ── Spell (susun kata) ──────────── */
+.spell-slots { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 20px 0 4px; }
+.spell-slot {
+  width: 48px; height: 56px; border-radius: 12px; border: 3px dashed #E9ECEF;
+  background: var(--card); display: flex; align-items: center; justify-content: center;
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 26px;
+  color: var(--text); cursor: pointer; transition: all 0.15s ease;
+}
+.spell-slot.filled { border-style: solid; border-color: var(--leaf-soft); background: var(--leaf-soft); }
+.spell-tiles { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 24px; }
+.spell-tile {
+  width: 52px; height: 52px; border-radius: 14px; border: 3px solid var(--lavender-soft);
+  background: var(--card); font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 24px;
+  color: var(--lavender-deep); cursor: pointer; transition: all 0.15s ease; box-shadow: var(--shadow-sm);
+}
+.spell-tile:active { transform: scale(0.92); }
+.spell-tile.used { visibility: hidden; }
+.spell-wrong { animation: shake 0.4s ease; }
+
 /* ── Count / Number ──────────────── */
 .count-objects { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 24px; min-height: 120px; align-items: center; }
 .count-obj { font-size: 36px; animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) backwards; }
@@ -345,6 +368,7 @@ body {
       <span class="home-mascot" onclick="speakMascot()">🦉</span>
       <h1 class="home-greeting" id="homeGreeting">Dunia Belajar</h1>
       <p class="home-sub" id="homeSub">Hai! Mau belajar apa hari ini?</p>
+      <div class="star-badge" id="homeStarsBadge" style="display:inline-flex;margin-top:14px" hidden>⭐ <span id="homeStarsVal">0</span></div>
     </div>
     <div class="home-cards" style="position:relative;z-index:1">
       <div class="home-card home-card--read" onclick="go('membaca-menu')">
@@ -403,6 +427,25 @@ body {
     <div class="vowel-grid" id="vowelGrid"></div>
   </div>
 
+  <!-- HURUF KONSONAN -->
+  <div id="screen-konsonan" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('membaca-menu')">‹</button>
+      <h2 class="screen-title" id="konsTitle">Huruf Konsonan</h2>
+    </div>
+    <div class="vowel-display">
+      <span class="vowel-letter" id="konsLetter">B</span>
+      <div class="vowel-example">
+        <span class="vowel-emoji" id="konsEmoji">⚽</span>
+        <span class="vowel-word" id="konsWord"><em>B</em>ola</span>
+      </div>
+      <div class="vowel-speak-row">
+        <button class="speak-btn" id="konsSpeakBtn" onclick="speakKonsCurrent()">🔊</button>
+      </div>
+    </div>
+    <div class="vowel-grid" id="konsGrid"></div>
+  </div>
+
   <!-- SUKU KATA -->
   <div id="screen-sukukata" class="screen" hidden>
     <div class="screen-header">
@@ -422,6 +465,16 @@ body {
       <div class="star-badge" id="tebakStars">⭐ 0</div>
     </div>
     <div id="tebakContent"></div>
+  </div>
+
+  <!-- SUSUN KATA -->
+  <div id="screen-susun" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('membaca-menu')">‹</button>
+      <h2 class="screen-title" id="susunTitle">Susun Kata</h2>
+      <div class="star-badge" id="susunStars">⭐ 0</div>
+    </div>
+    <div id="susunContent"></div>
   </div>
 
   <!-- KENAL ANGKA -->
@@ -475,8 +528,10 @@ const T = {
     counting: 'Menghitung', countingDesc: 'Angka & hitung',
     menuRead: '📖 Membaca', menuCount: '🔢 Menghitung',
     vowels: 'Huruf Vokal', vowelsDesc: 'Belajar A, I, U, E, O',
+    consonants: 'Huruf Konsonan', consonantsDesc: 'Belajar B sampai Z',
     syllables: 'Suku Kata', syllablesDesc: 'Gabungkan huruf jadi suku kata',
     wordGuess: 'Tebak Kata', wordGuessDesc: 'Cocokkan gambar dengan kata',
+    spellWord: 'Susun Kata', spellWordDesc: 'Susun huruf jadi kata',
     numbers: 'Kenal Angka', numbersDesc: 'Belajar angka 1 sampai 10',
     countObj: 'Hitung Benda', countObjDesc: 'Hitung berapa banyak benda',
     addition: 'Penjumlahan', additionDesc: 'Belajar menambah angka',
@@ -485,10 +540,11 @@ const T = {
     qOf: 'dari', qLabel: 'Soal',
     correct: 'Benar!', tryAgain: 'Coba lagi!',
     perfect: 'Sempurna!', great: 'Hebat sekali!', good: 'Bagus!', retry: 'Ayo coba lagi!',
-    score: 'Skor:', stars: 'bintang', back: 'Kembali',
+    score: 'Skor:', stars: 'bintang', back: 'Kembali', best: 'Terbaik',
     numLabel: 'Angka', plus: 'tambah', equals: 'sama dengan', there: 'Ada',
     youGot: 'Kamu dapat',
     startWord: 'Tebak kata!', startCount: 'Hitung benda!', startAdd: 'Penjumlahan!',
+    startSpell: 'Susun kata!',
     addQ: '= berapa?',
     speechLang: 'id-ID',
   },
@@ -500,8 +556,10 @@ const T = {
     counting: 'Counting', countingDesc: 'Numbers & count',
     menuRead: '📖 Reading', menuCount: '🔢 Counting',
     vowels: 'Vowels', vowelsDesc: 'Learn A, I, U, E, O',
+    consonants: 'Consonants', consonantsDesc: 'Learn B to Z',
     syllables: 'Syllables', syllablesDesc: 'Combine letters into syllables',
     wordGuess: 'Word Guess', wordGuessDesc: 'Match pictures with words',
+    spellWord: 'Spell the Word', spellWordDesc: 'Arrange letters into words',
     numbers: 'Know Numbers', numbersDesc: 'Learn numbers 1 to 10',
     countObj: 'Count Objects', countObjDesc: 'Count how many objects',
     addition: 'Addition', additionDesc: 'Learn to add numbers',
@@ -510,10 +568,11 @@ const T = {
     qOf: 'of', qLabel: 'Question',
     correct: 'Correct!', tryAgain: 'Try again!',
     perfect: 'Perfect!', great: 'Awesome!', good: 'Good job!', retry: 'Try again!',
-    score: 'Score:', stars: 'stars', back: 'Back',
+    score: 'Score:', stars: 'stars', back: 'Back', best: 'Best',
     numLabel: 'Number', plus: 'plus', equals: 'equals', there: 'There are',
     youGot: 'You got',
     startWord: 'Guess the word!', startCount: 'Count the objects!', startAdd: 'Addition!',
+    startSpell: 'Spell the word!',
     addQ: '= how many?',
     speechLang: 'en-US',
   }
@@ -538,7 +597,7 @@ const PH = {
   numLabel: 'ahng-kah', plus: 'tahm-bah', equals: 'sah-mah dehng-ahn',
   there: 'ah-dah', youGot: 'kah-moo dah-paht', stars: 'been-tahng',
   startWord: 'teh-bahk kah-tah!', startCount: 'hee-toong ben-dah!',
-  startAdd: 'pen-joom-lah-hahn!',
+  startAdd: 'pen-joom-lah-hahn!', startSpell: 'soo-soon kah-tah!',
   mascot: 'high! seh-lah-maht dah-tahng dee doo-nee-ah beh-lah-jar! mah-oo beh-lah-jar ah-pah hah-ree ee-nee?',
 };
 
@@ -562,7 +621,7 @@ const PH_EN = {
   numLabel: 'namber', plus: 'plas', equals: 'ikwals',
   there: 'der ar', youGot: 'yu got', stars: 'stars',
   startWord: 'ges de word!', startCount: 'kaunt de objek!',
-  startAdd: 'adisyen!',
+  startAdd: 'adisyen!', startSpell: 'spel de word!',
   mascot: 'hai! welkam tu lerning world! wat du yu won tu lern tudei?',
 };
 
@@ -634,6 +693,41 @@ const VOWELS_DATA = {
   ],
 };
 
+const CONSONANTS_DATA = {
+  id: [
+    { letter:'B', emoji:'⚽', hl:'<em>B</em>ola',   sp:'B, seperti Bola',   ph:'beh, seh-pehr-tee boh-lah' },
+    { letter:'C', emoji:'🦎', hl:'<em>C</em>icak',  sp:'C, seperti Cicak',  ph:'cheh, seh-pehr-tee chee-chahk' },
+    { letter:'D', emoji:'🎲', hl:'<em>D</em>adu',   sp:'D, seperti Dadu',   ph:'deh, seh-pehr-tee dah-doo' },
+    { letter:'G', emoji:'🐘', hl:'<em>G</em>ajah',  sp:'G, seperti Gajah',  ph:'gheh, seh-pehr-tee gah-jah' },
+    { letter:'H', emoji:'❤️', hl:'<em>H</em>ati',   sp:'H, seperti Hati',   ph:'hah, seh-pehr-tee hah-tee' },
+    { letter:'J', emoji:'⏰', hl:'<em>J</em>am',    sp:'J, seperti Jam',    ph:'jeh, seh-pehr-tee jahm' },
+    { letter:'K', emoji:'🐱', hl:'<em>K</em>ucing', sp:'K, seperti Kucing', ph:'kah, seh-pehr-tee koo-ching' },
+    { letter:'L', emoji:'💡', hl:'<em>L</em>ampu',  sp:'L, seperti Lampu',  ph:'ell, seh-pehr-tee lahm-poo' },
+    { letter:'M', emoji:'🚗', hl:'<em>M</em>obil',  sp:'M, seperti Mobil',  ph:'em, seh-pehr-tee moh-beel' },
+    { letter:'N', emoji:'🍚', hl:'<em>N</em>asi',   sp:'N, seperti Nasi',   ph:'en, seh-pehr-tee nah-see' },
+    { letter:'P', emoji:'🍌', hl:'<em>P</em>isang', sp:'P, seperti Pisang', ph:'peh, seh-pehr-tee pee-sahng' },
+    { letter:'R', emoji:'🍞', hl:'<em>R</em>oti',   sp:'R, seperti Roti',   ph:'air, seh-pehr-tee roh-tee' },
+    { letter:'S', emoji:'🐄', hl:'<em>S</em>api',   sp:'S, seperti Sapi',   ph:'ess, seh-pehr-tee sah-pee' },
+    { letter:'T', emoji:'🎩', hl:'<em>T</em>opi',   sp:'T, seperti Topi',   ph:'teh, seh-pehr-tee toh-pee' },
+  ],
+  en: [
+    { letter:'B', emoji:'⚽', hl:'<em>B</em>all',  sp:'B, like Ball',  ph:'bi, laik bol' },
+    { letter:'C', emoji:'🐱', hl:'<em>C</em>at',   sp:'C, like Cat',   ph:'si, laik ket' },
+    { letter:'D', emoji:'🐶', hl:'<em>D</em>og',   sp:'D, like Dog',   ph:'di, laik dog' },
+    { letter:'G', emoji:'🐐', hl:'<em>G</em>oat',  sp:'G, like Goat',  ph:'ji, laik gout' },
+    { letter:'H', emoji:'🎩', hl:'<em>H</em>at',   sp:'H, like Hat',   ph:'eic, laik het' },
+    { letter:'J', emoji:'🧃', hl:'<em>J</em>uice', sp:'J, like Juice', ph:'jei, laik jus' },
+    { letter:'K', emoji:'🪁', hl:'<em>K</em>ite',  sp:'K, like Kite',  ph:'kei, laik kait' },
+    { letter:'L', emoji:'🦁', hl:'<em>L</em>ion',  sp:'L, like Lion',  ph:'el, laik laion' },
+    { letter:'M', emoji:'🌙', hl:'<em>M</em>oon',  sp:'M, like Moon',  ph:'em, laik mun' },
+    { letter:'N', emoji:'🪺', hl:'<em>N</em>est',  sp:'N, like Nest',  ph:'en, laik nest' },
+    { letter:'P', emoji:'🐷', hl:'<em>P</em>ig',   sp:'P, like Pig',   ph:'pi, laik pig' },
+    { letter:'R', emoji:'🌧️', hl:'<em>R</em>ain',  sp:'R, like Rain',  ph:'ar, laik rein' },
+    { letter:'S', emoji:'☀️', hl:'<em>S</em>un',   sp:'S, like Sun',   ph:'es, laik san' },
+    { letter:'T', emoji:'🐯', hl:'<em>T</em>iger', sp:'T, like Tiger', ph:'ti, laik taigar' },
+  ],
+};
+
 const WORDS_DATA = {
   id: [
     {w:'BOLA', e:'⚽', s:'Bola',  p:'boh-lah'},
@@ -678,7 +772,8 @@ const NUM_WORDS = {
   en: ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'],
 };
 
-function vowels()  { return VOWELS_DATA[lang]; }
+function vowels()     { return VOWELS_DATA[lang]; }
+function consonants() { return CONSONANTS_DATA[lang]; }
 function words()   { return WORDS_DATA[lang]; }
 function numWord(n){ return NUM_WORDS[lang][n]; }
 
@@ -832,8 +927,10 @@ function refreshUI() {
   buildCountMenu();
 
   document.getElementById('hurufTitle').textContent = t('vowels');
+  document.getElementById('konsTitle').textContent = t('consonants');
   document.getElementById('sukuTitle').textContent = t('syllables');
   document.getElementById('tebakTitle').textContent = t('wordGuess');
+  document.getElementById('susunTitle').textContent = t('spellWord');
   document.getElementById('angkaTitle').textContent = t('numbers');
   document.getElementById('hitungTitle').textContent = t('countObj');
   document.getElementById('tambahTitle').textContent = t('addition');
@@ -845,6 +942,14 @@ function refreshUI() {
   document.getElementById('vowelLetter').style.color = '#4DABF7';
   document.getElementById('vowelEmoji').textContent = v.emoji;
   document.getElementById('vowelWord').innerHTML = v.hl;
+
+  currentKons = 0;
+  initKons();
+  const k = consonants()[0];
+  document.getElementById('konsLetter').textContent = k.letter;
+  document.getElementById('konsLetter').style.color = '#4DABF7';
+  document.getElementById('konsEmoji').textContent = k.emoji;
+  document.getElementById('konsWord').innerHTML = k.hl;
 }
 
 function buildReadMenu() {
@@ -854,6 +959,13 @@ function buildReadMenu() {
       <div class="menu-card__text">
         <div class="menu-card__title">${t('vowels')}</div>
         <div class="menu-card__desc">${t('vowelsDesc')}</div>
+      </div><span class="menu-card__arrow">›</span>
+    </div>
+    <div class="menu-card mc-konsonan" onclick="go('konsonan');speakKonsCurrent();">
+      <div class="menu-card__icon">🔡</div>
+      <div class="menu-card__text">
+        <div class="menu-card__title">${t('consonants')}</div>
+        <div class="menu-card__desc">${t('consonantsDesc')}</div>
       </div><span class="menu-card__arrow">›</span>
     </div>
     <div class="menu-card mc-suku" onclick="go('sukukata')">
@@ -868,6 +980,15 @@ function buildReadMenu() {
       <div class="menu-card__text">
         <div class="menu-card__title">${t('wordGuess')}</div>
         <div class="menu-card__desc">${t('wordGuessDesc')}</div>
+        ${bestLine('tebak')}
+      </div><span class="menu-card__arrow">›</span>
+    </div>
+    <div class="menu-card mc-susun" onclick="startSusunKata()">
+      <div class="menu-card__icon">✍️</div>
+      <div class="menu-card__text">
+        <div class="menu-card__title">${t('spellWord')}</div>
+        <div class="menu-card__desc">${t('spellWordDesc')}</div>
+        ${bestLine('susun')}
       </div><span class="menu-card__arrow">›</span>
     </div>`;
 }
@@ -886,6 +1007,7 @@ function buildCountMenu() {
       <div class="menu-card__text">
         <div class="menu-card__title">${t('countObj')}</div>
         <div class="menu-card__desc">${t('countObjDesc')}</div>
+        ${bestLine('hitung')}
       </div><span class="menu-card__arrow">›</span>
     </div>
     <div class="menu-card mc-tambah" onclick="startPenjumlahan()">
@@ -893,6 +1015,7 @@ function buildCountMenu() {
       <div class="menu-card__text">
         <div class="menu-card__title">${t('addition')}</div>
         <div class="menu-card__desc">${t('additionDesc')}</div>
+        ${bestLine('tambah')}
       </div><span class="menu-card__arrow">›</span>
     </div>`;
 }
@@ -990,6 +1113,41 @@ function selectVowel(i) {
 }
 
 function speakVowelCurrent() { speakBtn(vowelSpeak(vowels()[currentVowel]), 'vowelSpeakBtn'); }
+
+/* ═══════════════════════════════════════
+   HURUF KONSONAN
+   ═══════════════════════════════════════ */
+
+let currentKons = 0;
+
+function initKons() {
+  const grid = document.getElementById('konsGrid');
+  grid.innerHTML = '';
+  consonants().forEach((k,i) => {
+    const btn = document.createElement('button');
+    btn.className = 'vowel-btn' + (i===0?' active':'');
+    btn.textContent = k.letter;
+    btn.onclick = () => selectKons(i);
+    grid.appendChild(btn);
+  });
+}
+
+function selectKons(i) {
+  sfxTap(); currentKons = i;
+  const k = consonants()[i];
+  const colors = ['#4DABF7','#51CF66','#CC5DE8','#FF922B','#FF6B6B','#20C997','#F06595'];
+  document.getElementById('konsLetter').textContent = k.letter;
+  document.getElementById('konsLetter').style.color = colors[i % colors.length];
+  document.getElementById('konsEmoji').textContent = k.emoji;
+  document.getElementById('konsWord').innerHTML = k.hl;
+  document.querySelectorAll('#konsGrid .vowel-btn').forEach((b,j) => {
+    b.classList.toggle('active', j===i);
+    b.style.background = j===i ? colors[i % colors.length] : '';
+  });
+  speakBtn(vowelSpeak(k), 'konsSpeakBtn');
+}
+
+function speakKonsCurrent() { speakBtn(vowelSpeak(consonants()[currentKons]), 'konsSpeakBtn'); }
 
 /* ═══════════════════════════════════════
    SUKU KATA
@@ -1108,6 +1266,105 @@ function checkTebak(btn, cw, cIdx) {
     sfxWrong(); btn.classList.add('wrong');
     speak(ts('tryAgain'));
     setTimeout(() => btn.classList.remove('wrong'), 500);
+  }
+}
+
+/* ═══════════════════════════════════════
+   SUSUN KATA
+   ═══════════════════════════════════════ */
+
+let susunState = { score:0, round:0, used:[] };
+
+function startSusunKata() {
+  susunState = { score:0, round:0, used:[] };
+  go('susun');
+  speak(ts('startSpell'));
+  nextSusunRound();
+}
+
+function nextSusunRound() {
+  if (susunState.round >= TOTAL_QUIZ) { showComplete('susun', susunState.score, 'membaca-menu'); return; }
+  const wl = words();
+  const avail = wl.filter((_,i) => !susunState.used.includes(i));
+  const ci = Math.floor(Math.random()*avail.length);
+  const cIdx = wl.indexOf(avail[ci]);
+  susunState.used.push(cIdx);
+  const entry = wl[cIdx];
+  susunState.word = entry;
+  const letters = entry.w.split('');
+  let shuffled;
+  do { shuffled = shuffle(letters); } while (letters.length > 1 && shuffled.join('') === entry.w);
+  susunState.tiles = shuffled.map(c => ({ char:c, used:false }));
+  susunState.slots = Array(letters.length).fill(null);
+  susunState.mapping = Array(letters.length).fill(null);
+  document.getElementById('susunStars').textContent = '⭐ '+susunState.score;
+  renderSusun();
+}
+
+function renderSusun() {
+  const entry = susunState.word;
+  document.getElementById('susunContent').innerHTML = `
+    <div class="quiz-area">
+      <div class="quiz-prompt">
+        <span class="quiz-emoji">${entry.e}</span>
+        <div class="quiz-question">${t('whatPic')}</div>
+        <div class="spell-slots" id="spellSlots">
+          ${susunState.slots.map((c,i) => `<div class="spell-slot ${c?'filled':''}" onclick="removeSlot(${i})">${c||''}</div>`).join('')}
+        </div>
+      </div>
+      <div class="spell-tiles" id="spellTiles">
+        ${susunState.tiles.map((tl,j) => `<button class="spell-tile ${tl.used?'used':''}" onclick="placeTile(${j})" ${tl.used?'disabled':''}>${tl.char}</button>`).join('')}
+      </div>
+      <div class="quiz-score">${t('qLabel')} ${susunState.round+1} ${t('qOf')} ${TOTAL_QUIZ}</div>
+    </div>`;
+}
+
+function placeTile(j) {
+  const tile = susunState.tiles[j];
+  if (tile.used) return;
+  const idx = susunState.slots.findIndex(c => c===null);
+  if (idx===-1) return;
+  sfxTap();
+  susunState.slots[idx] = tile.char;
+  susunState.mapping[idx] = j;
+  tile.used = true;
+  renderSusun();
+  if (susunState.slots.every(c => c!==null)) checkSusun();
+}
+
+function removeSlot(i) {
+  if (susunState.slots[i]===null) return;
+  sfxTap();
+  const j = susunState.mapping[i];
+  susunState.tiles[j].used = false;
+  susunState.slots[i] = null;
+  susunState.mapping[i] = null;
+  renderSusun();
+}
+
+function checkSusun() {
+  const joined = susunState.slots.join('');
+  const entry = susunState.word;
+  if (joined === entry.w) {
+    sfxCorrect(); showFeedback('⭐');
+    susunState.score++; susunState.round++;
+    document.getElementById('susunStars').textContent = '⭐ '+susunState.score;
+    document.querySelectorAll('#spellTiles .spell-tile').forEach(b => b.style.pointerEvents='none');
+    document.querySelectorAll('#spellSlots .spell-slot').forEach(b => { b.style.pointerEvents='none'; b.classList.add('filled'); });
+    setTimeout(() => speak(ts('correct')+' '+wordSpeak(entry)), 300);
+    setTimeout(nextSusunRound, 1400);
+  } else {
+    sfxWrong();
+    const slotsEl = document.getElementById('spellSlots');
+    slotsEl.classList.add('spell-wrong');
+    speak(ts('tryAgain'));
+    setTimeout(() => {
+      slotsEl.classList.remove('spell-wrong');
+      susunState.slots = susunState.slots.map(() => null);
+      susunState.tiles.forEach(tl => tl.used = false);
+      susunState.mapping = susunState.mapping.map(() => null);
+      renderSusun();
+    }, 700);
   }
 }
 
@@ -1263,6 +1520,7 @@ function checkTambah(btn, correct, a, b) {
    ═══════════════════════════════════════ */
 
 function showComplete(id, score, backTo) {
+  saveProgress(id, score);
   const pct = Math.round((score/TOTAL_QUIZ)*100);
   const emoji = pct===100?'🏆':pct>=75?'🌟':pct>=50?'👏':'💪';
   const key = pct===100?'perfect':pct>=75?'great':pct>=50?'good':'retry';
@@ -1277,6 +1535,42 @@ function showComplete(id, score, backTo) {
   setTimeout(() => speak(
     ts(key) + ' ' + ts('youGot') + ' ' + numSpeak(score) + ' ' + ts('stars') + '!'
   ), 400);
+}
+
+/* ═══════════════════════════════════════
+   PROGRESS (localStorage)
+   ═══════════════════════════════════════ */
+
+const PROGRESS_KEY = 'learnWorldProgress_v1';
+
+function loadProgress() {
+  try { return JSON.parse(localStorage.getItem(PROGRESS_KEY)) || {}; }
+  catch (e) { return {}; }
+}
+
+function saveProgress(id, score) {
+  try {
+    const p = loadProgress();
+    if (p[id] === undefined || score > p[id]) p[id] = score;
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
+  } catch (e) {}
+  updateHomeStars();
+}
+
+function bestLine(id) {
+  const p = loadProgress();
+  if (p[id] === undefined) return '';
+  return `<div class="menu-card__best">🏆 ${t('best')}: ${p[id]}/${TOTAL_QUIZ}</div>`;
+}
+
+function updateHomeStars() {
+  const p = loadProgress();
+  const total = Object.values(p).reduce((a,b) => a+b, 0);
+  const badge = document.getElementById('homeStarsBadge');
+  const val = document.getElementById('homeStarsVal');
+  if (!badge || !val) return;
+  val.textContent = total;
+  badge.hidden = total <= 0;
 }
 
 /* ═══════════════════════════════════════
@@ -1305,9 +1599,11 @@ function generateOptions(correct, min, max) {
 initVoice();
 initStars();
 initHuruf();
+initKons();
 initSukuKata();
 buildReadMenu();
 buildCountMenu();
+updateHomeStars();
 </script>
 </body>
 </html>
