@@ -1629,7 +1629,7 @@ function setupTraceCanvas() {
   initTraceDrawing(canvas);
 }
 
-function traceFont(size) { return `bold ${Math.floor(size*0.72)}px 'Fredoka', sans-serif`; }
+function traceFont(size) { return `400 ${Math.floor(size*0.72)}px 'Fredoka', sans-serif`; }
 
 function computeGuidePoints(char, size) {
   const off = document.createElement('canvas');
@@ -1655,8 +1655,8 @@ function drawTraceGuide() {
   const ctx = menulisState.ctx, size = menulisState.canvasSize, char = menulisState.char;
   ctx.clearRect(0, 0, size, size);
   ctx.save();
-  ctx.setLineDash([size*0.045, size*0.035]);
-  ctx.lineWidth = Math.max(6, size * 0.05);
+  ctx.setLineDash([size*0.04, size*0.03]);
+  ctx.lineWidth = Math.max(2.5, size * 0.016);
   ctx.lineCap = 'round';
   ctx.strokeStyle = '#ADB5BD';
   ctx.font = traceFont(size);
