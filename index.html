@@ -333,6 +333,11 @@ body {
   height: 100%; width: 0%; border-radius: 8px;
   background: linear-gradient(90deg, var(--leaf), var(--sky)); transition: width 0.2s ease;
 }
+.trace-canvas.wrong { border-color: var(--berry); animation: shake 0.4s ease; }
+.trace-error {
+  color: var(--berry-deep); font-weight: 700; font-size: 14px; text-align: center;
+  margin-top: 10px; animation: fadeIn 0.2s ease;
+}
 .trace-actions { display: flex; justify-content: center; gap: 12px; margin-top: 18px; }
 .trace-btn {
   font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 15px;
@@ -797,6 +802,7 @@ const T = {
     startWord: 'Tebak kata!', startCount: 'Hitung benda!', startAdd: 'Penjumlahan!',
     startSpell: 'Susun kata!', startWriteL: 'Menulis huruf!', startWriteN: 'Menulis angka!',
     traceHint: 'Ikuti garis putus-putus!', clearBtn: 'Hapus', skipBtn: 'Lewati',
+    tryAgainDraw: '❌ Belum pas, coba lagi ya!',
     addQ: '= berapa?',
     adventure: 'Petualangan Huruf', adventureDesc: 'Jelajahi & temukan huruf',
     advMenuTitle: '🗺️ Petualangan Huruf',
@@ -853,6 +859,7 @@ const T = {
     startWord: 'Guess the word!', startCount: 'Count the objects!', startAdd: 'Addition!',
     startSpell: 'Spell the word!', startWriteL: 'Write letters!', startWriteN: 'Write numbers!',
     traceHint: 'Trace the dotted line!', clearBtn: 'Clear', skipBtn: 'Skip',
+    tryAgainDraw: "❌ Not quite, try again!",
     addQ: '= how many?',
     adventure: 'Letter Adventure', adventureDesc: 'Explore & find letters',
     advMenuTitle: '🗺️ Letter Adventure',
@@ -1856,13 +1863,24 @@ const DIGITS = '0123456789'.split('');
 const TRACE_COLORS = ['#4DABF7','#FF6B6B','#40C057','#F59F00','#B197FC','#20C997'];
 const TRACE_COVER_THRESHOLD = 0.65;
 
-let menulisState = { mode:'huruf', used:[], score:0, round:0, char:null, samplePoints:[], drawing:false, completed:false };
+/* A drawing is only accepted once it both (a) covers enough of the guide
+   shape, and (b) doesn't stray off it too much — this stops "scribble
+   everywhere" from being able to fake a correct letter. */
+const MAX_STRAY_RATIO = 0.45;
+function isOnTarget(samplePoints, x, y, R) {
+  return samplePoints.some(p => Math.hypot(p.x - x, p.y - y) <= R);
+}
+function strayRatioOf(state) {
+  return state.inkTotal ? state.inkStray / state.inkTotal : 0;
+}
+
+let menulisState = { mode:'huruf', used:[], score:0, round:0, char:null, samplePoints:[], drawing:false, completed:false, inkTotal:0, inkStray:0, wrongShown:false };
 let menulisBackTo = 'membaca-menu';
 
 function traceCharPool() { return menulisState.mode === 'angka' ? DIGITS : ALPHABET; }
 
 function startMenulis(mode) {
-  menulisState = { mode, used:[], score:0, round:0, char:null, samplePoints:[], drawing:false, completed:false };
+  menulisState = { mode, used:[], score:0, round:0, char:null, samplePoints:[], drawing:false, completed:false, inkTotal:0, inkStray:0, wrongShown:false };
   menulisBackTo = mode === 'angka' ? 'menghitung-menu' : 'membaca-menu';
   document.getElementById('menulisTitle').textContent = mode === 'angka' ? t('writeNumbers') : t('writeLetters');
   go('menulis');
@@ -1876,6 +1894,7 @@ function renderMenulisShell() {
     <div class="trace-wrap">
       <canvas id="traceCanvas" class="trace-canvas"></canvas>
       <div class="trace-progress"><div class="trace-progress__fill" id="traceProgressFill"></div></div>
+      <div class="trace-error" id="traceError" hidden>${t('tryAgainDraw')}</div>
     </div>
     <div class="trace-actions">
       <button class="trace-btn" onclick="clearTrace()">🧹 ${t('clearBtn')}</button>
@@ -1927,6 +1946,7 @@ function setupTraceCanvas() {
   menulisState.ctx = ctx;
   menulisState.canvasSize = size;
   menulisState.samplePoints = computeGuidePoints(menulisState.char, size);
+  menulisState.inkTotal = 0; menulisState.inkStray = 0; menulisState.wrongShown = false;
   drawTraceGuide();
   updateTraceProgress(0);
   initTraceDrawing(canvas);
@@ -1985,6 +2005,8 @@ function drawTraceSegment(x0, y0, x1, y1) {
 
 function markTraceCovered(x, y) {
   const R = menulisState.canvasSize * 0.05;
+  menulisState.inkTotal++;
+  if (!isOnTarget(menulisState.samplePoints, x, y, R)) menulisState.inkStray++;
   let changed = false;
   menulisState.samplePoints.forEach(p => {
     if (!p.covered && Math.hypot(p.x - x, p.y - y) <= R) { p.covered = true; changed = true; }
@@ -1995,9 +2017,24 @@ function markTraceCovered(x, y) {
   const pct = total ? covered / total : 0;
   updateTraceProgress(pct);
   if (pct >= TRACE_COVER_THRESHOLD && !menulisState.completed) {
-    menulisState.completed = true;
-    completeTraceChar();
+    if (strayRatioOf(menulisState) <= MAX_STRAY_RATIO) {
+      menulisState.completed = true;
+      completeTraceChar();
+    } else if (!menulisState.wrongShown) {
+      menulisState.wrongShown = true;
+      showTraceWrong();
+    }
   }
+}
+
+function showTraceWrong() {
+  sfxWrong();
+  const canvas = document.getElementById('traceCanvas');
+  const err = document.getElementById('traceError');
+  canvas.classList.add('wrong');
+  setTimeout(() => canvas.classList.remove('wrong'), 400);
+  if (err) err.hidden = false;
+  setTimeout(() => { if (err) err.hidden = true; clearTrace(); }, 1400);
 }
 
 function updateTraceProgress(pct) {
@@ -2045,6 +2082,7 @@ function clearTrace() {
   sfxTap();
   menulisState.samplePoints.forEach(p => p.covered = false);
   menulisState.completed = false;
+  menulisState.inkTotal = 0; menulisState.inkStray = 0; menulisState.wrongShown = false;
   drawTraceGuide();
   updateTraceProgress(0);
 }
@@ -2092,7 +2130,7 @@ function advIsComplete(locId) {
   return advCollected(locId).length >= advLoc(locId).letters.length;
 }
 
-let advState = { locId:null, char:null, ctx:null, canvasSize:0, samplePoints:[], drawing:false, completed:false, lastX:0, lastY:0 };
+let advState = { locId:null, char:null, ctx:null, canvasSize:0, samplePoints:[], drawing:false, completed:false, lastX:0, lastY:0, inkTotal:0, inkStray:0, wrongShown:false };
 
 function buildAdvMenu() {
   document.getElementById('advMenuGrid').innerHTML = ADV_LOCATIONS.map(loc => {
@@ -2164,12 +2202,14 @@ function startAdvDraw(L) {
   sfxTap();
   advState.char = L;
   advState.completed = false;
+  advState.inkTotal = 0; advState.inkStray = 0; advState.wrongShown = false;
   const popup = document.getElementById('advPopup');
   popup.innerHTML = `<div class="syllable-popup__inner">
     <button class="syllable-popup__close" onclick="event.stopPropagation();closeAdvPopup()">✕</button>
     <div class="trace-wrap">
       <canvas id="advTraceCanvas" class="trace-canvas"></canvas>
       <div class="trace-progress"><div class="trace-progress__fill" id="advProgressFill"></div></div>
+      <div class="trace-error" id="advTraceError" hidden>${t('tryAgainDraw')}</div>
     </div>
     <div class="trace-actions">
       <button class="trace-btn" onclick="event.stopPropagation();clearAdvTrace()">🧹 ${t('clearBtn')}</button>
@@ -2220,6 +2260,8 @@ function drawAdvSegment(x0, y0, x1, y1) {
 
 function markAdvCovered(x, y) {
   const R = advState.canvasSize * 0.05;
+  advState.inkTotal++;
+  if (!isOnTarget(advState.samplePoints, x, y, R)) advState.inkStray++;
   let changed = false;
   advState.samplePoints.forEach(p => {
     if (!p.covered && Math.hypot(p.x - x, p.y - y) <= R) { p.covered = true; changed = true; }
@@ -2230,9 +2272,23 @@ function markAdvCovered(x, y) {
   const pct = total ? covered / total : 0;
   updateAdvProgress(pct);
   if (pct >= TRACE_COVER_THRESHOLD && !advState.completed) {
-    advState.completed = true;
-    completeAdvLetter();
+    if (strayRatioOf(advState) <= MAX_STRAY_RATIO) {
+      advState.completed = true;
+      completeAdvLetter();
+    } else if (!advState.wrongShown) {
+      advState.wrongShown = true;
+      showAdvTraceWrong();
+    }
   }
+}
+
+function showAdvTraceWrong() {
+  sfxWrong();
+  const canvas = document.getElementById('advTraceCanvas');
+  const err = document.getElementById('advTraceError');
+  if (canvas) { canvas.classList.add('wrong'); setTimeout(() => canvas.classList.remove('wrong'), 400); }
+  if (err) err.hidden = false;
+  setTimeout(() => { if (err) err.hidden = true; clearAdvTrace(); }, 1400);
 }
 
 function updateAdvProgress(pct) {
@@ -2271,6 +2327,7 @@ function clearAdvTrace() {
   sfxTap();
   advState.samplePoints.forEach(p => p.covered = false);
   advState.completed = false;
+  advState.inkTotal = 0; advState.inkStray = 0; advState.wrongShown = false;
   drawAdvGuide();
   updateAdvProgress(0);
 }
@@ -2491,7 +2548,7 @@ function awardKaraokeStar() {
    PAPAN TULIS AJAIB (magic whiteboard)
    ═══════════════════════════════════════ */
 
-let papanState = { char: PAPAN_POOL[0], ctx:null, canvasSize:0, drawing:false, lastX:0, lastY:0 };
+let papanState = { char: PAPAN_POOL[0], ctx:null, canvasSize:0, drawing:false, lastX:0, lastY:0, samplePoints:[], inkTotal:0, inkStray:0 };
 
 function startPapan() {
   go('papan');
@@ -2507,6 +2564,7 @@ function renderPapanBoard() {
     <div class="consonant-scroll" id="papanLetterRow">${chips}</div>
     <div class="trace-wrap">
       <canvas id="papanCanvas" class="trace-canvas"></canvas>
+      <div class="trace-error" id="papanTraceError" hidden>${t('tryAgainDraw')}</div>
     </div>
     <div class="trace-actions">
       <button class="trace-btn" onclick="clearPapanBoard()">🧹 ${t('clearBtn')}</button>
@@ -2533,7 +2591,24 @@ function setupPapanCanvas() {
   papanState.ctx = ctx;
   papanState.canvasSize = size;
   ctx.clearRect(0, 0, size, size);
+  resetPapanValidation();
   initPapanDrawing(canvas);
+}
+
+function resetPapanValidation() {
+  papanState.samplePoints = computeGuidePoints(papanState.char, papanState.canvasSize);
+  papanState.inkTotal = 0; papanState.inkStray = 0;
+  const err = document.getElementById('papanTraceError');
+  if (err) err.hidden = true;
+}
+
+function markPapanCovered(x, y) {
+  const R = papanState.canvasSize * 0.05;
+  papanState.inkTotal++;
+  if (!isOnTarget(papanState.samplePoints, x, y, R)) papanState.inkStray++;
+  papanState.samplePoints.forEach(p => {
+    if (!p.covered && Math.hypot(p.x - x, p.y - y) <= R) p.covered = true;
+  });
 }
 
 function drawPapanSegment(x0, y0, x1, y1) {
@@ -2555,12 +2630,14 @@ function initPapanDrawing(canvas) {
     const p = tracePointFromEvent(e, canvas);
     papanState.lastX = p.x; papanState.lastY = p.y;
     drawPapanSegment(p.x, p.y, p.x, p.y);
+    markPapanCovered(p.x, p.y);
   };
   const move = (e) => {
     if (!papanState.drawing) return;
     e.preventDefault();
     const p = tracePointFromEvent(e, canvas);
     drawPapanSegment(papanState.lastX, papanState.lastY, p.x, p.y);
+    markPapanCovered(p.x, p.y);
     papanState.lastX = p.x; papanState.lastY = p.y;
   };
   const end = () => { papanState.drawing = false; };
@@ -2574,9 +2651,22 @@ function initPapanDrawing(canvas) {
 function clearPapanBoard() {
   sfxTap();
   if (papanState.ctx) papanState.ctx.clearRect(0, 0, papanState.canvasSize, papanState.canvasSize);
+  resetPapanValidation();
 }
 
 function revealPapanLife() {
+  const err = document.getElementById('papanTraceError');
+  if (err) err.hidden = true;
+  const total = papanState.samplePoints.length;
+  const covered = papanState.samplePoints.filter(p => p.covered).length;
+  const pct = total ? covered / total : 0;
+  if (pct < TRACE_COVER_THRESHOLD || strayRatioOf(papanState) > MAX_STRAY_RATIO) {
+    sfxWrong();
+    const canvas = document.getElementById('papanCanvas');
+    if (canvas) { canvas.classList.add('wrong'); setTimeout(() => canvas.classList.remove('wrong'), 400); }
+    if (err) err.hidden = false;
+    return;
+  }
   sfxCorrect(); showFeedback('✨');
   const L = papanState.char;
   const entry = letterInfo(L);
