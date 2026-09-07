@@ -323,6 +323,7 @@ body {
   width: 100%; max-width: 280px; aspect-ratio: 1 / 1; touch-action: none;
   background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow-md);
   border: 3px solid var(--sky-soft); cursor: crosshair;
+  -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
 }
 .trace-progress {
   width: 100%; max-width: 280px; height: 12px; border-radius: 8px;
@@ -340,6 +341,109 @@ body {
   box-shadow: var(--shadow-sm); transition: transform 0.15s ease;
 }
 .trace-btn:active { transform: scale(0.95); }
+
+/* ── Petualangan Huruf (letter adventure) ─ */
+.home-card--adventure { border-color: #FFE8A3; grid-column: 1 / -1; }
+.home-card--adventure::before { background: linear-gradient(90deg, var(--sun), var(--leaf)); }
+.adv-loc-card { position: relative; overflow: hidden; }
+.adv-loc-card__badge { font-size: 12px; font-weight: 700; color: var(--leaf); margin-top: 3px; }
+.adv-loc-card__badge.done { color: var(--sun-deep); }
+.adv-scene {
+  border-radius: var(--radius); padding: 22px 16px 26px; box-shadow: var(--shadow-md);
+  text-align: center; margin-bottom: 16px;
+}
+.adv-scene__title { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 20px; }
+.adv-scene__hint { font-size: 14px; color: var(--text-soft); font-weight: 600; margin-top: 4px; }
+.adv-scene__grid { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 20px; }
+.adv-spot {
+  width: 64px; height: 64px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.6); font-size: 30px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-sm); transition: transform 0.15s ease; animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) backwards;
+}
+.adv-spot:active { transform: scale(0.88); }
+.adv-spot--found {
+  background: var(--card); border-style: solid; border-color: var(--leaf-soft);
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 26px; cursor: default;
+}
+.adv-scene__progress { margin-top: 18px; font-weight: 700; color: var(--text-soft); font-size: 14px; }
+.adv-story-btn {
+  margin-top: 20px; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 16px;
+  padding: 12px 22px; border-radius: 24px; border: none; cursor: pointer; color: white;
+  background: linear-gradient(135deg, var(--sun-deep), var(--berry)); box-shadow: var(--shadow-md);
+}
+.adv-story-btn:active { transform: scale(0.95); }
+.adv-popup__letter { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 64px; color: var(--sky); }
+.adv-popup__emoji { font-size: 56px; }
+.adv-popup__word { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 22px; }
+.adv-story-card { text-align: center; }
+.adv-story-card__emoji { font-size: 64px; }
+.adv-story-card__title { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 24px; margin-top: 8px; }
+.adv-story-card__text {
+  font-size: 16px; line-height: 1.6; color: var(--text); margin-top: 16px; text-align: left;
+  background: var(--card); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-md);
+}
+.adv-story-card__actions { display: flex; justify-content: center; gap: 12px; margin-top: 20px; }
+
+/* ── Karaoke Membaca (reading karaoke) ─ */
+.home-card--karaoke { border-color: #FFD8D8; grid-column: 1 / -1; }
+.home-card--karaoke::before { background: linear-gradient(90deg, var(--berry), var(--lavender-deep)); }
+.karaoke-card { position: relative; overflow: hidden; }
+.karaoke-card__badge { font-size: 12px; font-weight: 700; color: var(--sun-deep); margin-top: 3px; }
+.karaoke-stage {
+  background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow-md);
+  padding: 26px 20px; text-align: center; margin-bottom: 16px;
+}
+.karaoke-stage__emoji { font-size: 48px; }
+.karaoke-stage__title { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 20px; margin-top: 4px; }
+.karaoke-text {
+  font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 22px; line-height: 1.9;
+  margin-top: 18px; text-align: left; color: var(--text-soft);
+}
+.karaoke-word { transition: color 0.15s ease, background 0.15s ease; border-radius: 6px; padding: 0 2px; }
+.karaoke-word.active { color: white; background: var(--sky); }
+.karaoke-word.done { color: var(--text); }
+.karaoke-listen-btn {
+  margin-top: 20px; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 16px;
+  padding: 12px 26px; border-radius: 24px; border: none; cursor: pointer; color: white;
+  background: linear-gradient(135deg, var(--sky), var(--lavender-deep)); box-shadow: var(--shadow-md);
+}
+.karaoke-listen-btn:active { transform: scale(0.95); }
+.karaoke-turn { margin-top: 22px; padding-top: 20px; border-top: 2px dashed #E9ECEF; }
+.karaoke-turn__hint { font-size: 15px; color: var(--text-soft); font-weight: 600; }
+.karaoke-mic-btn {
+  width: 84px; height: 84px; border-radius: 50%; border: none; cursor: pointer;
+  background: linear-gradient(135deg, var(--berry), var(--berry-deep)); color: white;
+  font-size: 34px; box-shadow: var(--shadow-lg); margin-top: 16px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.karaoke-mic-btn:active { transform: scale(0.92); }
+.karaoke-mic-btn.recording { animation: karaokePulse 1s ease-in-out infinite; }
+@keyframes karaokePulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(255,107,107,0.5); }
+  50% { box-shadow: 0 0 0 16px rgba(255,107,107,0); }
+}
+.karaoke-playback { margin-top: 16px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.karaoke-playback audio { width: 100%; max-width: 280px; }
+.karaoke-star-btn {
+  margin-top: 16px; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 18px;
+  padding: 14px 28px; border-radius: 28px; border: none; cursor: pointer; color: #744210;
+  background: linear-gradient(135deg, var(--sun), #FFE066); box-shadow: var(--shadow-md);
+}
+.karaoke-star-btn:active { transform: scale(0.95); }
+
+/* ── Papan Tulis Ajaib (magic whiteboard) ─ */
+.home-card--papan { border-color: var(--lavender-soft); grid-column: 1 / -1; }
+.home-card--papan::before { background: linear-gradient(90deg, var(--lavender), var(--berry)); }
+.papan-life { font-size: 100px; display: inline-block; }
+.papan-life--bounce { animation: papanBounce 0.6s ease-in-out 3; }
+.papan-life--wiggle { animation: papanWiggle 0.5s ease-in-out 4; }
+.papan-life--spin   { animation: papanSpin 0.7s ease-in-out 2; }
+.papan-life--pulse  { animation: papanPulse 0.5s ease-in-out 3; }
+@keyframes papanBounce { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-32px); } }
+@keyframes papanWiggle { 0%,100%{ transform: rotate(-14deg); } 50%{ transform: rotate(14deg); } }
+@keyframes papanSpin   { 0%{ transform: rotate(0deg); } 100%{ transform: rotate(360deg); } }
+@keyframes papanPulse  { 0%,100%{ transform: scale(1); } 50%{ transform: scale(1.3); } }
 
 /* ── Count / Number ──────────────── */
 .count-objects { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 24px; min-height: 120px; align-items: center; }
@@ -445,6 +549,21 @@ body {
         <span class="home-card__icon">🔢</span>
         <div class="home-card__label" id="homeCountLabel">Menghitung</div>
         <div class="home-card__desc" id="homeCountDesc">Angka &amp; hitung</div>
+      </div>
+      <div class="home-card home-card--adventure" onclick="go('petualangan-menu')">
+        <span class="home-card__icon">🗺️</span>
+        <div class="home-card__label" id="homeAdvLabel">Petualangan Huruf</div>
+        <div class="home-card__desc" id="homeAdvDesc">Jelajahi &amp; temukan huruf</div>
+      </div>
+      <div class="home-card home-card--karaoke" onclick="go('karaoke-menu')">
+        <span class="home-card__icon">🎤</span>
+        <div class="home-card__label" id="homeKaraokeLabel">Karaoke Membaca</div>
+        <div class="home-card__desc" id="homeKaraokeDesc">Dengar &amp; baca cerita</div>
+      </div>
+      <div class="home-card home-card--papan" onclick="startPapan()">
+        <span class="home-card__icon">🪄</span>
+        <div class="home-card__label" id="homePapanLabel">Papan Tulis Ajaib</div>
+        <div class="home-card__desc" id="homePapanDesc">Tulis huruf, lihat ia hidup!</div>
       </div>
     </div>
     <div class="lang-toggle" style="position:relative;z-index:1">
@@ -580,6 +699,61 @@ body {
     </div>
     <div id="tambahContent"></div>
   </div>
+
+  <!-- PETUALANGAN HURUF: location picker -->
+  <div id="screen-petualangan-menu" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('home')">‹</button>
+      <h2 class="screen-title" id="advMenuTitle">🗺️ Petualangan Huruf</h2>
+    </div>
+    <div class="menu-grid" id="advMenuGrid"></div>
+  </div>
+
+  <!-- PETUALANGAN HURUF: location scene -->
+  <div id="screen-petualangan" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('petualangan-menu')">‹</button>
+      <h2 class="screen-title" id="advSceneTitle">Hutan Ajaib</h2>
+    </div>
+    <div id="advContent"></div>
+    <div id="advPopup" hidden></div>
+  </div>
+
+  <!-- PETUALANGAN HURUF: story -->
+  <div id="screen-petualangan-cerita" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('petualangan-menu')">‹</button>
+      <h2 class="screen-title" id="advStoryTitle">Cerita</h2>
+    </div>
+    <div id="advStoryContent"></div>
+  </div>
+
+  <!-- KARAOKE MEMBACA: story picker -->
+  <div id="screen-karaoke-menu" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('home')">‹</button>
+      <h2 class="screen-title" id="karaokeMenuTitle">🎤 Karaoke Membaca</h2>
+    </div>
+    <div class="menu-grid" id="karaokeMenuGrid"></div>
+  </div>
+
+  <!-- KARAOKE MEMBACA: stage -->
+  <div id="screen-karaoke" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="leaveKaraoke()">‹</button>
+      <h2 class="screen-title" id="karaokeStageTitle">Cerita</h2>
+    </div>
+    <div id="karaokeContent"></div>
+  </div>
+
+  <!-- PAPAN TULIS AJAIB (magic whiteboard) -->
+  <div id="screen-papan" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('home')">‹</button>
+      <h2 class="screen-title" id="papanTitle">🪄 Papan Tulis Ajaib</h2>
+    </div>
+    <div id="papanContent"></div>
+  </div>
 </div>
 
 <div class="feedback" id="feedbackOverlay" hidden>
@@ -624,6 +798,31 @@ const T = {
     startSpell: 'Susun kata!', startWriteL: 'Menulis huruf!', startWriteN: 'Menulis angka!',
     traceHint: 'Ikuti garis putus-putus!', clearBtn: 'Hapus', skipBtn: 'Lewati',
     addQ: '= berapa?',
+    adventure: 'Petualangan Huruf', adventureDesc: 'Jelajahi & temukan huruf',
+    advMenuTitle: '🗺️ Petualangan Huruf',
+    advFindHint: 'Sentuh sesuatu untuk menemukan huruf tersembunyi!',
+    advDrawHint: 'Sekarang gambar hurufnya dengan jarimu!',
+    advDrawBtn: '✏️ Gambar Hurufnya',
+    advFound: 'huruf ditemukan',
+    advStoryBtn: '📖 Baca Cerita',
+    advStoryDone: '✓ Cerita selesai',
+    advReadAloud: '🔊 Baca Cerita',
+    advBack: 'Kembali',
+    karaoke: 'Karaoke Membaca', karaokeDesc: 'Dengar & baca cerita',
+    karaokeMenuTitle: '🎤 Karaoke Membaca',
+    karaokeListenBtn: '🔊 Dengarkan Ceritanya',
+    karaokeListenAgain: '🔁 Dengarkan Lagi',
+    karaokeTurnHint: 'Sekarang giliranmu! Baca ceritanya dengan suara keras.',
+    karaokeRecordHint: 'Tekan mikrofon lalu baca ceritanya!',
+    karaokeRecording: 'Merekam... tekan lagi untuk berhenti',
+    karaokeNoMic: 'Baca ceritanya dengan suara keras, lalu tekan bintang!',
+    karaokePlayback: 'Dengar rekamanmu:',
+    karaokeStarBtn: '⭐ Beri Bintang!',
+    karaokeBestStars: 'bintang terbaik',
+    papan: 'Papan Tulis Ajaib', papanDesc: 'Tulis huruf, lihat ia hidup!',
+    papanTitle: '🪄 Papan Tulis Ajaib',
+    papanHint: 'Pilih huruf, lalu tulis dengan jarimu!',
+    papanReveal: '✨ Hidupkan!',
     speechLang: 'id-ID',
   },
   en: {
@@ -655,6 +854,31 @@ const T = {
     startSpell: 'Spell the word!', startWriteL: 'Write letters!', startWriteN: 'Write numbers!',
     traceHint: 'Trace the dotted line!', clearBtn: 'Clear', skipBtn: 'Skip',
     addQ: '= how many?',
+    adventure: 'Letter Adventure', adventureDesc: 'Explore & find letters',
+    advMenuTitle: '🗺️ Letter Adventure',
+    advFindHint: 'Tap something to find the hidden letter!',
+    advDrawHint: 'Now draw the letter with your finger!',
+    advDrawBtn: '✏️ Draw the Letter',
+    advFound: 'letters found',
+    advStoryBtn: '📖 Read the Story',
+    advStoryDone: '✓ Story finished',
+    advReadAloud: '🔊 Read Story',
+    advBack: 'Back',
+    karaoke: 'Reading Karaoke', karaokeDesc: 'Listen & read the story',
+    karaokeMenuTitle: '🎤 Reading Karaoke',
+    karaokeListenBtn: '🔊 Listen to the Story',
+    karaokeListenAgain: '🔁 Listen Again',
+    karaokeTurnHint: 'Now it’s your turn! Read the story out loud.',
+    karaokeRecordHint: 'Press the microphone, then read the story!',
+    karaokeRecording: 'Recording... press again to stop',
+    karaokeNoMic: 'Read the story out loud, then press the star!',
+    karaokePlayback: 'Listen to your reading:',
+    karaokeStarBtn: '⭐ Give a Star!',
+    karaokeBestStars: 'best stars',
+    papan: 'Magic Whiteboard', papanDesc: 'Write a letter, watch it come alive!',
+    papanTitle: '🪄 Magic Whiteboard',
+    papanHint: 'Pick a letter, then write it with your finger!',
+    papanReveal: '✨ Bring it to Life!',
     speechLang: 'en-US',
   }
 };
@@ -866,6 +1090,64 @@ function consonants() { return CONSONANTS_DATA[lang]; }
 function words()   { return WORDS_DATA[lang]; }
 function numWord(n){ return NUM_WORDS[lang][n]; }
 
+/* ── Petualangan Huruf (letter adventure) data ── */
+const ADV_LOCATIONS = [
+  { id:'hutan',    icon:'🌲', spot:'🍃', bg:'linear-gradient(160deg,#EAF7E0,#D3F9D8)', letters:['A','I','U','E','O','B'] },
+  { id:'laut',     icon:'🌊', spot:'🐚', bg:'linear-gradient(160deg,#E3F7FF,#D0EBFF)', letters:['C','D','G','H','J','K'] },
+  { id:'angkasa',  icon:'🚀', spot:'⭐', bg:'linear-gradient(160deg,#EDE6FF,#E5DBFF)', letters:['L','M','N','P','R','S','T'] },
+];
+
+const ADV_TEXT = {
+  id: {
+    hutan:   { name:'Hutan Ajaib', desc:'Cari huruf di antara pepohonan',
+      story:'Di dalam hutan yang rimbun, seekor burung hantu kecil bernama Ollie terbang mencari huruf-huruf ajaib yang bersembunyi di balik daun. Satu per satu, kamu berhasil menemukan dan menggambar setiap huruf dengan rapi. Hutan pun bersinar terang dan burung-burung lain ikut bernyanyi gembira. "Terima kasih sudah menemukan semua huruf!" kata Ollie sambil tersenyum.' },
+    laut:    { name:'Laut Biru', desc:'Cari huruf di dasar laut',
+      story:'Jauh di dasar laut biru, seekor kura-kura bernama Kiki menjaga huruf-huruf yang tersembunyi di antara karang dan kerang. Kamu berhasil menemukan dan menggambar setiap huruf dengan hebat. Ikan-ikan kecil berenang berputar-putar merayakan keberhasilanmu. Laut yang tenang kini dipenuhi gelembung kebahagiaan!' },
+    angkasa: { name:'Luar Angkasa', desc:'Cari huruf di antar planet',
+      story:'Roket kecil membawamu terbang jauh ke luar angkasa, melewati bintang-bintang yang berkelap-kelip. Di setiap planet, ada huruf ajaib menunggu untuk ditemukan dan digambar. Setelah semua huruf terkumpul, seluruh galaksi bersinar seperti pesta kembang api. Kapten Luna berkata, "Kamu penjelajah huruf terhebat di alam semesta!"' },
+  },
+  en: {
+    hutan:   { name:'Magic Forest', desc:'Find letters among the trees',
+      story:'Deep in the green forest, a little owl named Ollie flew from branch to branch searching for magic letters hidden behind the leaves. One by one, you found and drew every letter with great care. The whole forest lit up and the birds began to sing with joy. "Thank you for finding all the letters!" said Ollie with a big smile.' },
+    laut:    { name:'Blue Ocean', desc:'Find letters under the sea',
+      story:'Far beneath the blue ocean, a wise turtle named Kiki guarded letters hidden among the coral and shells. You found and drew every single one like a true ocean explorer. Tiny fish swirled around in a happy dance to celebrate. The calm sea filled with bubbles of joy!' },
+    angkasa: { name:'Outer Space', desc:'Find letters among the planets',
+      story:'A tiny rocket carried you far into space, past twinkling stars and swirling planets. On every planet, a magic letter was waiting to be found and drawn. Once every letter was collected, the whole galaxy sparkled like a fireworks show. Captain Luna cheered, "You are the greatest letter explorer in the universe!"' },
+  },
+};
+
+function advLoc(id) { return ADV_LOCATIONS.find(l => l.id === id); }
+function advText(id) { return ADV_TEXT[lang][id]; }
+function letterInfo(L) { return vowels().find(v => v.letter === L) || consonants().find(c => c.letter === L); }
+
+/* ── Karaoke Membaca data ── */
+const KARAOKE_STORIES = {
+  id: [
+    { id:'kucing',  emoji:'🐱', title:'Kucingku',
+      text:'Aku punya seekor kucing. Namanya Mimi. Mimi suka minum susu. Mimi juga suka tidur di bawah bulan. Aku sayang Mimi!' },
+    { id:'sekolah', emoji:'🎒', title:'Pergi ke Sekolah',
+      text:'Setiap pagi aku pergi ke sekolah. Aku naik sepeda bersama teman. Di sekolah aku belajar membaca dan berhitung. Aku senang sekali!' },
+    { id:'piknik',  emoji:'🧺', title:'Piknik Keluarga',
+      text:'Hari ini kami piknik di taman. Ibu membawa roti dan apel. Ayah membawa bola untuk bermain. Kami makan bersama di bawah pohon. Senang sekali harinya!' },
+  ],
+  en: [
+    { id:'kucing',  emoji:'🐱', title:'My Cat',
+      text:'I have a little cat. Her name is Mimi. Mimi loves to drink milk. Mimi also loves to sleep under the moon. I love Mimi!' },
+    { id:'sekolah', emoji:'🎒', title:'Going to School',
+      text:'Every morning I go to school. I ride my bike with a friend. At school I learn to read and count. I am very happy!' },
+    { id:'piknik',  emoji:'🧺', title:'Family Picnic',
+      text:'Today we had a picnic in the park. Mom brought bread and apples. Dad brought a ball to play. We ate together under a tree. What a happy day!' },
+  ],
+};
+const KARAOKE_STARS = 3;
+
+function karaokeStories() { return KARAOKE_STORIES[lang]; }
+function karaokeStory(id) { return karaokeStories().find(s => s.id === id); }
+
+/* ── Papan Tulis Ajaib data ── */
+const PAPAN_POOL = ['A','B','C','D','E','G','H','I','J','K','L','M','N','O','P','R','S','T','U'];
+const PAPAN_ANIMS = ['bounce','wiggle','spin','pulse'];
+
 /* Spoken form of a number word */
 function numSpeak(n) {
   if (phoneticMode())   return NUM_PH[n]    || NUM_WORDS.id[n];
@@ -1008,12 +1290,33 @@ function refreshUI() {
   document.getElementById('homeReadDesc').textContent = t('readingDesc');
   document.getElementById('homeCountLabel').textContent = t('counting');
   document.getElementById('homeCountDesc').textContent = t('countingDesc');
+  document.getElementById('homeAdvLabel').textContent = t('adventure');
+  document.getElementById('homeAdvDesc').textContent = t('adventureDesc');
+  document.getElementById('homeKaraokeLabel').textContent = t('karaoke');
+  document.getElementById('homeKaraokeDesc').textContent = t('karaokeDesc');
+  document.getElementById('homePapanLabel').textContent = t('papan');
+  document.getElementById('homePapanDesc').textContent = t('papanDesc');
 
   document.getElementById('menuReadTitle').textContent = t('menuRead');
   document.getElementById('menuCountTitle').textContent = t('menuCount');
+  document.getElementById('advMenuTitle').textContent = t('advMenuTitle');
+  document.getElementById('karaokeMenuTitle').textContent = t('karaokeMenuTitle');
+  document.getElementById('papanTitle').textContent = t('papanTitle');
 
   buildReadMenu();
   buildCountMenu();
+  buildAdvMenu();
+  buildKaraokeMenu();
+  if (advState.locId) {
+    document.getElementById('advSceneTitle').textContent = advText(advState.locId).name;
+    if (!document.getElementById('screen-petualangan').hidden) renderAdvScene();
+  }
+  if (karaokeState.storyId && !document.getElementById('screen-karaoke').hidden) {
+    stopKaraokeTimers();
+    document.getElementById('karaokeStageTitle').textContent = karaokeStory(karaokeState.storyId).title;
+    renderKaraokeStage();
+  }
+  if (!document.getElementById('screen-papan').hidden) renderPapanBoard();
 
   document.getElementById('hurufTitle').textContent = t('vowels');
   document.getElementById('konsTitle').textContent = t('consonants');
@@ -1706,6 +2009,7 @@ function initTraceDrawing(canvas) {
     if (menulisState.completed) return;
     e.preventDefault();
     menulisState.drawing = true;
+    if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
     const p = tracePointFromEvent(e, canvas);
     menulisState.lastX = p.x; menulisState.lastY = p.y;
     markTraceCovered(p.x, p.y);
@@ -1749,6 +2053,551 @@ function skipTrace() {
   sfxTap();
   menulisState.round++;
   nextTraceChar();
+}
+
+/* ═══════════════════════════════════════
+   PETUALANGAN HURUF (letter adventure)
+   ═══════════════════════════════════════ */
+
+const ADV_KEY = 'learnWorldAdventure_v1';
+
+function loadAdv() {
+  try { return JSON.parse(localStorage.getItem(ADV_KEY)) || {}; }
+  catch (e) { return {}; }
+}
+function saveAdvData(data) {
+  try { localStorage.setItem(ADV_KEY, JSON.stringify(data)); } catch (e) {}
+}
+function advCollected(locId) {
+  const d = loadAdv();
+  return (d[locId] && d[locId].found) ? d[locId].found : [];
+}
+function advStoryRead(locId) {
+  const d = loadAdv();
+  return !!(d[locId] && d[locId].storyRead);
+}
+function markAdvFound(locId, letter) {
+  const d = loadAdv();
+  if (!d[locId]) d[locId] = { found: [], storyRead: false };
+  if (!d[locId].found.includes(letter)) d[locId].found.push(letter);
+  saveAdvData(d);
+}
+function markAdvStoryRead(locId) {
+  const d = loadAdv();
+  if (!d[locId]) d[locId] = { found: [], storyRead: false };
+  d[locId].storyRead = true;
+  saveAdvData(d);
+}
+function advIsComplete(locId) {
+  return advCollected(locId).length >= advLoc(locId).letters.length;
+}
+
+let advState = { locId:null, char:null, ctx:null, canvasSize:0, samplePoints:[], drawing:false, completed:false, lastX:0, lastY:0 };
+
+function buildAdvMenu() {
+  document.getElementById('advMenuGrid').innerHTML = ADV_LOCATIONS.map(loc => {
+    const info = advText(loc.id);
+    const found = advCollected(loc.id).length, total = loc.letters.length;
+    const done = advStoryRead(loc.id);
+    return `<div class="menu-card adv-loc-card" onclick="startAdventure('${loc.id}')">
+      <div class="menu-card__icon">${loc.icon}</div>
+      <div class="menu-card__text">
+        <div class="menu-card__title">${info.name}</div>
+        <div class="menu-card__desc">${info.desc}</div>
+        <div class="adv-loc-card__badge${done ? ' done' : ''}">${done ? t('advStoryDone') : `${found}/${total} ${t('advFound')}`}</div>
+      </div><span class="menu-card__arrow">›</span>
+    </div>`;
+  }).join('');
+}
+
+function startAdventure(locId) {
+  advState.locId = locId;
+  go('petualangan');
+  document.getElementById('advSceneTitle').textContent = advText(locId).name;
+  renderAdvScene();
+}
+
+function renderAdvScene() {
+  const loc = advLoc(advState.locId);
+  const found = advCollected(loc.id);
+  const spots = loc.letters.map((L, i) => {
+    if (found.includes(L)) return `<div class="adv-spot adv-spot--found" style="animation-delay:${i*0.05}s">${L}</div>`;
+    return `<button class="adv-spot" style="animation-delay:${i*0.05}s" onclick="openAdvLetter('${L}')">${loc.spot}</button>`;
+  }).join('');
+  const complete = found.length >= loc.letters.length;
+  document.getElementById('advContent').innerHTML = `
+    <div class="adv-scene" style="background:${loc.bg}">
+      <div class="adv-scene__title">${loc.icon} ${advText(loc.id).name}</div>
+      <div class="adv-scene__hint">${t('advFindHint')}</div>
+      <div class="adv-scene__grid">${spots}</div>
+      <div class="adv-scene__progress">${found.length}/${loc.letters.length} ${t('advFound')}</div>
+      ${complete ? `<button class="adv-story-btn" onclick="openAdvStory('${loc.id}')">${t('advStoryBtn')}</button>` : ''}
+    </div>`;
+}
+
+function openAdvLetter(L) {
+  sfxTap();
+  advState.char = L;
+  const entry = letterInfo(L);
+  const popup = document.getElementById('advPopup');
+  popup.hidden = false; popup.className = 'syllable-popup';
+  popup.innerHTML = `<div class="syllable-popup__inner">
+    <button class="syllable-popup__close" onclick="event.stopPropagation();closeAdvPopup()">✕</button>
+    <div class="adv-popup__letter">${entry.letter}</div>
+    <div class="adv-popup__emoji">${entry.emoji}</div>
+    <div class="adv-popup__word">${entry.hl}</div>
+    <button class="speak-btn" id="advSpeakBtn" onclick="event.stopPropagation();speakBtn(vowelSpeak(letterInfo('${L}')),'advSpeakBtn')">🔊</button>
+    <div class="trace-hint">${t('advDrawHint')}</div>
+    <button class="adv-story-btn" onclick="event.stopPropagation();startAdvDraw('${L}')">${t('advDrawBtn')}</button>
+  </div>`;
+  popup.onclick = (e) => { if (e.target === popup) closeAdvPopup(); };
+  speakBtn(vowelSpeak(entry), 'advSpeakBtn');
+}
+
+function closeAdvPopup() {
+  sfxTap();
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  document.getElementById('advPopup').hidden = true;
+}
+
+function startAdvDraw(L) {
+  sfxTap();
+  advState.char = L;
+  advState.completed = false;
+  const popup = document.getElementById('advPopup');
+  popup.innerHTML = `<div class="syllable-popup__inner">
+    <button class="syllable-popup__close" onclick="event.stopPropagation();closeAdvPopup()">✕</button>
+    <div class="trace-wrap">
+      <canvas id="advTraceCanvas" class="trace-canvas"></canvas>
+      <div class="trace-progress"><div class="trace-progress__fill" id="advProgressFill"></div></div>
+    </div>
+    <div class="trace-actions">
+      <button class="trace-btn" onclick="event.stopPropagation();clearAdvTrace()">🧹 ${t('clearBtn')}</button>
+    </div>
+  </div>`;
+  setupAdvCanvas();
+}
+
+function setupAdvCanvas() {
+  const canvas = document.getElementById('advTraceCanvas');
+  const size = Math.round(canvas.clientWidth || 280);
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = size * dpr; canvas.height = size * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  advState.ctx = ctx;
+  advState.canvasSize = size;
+  advState.samplePoints = computeGuidePoints(advState.char, size);
+  drawAdvGuide();
+  updateAdvProgress(0);
+  initAdvDrawing(canvas);
+}
+
+function drawAdvGuide() {
+  const ctx = advState.ctx, size = advState.canvasSize, char = advState.char;
+  ctx.clearRect(0, 0, size, size);
+  ctx.save();
+  ctx.setLineDash([size*0.04, size*0.03]);
+  ctx.lineWidth = Math.max(2.5, size * 0.016);
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = '#ADB5BD';
+  ctx.font = traceFont(size);
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.strokeText(char, size/2, size/2 + size*0.02);
+  ctx.restore();
+}
+
+function drawAdvSegment(x0, y0, x1, y1) {
+  const ctx = advState.ctx, size = advState.canvasSize;
+  const idx = advLoc(advState.locId).letters.indexOf(advState.char);
+  ctx.save();
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.lineWidth = Math.max(8, size * 0.06);
+  ctx.strokeStyle = TRACE_COLORS[idx % TRACE_COLORS.length];
+  ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+  ctx.restore();
+}
+
+function markAdvCovered(x, y) {
+  const R = advState.canvasSize * 0.05;
+  let changed = false;
+  advState.samplePoints.forEach(p => {
+    if (!p.covered && Math.hypot(p.x - x, p.y - y) <= R) { p.covered = true; changed = true; }
+  });
+  if (!changed) return;
+  const total = advState.samplePoints.length;
+  const covered = advState.samplePoints.filter(p => p.covered).length;
+  const pct = total ? covered / total : 0;
+  updateAdvProgress(pct);
+  if (pct >= TRACE_COVER_THRESHOLD && !advState.completed) {
+    advState.completed = true;
+    completeAdvLetter();
+  }
+}
+
+function updateAdvProgress(pct) {
+  const el = document.getElementById('advProgressFill');
+  if (el) el.style.width = Math.round(pct*100) + '%';
+}
+
+function initAdvDrawing(canvas) {
+  const start = (e) => {
+    if (advState.completed) return;
+    e.preventDefault();
+    advState.drawing = true;
+    if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+    const p = tracePointFromEvent(e, canvas);
+    advState.lastX = p.x; advState.lastY = p.y;
+    markAdvCovered(p.x, p.y);
+  };
+  const move = (e) => {
+    if (!advState.drawing) return;
+    e.preventDefault();
+    const p = tracePointFromEvent(e, canvas);
+    drawAdvSegment(advState.lastX, advState.lastY, p.x, p.y);
+    markAdvCovered(p.x, p.y);
+    advState.lastX = p.x; advState.lastY = p.y;
+  };
+  const end = () => { advState.drawing = false; };
+  canvas.addEventListener('pointerdown', start);
+  canvas.addEventListener('pointermove', move);
+  canvas.addEventListener('pointerup', end);
+  canvas.addEventListener('pointerleave', end);
+  canvas.addEventListener('pointercancel', end);
+}
+
+function clearAdvTrace() {
+  if (!advState.samplePoints.length) return;
+  sfxTap();
+  advState.samplePoints.forEach(p => p.covered = false);
+  advState.completed = false;
+  drawAdvGuide();
+  updateAdvProgress(0);
+}
+
+function completeAdvLetter() {
+  sfxCorrect(); showFeedback('⭐');
+  markAdvFound(advState.locId, advState.char);
+  setTimeout(() => {
+    closeAdvPopup();
+    renderAdvScene();
+    if (advIsComplete(advState.locId)) {
+      setTimeout(() => openAdvStory(advState.locId), 500);
+    }
+  }, 900);
+}
+
+function openAdvStory(locId) {
+  markAdvStoryRead(locId);
+  buildAdvMenu();
+  go('petualangan-cerita');
+  const info = advText(locId);
+  const loc = advLoc(locId);
+  document.getElementById('advStoryTitle').textContent = info.name;
+  document.getElementById('advStoryContent').innerHTML = `
+    <div class="adv-story-card">
+      <div class="adv-story-card__emoji">${loc.icon}</div>
+      <div class="adv-story-card__title">${info.name}</div>
+      <div class="adv-story-card__text">${info.story}</div>
+      <div class="adv-story-card__actions">
+        <button class="speak-btn" id="advStorySpeakBtn" onclick="speakBtn(advText('${locId}').story,'advStorySpeakBtn')">🔊</button>
+      </div>
+    </div>`;
+  speakBtn(info.story, 'advStorySpeakBtn');
+}
+
+/* ═══════════════════════════════════════
+   KARAOKE MEMBACA (reading karaoke)
+   ═══════════════════════════════════════ */
+
+let karaokeState = { storyId:null, words:[], timers:[], recording:false, mediaRecorder:null, chunks:[], stream:null, audioUrl:null };
+
+function buildKaraokeMenu() {
+  const p = loadProgress();
+  document.getElementById('karaokeMenuGrid').innerHTML = karaokeStories().map(s => {
+    const got = p['karaoke-' + s.id];
+    return `<div class="menu-card karaoke-card" onclick="startKaraoke('${s.id}')">
+      <div class="menu-card__icon">${s.emoji}</div>
+      <div class="menu-card__text">
+        <div class="menu-card__title">${s.title}</div>
+        <div class="menu-card__desc">${t('karaokeDesc')}</div>
+        ${got !== undefined ? `<div class="karaoke-card__badge">⭐ ${got}/${KARAOKE_STARS} ${t('karaokeBestStars')}</div>` : ''}
+      </div><span class="menu-card__arrow">›</span>
+    </div>`;
+  }).join('');
+}
+
+function startKaraoke(storyId) {
+  stopKaraokeTimers();
+  if (karaokeState.stream) { karaokeState.stream.getTracks().forEach(tr => tr.stop()); karaokeState.stream = null; }
+  if (karaokeState.audioUrl) { URL.revokeObjectURL(karaokeState.audioUrl); karaokeState.audioUrl = null; }
+  karaokeState.storyId = storyId;
+  karaokeState.recording = false;
+  go('karaoke');
+  const story = karaokeStory(storyId);
+  document.getElementById('karaokeStageTitle').textContent = story.title;
+  renderKaraokeStage();
+}
+
+function leaveKaraoke() {
+  stopKaraokeTimers();
+  if (karaokeState.stream) { karaokeState.stream.getTracks().forEach(tr => tr.stop()); karaokeState.stream = null; }
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  go('karaoke-menu');
+}
+
+function renderKaraokeStage() {
+  const story = karaokeStory(karaokeState.storyId);
+  const words = story.text.split(' ');
+  karaokeState.words = words;
+  const wordsHtml = words.map((w, i) => `<span class="karaoke-word" id="kword-${i}">${w}</span>`).join(' ');
+  document.getElementById('karaokeContent').innerHTML = `
+    <div class="karaoke-stage">
+      <div class="karaoke-stage__emoji">${story.emoji}</div>
+      <div class="karaoke-stage__title">${story.title}</div>
+      <div class="karaoke-text" id="karaokeTextBox">${wordsHtml}</div>
+      <button class="karaoke-listen-btn" id="karaokeListenBtn" onclick="playKaraoke()">${t('karaokeListenBtn')}</button>
+      <div class="karaoke-turn" id="karaokeTurn" hidden>
+        <div class="karaoke-turn__hint">${t('karaokeTurnHint')}</div>
+        <div id="karaokeRecordArea"></div>
+      </div>
+    </div>`;
+}
+
+function stopKaraokeTimers() {
+  karaokeState.timers.forEach(id => clearTimeout(id));
+  karaokeState.timers = [];
+}
+
+function playKaraoke() {
+  sfxTap();
+  stopKaraokeTimers();
+  const story = karaokeStory(karaokeState.storyId);
+  const words = karaokeState.words;
+  words.forEach((_, i) => { const el = document.getElementById('kword-'+i); if (el) el.className = 'karaoke-word'; });
+  document.getElementById('karaokeListenBtn').textContent = t('karaokeListenAgain');
+  document.getElementById('karaokeTurn').hidden = true;
+
+  const slow = phoneticMode() || enPhoneticMode();
+  const perCharMs = slow ? 75 : 60, baseMs = slow ? 320 : 260;
+  let acc = 150;
+  words.forEach((w, i) => {
+    const startAt = acc;
+    karaokeState.timers.push(setTimeout(() => {
+      const prev = document.getElementById('kword-'+(i-1));
+      if (prev) prev.className = 'karaoke-word done';
+      const el = document.getElementById('kword-'+i);
+      if (el) el.className = 'karaoke-word active';
+    }, startAt));
+    acc += Math.max(280, baseMs + w.length * perCharMs);
+  });
+  karaokeState.timers.push(setTimeout(() => {
+    const last = document.getElementById('kword-'+(words.length-1));
+    if (last) last.className = 'karaoke-word done';
+    showKaraokeTurn();
+  }, acc));
+
+  speak(story.text);
+}
+
+function showKaraokeTurn() {
+  const turn = document.getElementById('karaokeTurn');
+  if (!turn) return;
+  turn.hidden = false;
+  initKaraokeRecordArea();
+}
+
+function initKaraokeRecordArea() {
+  const area = document.getElementById('karaokeRecordArea');
+  if (!area) return;
+  const supported = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+  if (!supported) {
+    area.innerHTML = `
+      <div class="karaoke-turn__hint">${t('karaokeNoMic')}</div>
+      <button class="karaoke-star-btn" onclick="awardKaraokeStar()">${t('karaokeStarBtn')}</button>`;
+    return;
+  }
+  area.innerHTML = `
+    <div class="karaoke-turn__hint">${t('karaokeRecordHint')}</div>
+    <button class="karaoke-mic-btn" id="karaokeMicBtn" onclick="toggleKaraokeRecording()">🎙️</button>
+    <div id="karaokePlaybackArea"></div>`;
+}
+
+function toggleKaraokeRecording() {
+  if (karaokeState.recording) stopKaraokeRecording();
+  else startKaraokeRecording();
+}
+
+function startKaraokeRecording() {
+  sfxTap();
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    karaokeState.stream = stream;
+    karaokeState.chunks = [];
+    const rec = new MediaRecorder(stream);
+    karaokeState.mediaRecorder = rec;
+    rec.ondataavailable = (e) => { if (e.data.size > 0) karaokeState.chunks.push(e.data); };
+    rec.onstop = () => {
+      const blob = new Blob(karaokeState.chunks, { type: rec.mimeType || 'audio/webm' });
+      if (karaokeState.audioUrl) URL.revokeObjectURL(karaokeState.audioUrl);
+      karaokeState.audioUrl = URL.createObjectURL(blob);
+      showKaraokePlayback();
+      stream.getTracks().forEach(tr => tr.stop());
+    };
+    rec.start();
+    karaokeState.recording = true;
+    const btn = document.getElementById('karaokeMicBtn');
+    if (btn) { btn.classList.add('recording'); btn.textContent = '⏹️'; }
+    const hint = document.querySelector('#karaokeRecordArea > .karaoke-turn__hint');
+    if (hint) hint.textContent = t('karaokeRecording');
+  }).catch(() => {
+    const area = document.getElementById('karaokeRecordArea');
+    area.innerHTML = `
+      <div class="karaoke-turn__hint">${t('karaokeNoMic')}</div>
+      <button class="karaoke-star-btn" onclick="awardKaraokeStar()">${t('karaokeStarBtn')}</button>`;
+  });
+}
+
+function stopKaraokeRecording() {
+  sfxTap();
+  karaokeState.recording = false;
+  if (karaokeState.mediaRecorder && karaokeState.mediaRecorder.state !== 'inactive') {
+    karaokeState.mediaRecorder.stop();
+  }
+}
+
+function showKaraokePlayback() {
+  const area = document.getElementById('karaokePlaybackArea');
+  if (!area) return;
+  area.innerHTML = `
+    <div class="karaoke-playback">
+      <div class="karaoke-turn__hint">${t('karaokePlayback')}</div>
+      <audio controls src="${karaokeState.audioUrl}"></audio>
+      <button class="karaoke-star-btn" onclick="awardKaraokeStar()">${t('karaokeStarBtn')}</button>
+    </div>`;
+  const btn = document.getElementById('karaokeMicBtn');
+  if (btn) { btn.classList.remove('recording'); btn.textContent = '🎙️'; }
+  const hint = document.querySelector('#karaokeRecordArea > .karaoke-turn__hint');
+  if (hint) hint.textContent = t('karaokeRecordHint');
+}
+
+function awardKaraokeStar() {
+  sfxCorrect();
+  showFeedback('⭐⭐⭐');
+  saveProgress('karaoke-' + karaokeState.storyId, KARAOKE_STARS);
+  buildKaraokeMenu();
+}
+
+/* ═══════════════════════════════════════
+   PAPAN TULIS AJAIB (magic whiteboard)
+   ═══════════════════════════════════════ */
+
+let papanState = { char: PAPAN_POOL[0], ctx:null, canvasSize:0, drawing:false, lastX:0, lastY:0 };
+
+function startPapan() {
+  go('papan');
+  renderPapanBoard();
+}
+
+function renderPapanBoard() {
+  const chips = PAPAN_POOL.map(L =>
+    `<button class="consonant-chip${L === papanState.char ? ' active' : ''}" onclick="selectPapanLetter('${L}')">${L}</button>`
+  ).join('');
+  document.getElementById('papanContent').innerHTML = `
+    <div class="trace-hint">${t('papanHint')}</div>
+    <div class="consonant-scroll" id="papanLetterRow">${chips}</div>
+    <div class="trace-wrap">
+      <canvas id="papanCanvas" class="trace-canvas"></canvas>
+    </div>
+    <div class="trace-actions">
+      <button class="trace-btn" onclick="clearPapanBoard()">🧹 ${t('clearBtn')}</button>
+      <button class="adv-story-btn" onclick="revealPapanLife()">${t('papanReveal')}</button>
+    </div>
+    <div id="papanPopup" hidden></div>`;
+  setupPapanCanvas();
+}
+
+function selectPapanLetter(L) {
+  sfxTap();
+  papanState.char = L;
+  document.querySelectorAll('#papanLetterRow .consonant-chip').forEach(c => c.classList.toggle('active', c.textContent === L));
+  clearPapanBoard();
+}
+
+function setupPapanCanvas() {
+  const canvas = document.getElementById('papanCanvas');
+  const size = Math.round(canvas.clientWidth || 280);
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = size * dpr; canvas.height = size * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  papanState.ctx = ctx;
+  papanState.canvasSize = size;
+  ctx.clearRect(0, 0, size, size);
+  initPapanDrawing(canvas);
+}
+
+function drawPapanSegment(x0, y0, x1, y1) {
+  const ctx = papanState.ctx, size = papanState.canvasSize;
+  const idx = PAPAN_POOL.indexOf(papanState.char);
+  ctx.save();
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.lineWidth = Math.max(8, size * 0.06);
+  ctx.strokeStyle = TRACE_COLORS[idx % TRACE_COLORS.length];
+  ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+  ctx.restore();
+}
+
+function initPapanDrawing(canvas) {
+  const start = (e) => {
+    e.preventDefault();
+    papanState.drawing = true;
+    if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+    const p = tracePointFromEvent(e, canvas);
+    papanState.lastX = p.x; papanState.lastY = p.y;
+    drawPapanSegment(p.x, p.y, p.x, p.y);
+  };
+  const move = (e) => {
+    if (!papanState.drawing) return;
+    e.preventDefault();
+    const p = tracePointFromEvent(e, canvas);
+    drawPapanSegment(papanState.lastX, papanState.lastY, p.x, p.y);
+    papanState.lastX = p.x; papanState.lastY = p.y;
+  };
+  const end = () => { papanState.drawing = false; };
+  canvas.addEventListener('pointerdown', start);
+  canvas.addEventListener('pointermove', move);
+  canvas.addEventListener('pointerup', end);
+  canvas.addEventListener('pointerleave', end);
+  canvas.addEventListener('pointercancel', end);
+}
+
+function clearPapanBoard() {
+  sfxTap();
+  if (papanState.ctx) papanState.ctx.clearRect(0, 0, papanState.canvasSize, papanState.canvasSize);
+}
+
+function revealPapanLife() {
+  sfxCorrect(); showFeedback('✨');
+  const L = papanState.char;
+  const entry = letterInfo(L);
+  const anim = PAPAN_ANIMS[PAPAN_POOL.indexOf(L) % PAPAN_ANIMS.length];
+  const popup = document.getElementById('papanPopup');
+  popup.hidden = false; popup.className = 'syllable-popup';
+  popup.innerHTML = `<div class="syllable-popup__inner">
+    <button class="syllable-popup__close" onclick="event.stopPropagation();closePapanPopup()">✕</button>
+    <div class="papan-life papan-life--${anim}">${entry.emoji}</div>
+    <div class="adv-popup__letter">${entry.letter}</div>
+    <div class="adv-popup__word">${entry.hl}</div>
+    <button class="speak-btn" id="papanSpeakBtn" onclick="event.stopPropagation();speakBtn(vowelSpeak(letterInfo('${L}')),'papanSpeakBtn')">🔊</button>
+  </div>`;
+  popup.onclick = (e) => { if (e.target === popup) closePapanPopup(); };
+  speakBtn(vowelSpeak(entry), 'papanSpeakBtn');
+}
+
+function closePapanPopup() {
+  sfxTap();
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  document.getElementById('papanPopup').hidden = true;
 }
 
 /* ═══════════════════════════════════════
@@ -1987,6 +2836,8 @@ initSukuKata();
 initSusunDrag();
 buildReadMenu();
 buildCountMenu();
+buildAdvMenu();
+buildKaraokeMenu();
 updateHomeStars();
 </script>
 </body>
