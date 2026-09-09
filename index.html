@@ -161,6 +161,7 @@ body {
 .mc-angka .menu-card__icon { background: var(--lavender-soft); }
 .mc-hitung .menu-card__icon { background: #FFD8D8; }
 .mc-tambah .menu-card__icon { background: #D0EBFF; }
+.mc-kurang .menu-card__icon { background: #FFE3C2; }
 .mc-konsonan .menu-card__icon { background: #FFD8D8; }
 .mc-susun .menu-card__icon { background: var(--lavender-soft); }
 .mc-tulis .menu-card__icon { background: #FFF3BF; }
@@ -705,6 +706,16 @@ body {
     <div id="tambahContent"></div>
   </div>
 
+  <!-- PENGURANGAN -->
+  <div id="screen-kurang" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('menghitung-menu')">‹</button>
+      <h2 class="screen-title" id="kurangTitle">Pengurangan</h2>
+      <div class="star-badge" id="kurangStars">⭐ 0</div>
+    </div>
+    <div id="kurangContent"></div>
+  </div>
+
   <!-- PETUALANGAN HURUF: location picker -->
   <div id="screen-petualangan-menu" class="screen" hidden>
     <div class="screen-header">
@@ -790,6 +801,7 @@ const T = {
     numbers: 'Kenal Angka', numbersDesc: 'Belajar angka 1 sampai 10',
     countObj: 'Hitung Benda', countObjDesc: 'Hitung berapa banyak benda',
     addition: 'Penjumlahan', additionDesc: 'Belajar menambah angka',
+    subtraction: 'Pengurangan', subtractionDesc: 'Belajar mengurangi angka',
     writeNumbers: 'Menulis Angka', writeNumbersDesc: 'Ikuti garis putus-putus',
     whatPic: 'Gambar apakah ini?',
     howMany: 'Ada berapa',
@@ -797,13 +809,13 @@ const T = {
     correct: 'Benar!', tryAgain: 'Coba lagi!',
     perfect: 'Sempurna!', great: 'Hebat sekali!', good: 'Bagus!', retry: 'Ayo coba lagi!',
     score: 'Skor:', stars: 'bintang', back: 'Kembali', best: 'Terbaik',
-    numLabel: 'Angka', plus: 'tambah', equals: 'sama dengan', there: 'Ada',
+    numLabel: 'Angka', plus: 'tambah', minus: 'kurang', equals: 'sama dengan', there: 'Ada',
     youGot: 'Kamu dapat',
-    startWord: 'Tebak kata!', startCount: 'Hitung benda!', startAdd: 'Penjumlahan!',
+    startWord: 'Tebak kata!', startCount: 'Hitung benda!', startAdd: 'Penjumlahan!', startSub: 'Pengurangan!',
     startSpell: 'Susun kata!', startWriteL: 'Menulis huruf!', startWriteN: 'Menulis angka!',
     traceHint: 'Ikuti garis putus-putus!', clearBtn: 'Hapus', skipBtn: 'Lewati',
     tryAgainDraw: '❌ Belum pas, coba lagi ya!',
-    addQ: '= berapa?',
+    addQ: '= berapa?', subQ: '= berapa?',
     adventure: 'Petualangan Huruf', adventureDesc: 'Jelajahi & temukan huruf',
     advMenuTitle: '🗺️ Petualangan Huruf',
     advFindHint: 'Sentuh sesuatu untuk menemukan huruf tersembunyi!',
@@ -847,6 +859,7 @@ const T = {
     numbers: 'Know Numbers', numbersDesc: 'Learn numbers 1 to 10',
     countObj: 'Count Objects', countObjDesc: 'Count how many objects',
     addition: 'Addition', additionDesc: 'Learn to add numbers',
+    subtraction: 'Subtraction', subtractionDesc: 'Learn to subtract numbers',
     writeNumbers: 'Write Numbers', writeNumbersDesc: 'Trace the dotted line',
     whatPic: 'What is this picture?',
     howMany: 'How many',
@@ -854,13 +867,13 @@ const T = {
     correct: 'Correct!', tryAgain: 'Try again!',
     perfect: 'Perfect!', great: 'Awesome!', good: 'Good job!', retry: 'Try again!',
     score: 'Score:', stars: 'stars', back: 'Back', best: 'Best',
-    numLabel: 'Number', plus: 'plus', equals: 'equals', there: 'There are',
+    numLabel: 'Number', plus: 'plus', minus: 'minus', equals: 'equals', there: 'There are',
     youGot: 'You got',
-    startWord: 'Guess the word!', startCount: 'Count the objects!', startAdd: 'Addition!',
+    startWord: 'Guess the word!', startCount: 'Count the objects!', startAdd: 'Addition!', startSub: 'Subtraction!',
     startSpell: 'Spell the word!', startWriteL: 'Write letters!', startWriteN: 'Write numbers!',
     traceHint: 'Trace the dotted line!', clearBtn: 'Clear', skipBtn: 'Skip',
     tryAgainDraw: "❌ Not quite, try again!",
-    addQ: '= how many?',
+    addQ: '= how many?', subQ: '= how many?',
     adventure: 'Letter Adventure', adventureDesc: 'Explore & find letters',
     advMenuTitle: '🗺️ Letter Adventure',
     advFindHint: 'Tap something to find the hidden letter!',
@@ -906,10 +919,10 @@ const PH = {
   correct: 'beh-nar!', tryAgain: 'choh-bah lah-ghee!',
   perfect: 'sem-poor-nah!', great: 'heh-baht seh-kah-lee!',
   good: 'bah-goos!', retry: 'ah-yoh choh-bah lah-ghee!',
-  numLabel: 'ahng-kah', plus: 'tahm-bah', equals: 'sah-mah dehng-ahn',
+  numLabel: 'ahng-kah', plus: 'tahm-bah', minus: 'koo-rahng', equals: 'sah-mah dehng-ahn',
   there: 'ah-dah', youGot: 'kah-moo dah-paht', stars: 'been-tahng',
   startWord: 'teh-bahk kah-tah!', startCount: 'hee-toong ben-dah!',
-  startAdd: 'pen-joom-lah-hahn!', startSpell: 'soo-soon kah-tah!',
+  startAdd: 'pen-joom-lah-hahn!', startSub: 'peng-oo-rahng-ahn!', startSpell: 'soo-soon kah-tah!',
   startWriteL: 'meh-noo-lees hoo-roof!', startWriteN: 'meh-noo-lees ahng-kah!',
   mascot: 'high! seh-lah-maht dah-tahng dee doo-nee-ah beh-lah-jar! mah-oo beh-lah-jar ah-pah hah-ree ee-nee?',
 };
@@ -932,10 +945,10 @@ const LETTER_PH = {
 const PH_EN = {
   correct: 'korek!', tryAgain: 'trai agen!',
   perfect: 'porfek!', great: 'osem!', good: 'gud job!', retry: 'trai agen!',
-  numLabel: 'namber', plus: 'plas', equals: 'ikwals',
+  numLabel: 'namber', plus: 'plas', minus: 'mainas', equals: 'ikwals',
   there: 'der ar', youGot: 'yu got', stars: 'stars',
   startWord: 'ges de word!', startCount: 'kaunt de objek!',
-  startAdd: 'adisyen!', startSpell: 'spel de word!',
+  startAdd: 'adisyen!', startSub: 'sabtreksyen!', startSpell: 'spel de word!',
   startWriteL: 'rait leters!', startWriteN: 'rait namberz!',
   mascot: 'hai! welkam tu lerning world! wat du yu won tu lern tudei?',
 };
@@ -948,7 +961,8 @@ const LETTER_PH_EN = {
   X:'eks', Y:'wai', Z:'zi',
 };
 
-const NUM_PH_EN = ['ziro','wan','tu','sri','for','faiv','siks','seven','eit','nain','ten'];
+const NUM_PH_EN = ['ziro','wan','tu','sri','for','faiv','siks','seven','eit','nain','ten',
+                    'ilewen','twelv','thirtin','fortin','fiftin','sikstin','sevntin','eitin','naintin','twenti'];
 
 /* Building blocks for generated syllables (Ba, Bi, Bu, Be, Bo …) */
 const CONS_PH = { B:'b', C:'ch', D:'d', G:'gh', H:'h', J:'j', K:'k',
@@ -956,7 +970,9 @@ const CONS_PH = { B:'b', C:'ch', D:'d', G:'gh', H:'h', J:'j', K:'k',
 const VOW_PH  = { a:'ah', i:'ee', u:'oo', e:'eh', o:'oh' };
 
 const NUM_PH = ['nohl','sah-too','doo-ah','tee-gah','em-paht','lee-mah',
-                'eh-nahm','too-jooh','deh-lah-pahn','sem-bee-lahn','seh-poo-looh'];
+                'eh-nahm','too-jooh','deh-lah-pahn','sem-bee-lahn','seh-poo-looh',
+                'seh-beh-lahs','doo-ah beh-lahs','tee-gah beh-lahs','em-paht beh-lahs','lee-mah beh-lahs',
+                'eh-nahm beh-lahs','too-jooh beh-lahs','deh-lah-pahn beh-lahs','sem-bee-lahn beh-lahs','doo-ah poo-looh'];
 
 /* What kind of voice the device actually gave us */
 let voiceIsIndonesian = false;
@@ -1088,8 +1104,10 @@ const WORDS_DATA = {
 };
 
 const NUM_WORDS = {
-  id: ['Nol','Satu','Dua','Tiga','Empat','Lima','Enam','Tujuh','Delapan','Sembilan','Sepuluh'],
-  en: ['Zero','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'],
+  id: ['Nol','Satu','Dua','Tiga','Empat','Lima','Enam','Tujuh','Delapan','Sembilan','Sepuluh',
+       'Sebelas','Dua Belas','Tiga Belas','Empat Belas','Lima Belas','Enam Belas','Tujuh Belas','Delapan Belas','Sembilan Belas','Dua Puluh'],
+  en: ['Zero','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten',
+       'Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen','Twenty'],
 };
 
 function vowels()     { return VOWELS_DATA[lang]; }
@@ -1334,6 +1352,7 @@ function refreshUI() {
   document.getElementById('angkaTitle').textContent = t('numbers');
   document.getElementById('hitungTitle').textContent = t('countObj');
   document.getElementById('tambahTitle').textContent = t('addition');
+  document.getElementById('kurangTitle').textContent = t('subtraction');
 
   currentVowel = 0;
   initHuruf();
@@ -1424,6 +1443,14 @@ function buildCountMenu() {
         <div class="menu-card__title">${t('addition')}</div>
         <div class="menu-card__desc">${t('additionDesc')}</div>
         ${bestLine('tambah')}
+      </div><span class="menu-card__arrow">›</span>
+    </div>
+    <div class="menu-card mc-kurang" onclick="startPengurangan()">
+      <div class="menu-card__icon">➖</div>
+      <div class="menu-card__text">
+        <div class="menu-card__title">${t('subtraction')}</div>
+        <div class="menu-card__desc">${t('subtractionDesc')}</div>
+        ${bestLine('kurang')}
       </div><span class="menu-card__arrow">›</span>
     </div>
     <div class="menu-card mc-tulis" onclick="startMenulis('angka')">
@@ -2791,13 +2818,13 @@ function startPenjumlahan() {
 
 function nextTambahRound() {
   if (tambahState.round >= TOTAL_QUIZ) { showComplete('tambah', tambahState.score, 'menghitung-menu'); return; }
-  const a = 1+Math.floor(Math.random()*5);
-  const b = 1+Math.floor(Math.random()*(Math.min(5,10-a)));
+  const a = 1+Math.floor(Math.random()*10);
+  const b = 1+Math.floor(Math.random()*(Math.min(10,20-a)));
   const sum = a+b;
   const emoji = COUNT_EMOJI[Math.floor(Math.random()*COUNT_EMOJI.length)];
   const gA = Array(a).fill(`<span>${emoji}</span>`).join('');
   const gB = Array(b).fill(`<span>${emoji}</span>`).join('');
-  let opts = generateOptions(sum, 2, 10);
+  let opts = generateOptions(sum, 2, 20);
   document.getElementById('tambahStars').textContent = '⭐ '+tambahState.score;
   document.getElementById('tambahContent').innerHTML = `
     <div class="quiz-area">
@@ -2830,6 +2857,65 @@ function checkTambah(btn, correct, a, b) {
     ), 300);
     document.querySelectorAll('#tambahOptions .number-opt').forEach(x => x.style.pointerEvents='none');
     setTimeout(nextTambahRound, 2000);
+  } else {
+    sfxWrong(); btn.classList.add('wrong');
+    speak(ts('tryAgain'));
+    setTimeout(() => btn.classList.remove('wrong'), 500);
+  }
+}
+
+/* ═══════════════════════════════════════
+   PENGURANGAN
+   ═══════════════════════════════════════ */
+
+let kurangState = { score:0, round:0 };
+
+function startPengurangan() {
+  kurangState = { score:0, round:0 };
+  go('kurang'); speak(ts('startSub')); nextKurangRound();
+}
+
+function nextKurangRound() {
+  if (kurangState.round >= TOTAL_QUIZ) { showComplete('kurang', kurangState.score, 'menghitung-menu'); return; }
+  const a = 2+Math.floor(Math.random()*19);
+  const b = 1+Math.floor(Math.random()*Math.min(10,a-1));
+  const diff = a-b;
+  const emoji = COUNT_EMOJI[Math.floor(Math.random()*COUNT_EMOJI.length)];
+  const gA = Array(a).fill(`<span>${emoji}</span>`).join('');
+  const gB = Array(b).fill(`<span>${emoji}</span>`).join('');
+  let opts = generateOptions(diff, 0, 20);
+  document.getElementById('kurangStars').textContent = '⭐ '+kurangState.score;
+  document.getElementById('kurangContent').innerHTML = `
+    <div class="quiz-area">
+      <div class="quiz-prompt">
+        <div class="addition-visual">
+          <div class="addition-group">${gA}</div>
+          <span class="addition-op">−</span>
+          <div class="addition-group">${gB}</div>
+          <span class="addition-op">=</span>
+          <span class="addition-op">?</span>
+        </div>
+        <div class="quiz-question">${a} − ${b} ${t('subQ')}</div>
+      </div>
+      <div class="number-options" id="kurangOptions">
+        ${opts.map(n => `<button class="number-opt" data-val="${n}" onclick="checkKurang(this,${diff},${a},${b})">${n}</button>`).join('')}
+      </div>
+      <div class="quiz-score">${t('qLabel')} ${kurangState.round+1} ${t('qOf')} ${TOTAL_QUIZ}</div>
+    </div>`;
+}
+
+function checkKurang(btn, correct, a, b) {
+  if (btn.classList.contains('correct')||btn.classList.contains('wrong')) return;
+  if (parseInt(btn.dataset.val) === correct) {
+    sfxCorrect(); btn.classList.add('correct');
+    kurangState.score++; kurangState.round++;
+    document.getElementById('kurangStars').textContent = '⭐ '+kurangState.score;
+    showFeedback('⭐');
+    setTimeout(() => speak(
+      ts('correct')+' '+numSpeak(a)+' '+ts('minus')+' '+numSpeak(b)+' '+ts('equals')+' '+numSpeak(correct)
+    ), 300);
+    document.querySelectorAll('#kurangOptions .number-opt').forEach(x => x.style.pointerEvents='none');
+    setTimeout(nextKurangRound, 2000);
   } else {
     sfxWrong(); btn.classList.add('wrong');
     speak(ts('tryAgain'));
