@@ -616,6 +616,58 @@ body {
 
 .sea-reset-row { position: relative; z-index: 1; text-align: center; margin-top: 16px; }
 
+/* ── Awan Kata (color-cloud decode game) ─ */
+.home-card--cloud { border-color: #BBDEFB; grid-column: 1 / -1; }
+.home-card--cloud::before { background: linear-gradient(90deg, #1E88E5, #7B1FA2); }
+
+.cloud-board { border-radius: var(--radius); padding: 20px 14px 24px; box-shadow: var(--shadow-md); background: linear-gradient(180deg, #AEE1FF 0%, #EAF7FF 55%, #FFFFFF 100%); }
+.cloud-hint { text-align: center; color: #0B4D6E; font-weight: 700; font-size: 14px; margin-bottom: 16px; }
+
+.cloud {
+  position: relative; width: 64px; height: 40px; border-radius: 50px;
+  flex-shrink: 0; animation: cloudFloat 3s ease-in-out infinite;
+}
+.cloud::before, .cloud::after { content: ''; position: absolute; background: inherit; border-radius: 50%; }
+.cloud::before { width: 34px; height: 34px; top: -15px; left: 8px; }
+.cloud::after  { width: 26px; height: 26px; top: -11px; left: 36px; }
+.cloud--sm { width: 40px; height: 24px; }
+.cloud--sm::before { width: 20px; height: 20px; top: -9px; left: 5px; }
+.cloud--sm::after  { width: 16px; height: 16px; top: -6px; left: 22px; }
+@keyframes cloudFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+.cloud-key { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px; }
+.cloud-key__item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.cloud-key__item:nth-child(2n) .cloud { animation-delay: 0.4s; }
+.cloud-key__item:nth-child(3n) .cloud { animation-delay: 0.8s; }
+.cloud-key__letter { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 16px; color: #0B4D6E; text-transform: uppercase; }
+
+.cloud-score { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.9); border-radius: 14px; padding: 10px 14px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
+.cloud-score__label { font-weight: 800; font-size: 13px; color: var(--text); }
+.cloud-score__track { flex: 1; height: 10px; background: #E9ECEF; border-radius: 5px; overflow: hidden; }
+.cloud-score__fill { height: 100%; width: 0%; border-radius: 5px; background: linear-gradient(90deg, var(--leaf-soft), var(--leaf)); transition: width 0.45s ease; }
+.cloud-score__count { font-weight: 800; font-size: 14px; color: #1E88E5; min-width: 48px; text-align: right; }
+
+.cloud-row {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  background: rgba(255,255,255,0.85); border-radius: var(--radius-sm); padding: 10px 12px;
+  margin-bottom: 10px; box-shadow: var(--shadow-sm); border: 2px solid transparent; transition: border-color 0.2s ease;
+}
+.cloud-row--example { border-color: #FFE066; background: #FFFDF3; }
+.cloud-row.correct { border-color: var(--leaf); }
+.cloud-row__clouds { display: flex; gap: 6px; }
+.cloud-arrow { font-size: 16px; color: var(--text-soft); }
+.cloud-input {
+  flex: 1; min-width: 90px; max-width: 120px; padding: 8px 10px; border-radius: 10px;
+  border: 2px solid #E9ECEF; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 16px;
+  text-align: center; text-transform: lowercase; outline: none; color: var(--text);
+}
+.cloud-input:focus { border-color: #1E88E5; box-shadow: 0 0 0 3px rgba(30,136,229,0.15); }
+.cloud-input:disabled { background: var(--leaf-soft); border-color: var(--leaf); color: #2B8A3E; }
+.cloud-row.wrong .cloud-input { border-color: var(--berry); animation: shake 0.4s ease; }
+.cloud-check { font-size: 20px; width: 24px; text-align: center; }
+
+.cloud-reset-row { text-align: center; margin-top: 16px; }
+
 /* ── Count / Number ──────────────── */
 .count-objects { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 24px; min-height: 120px; align-items: center; }
 .count-obj { font-size: 36px; animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) backwards; }
@@ -750,6 +802,11 @@ body {
         <span class="home-card__icon">🐠</span>
         <div class="home-card__label" id="homeSeaLabel">Coding Angka</div>
         <div class="home-card__desc" id="homeSeaDesc">Tulis angka sesuai hewan lautnya!</div>
+      </div>
+      <div class="home-card home-card--cloud" onclick="startCloud()">
+        <span class="home-card__icon">🌈</span>
+        <div class="home-card__label" id="homeCloudLabel">Awan Kata</div>
+        <div class="home-card__desc" id="homeCloudDesc">Terjemahkan warna jadi huruf!</div>
       </div>
     </div>
     <div class="lang-toggle" style="position:relative;z-index:1">
@@ -986,6 +1043,15 @@ body {
     </div>
     <div id="seaContent"></div>
   </div>
+
+  <!-- AWAN KATA (color-cloud decode game) -->
+  <div id="screen-cloud" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('home')">‹</button>
+      <h2 class="screen-title" id="cloudTitle">🌈 Awan Kata</h2>
+    </div>
+    <div id="cloudContent"></div>
+  </div>
 </div>
 
 <div class="feedback" id="feedbackOverlay" hidden>
@@ -1084,6 +1150,12 @@ const T = {
     seaScoreLabel: 'Skor:',
     seaResetBtn: 'Mulai Ulang',
     seaCompleteMsg: 'Hebat! Kamu berhasil! Semua jawaban benar! 🎉',
+    cloud: 'Awan Kata', cloudDesc: 'Terjemahkan warna jadi huruf!',
+    cloudTitle: '🌈 Awan Kata',
+    cloudHint: 'Lihat warna awannya, lalu ketik kata yang terbentuk!',
+    cloudScoreLabel: 'Skor:',
+    cloudResetBtn: 'Mulai Ulang',
+    cloudCompleteMsg: 'Hebat! Semua kata benar! 🎉',
     speechLang: 'id-ID',
   },
   en: {
@@ -1169,6 +1241,12 @@ const T = {
     seaScoreLabel: 'Score:',
     seaResetBtn: 'Start Over',
     seaCompleteMsg: 'Great job! You did it! All answers are correct! 🎉',
+    cloud: 'Cloud Words', cloudDesc: 'Translate the colors into letters!',
+    cloudTitle: '🌈 Cloud Words',
+    cloudHint: 'Look at the cloud colors, then type the word they spell!',
+    cloudScoreLabel: 'Score:',
+    cloudResetBtn: 'Start Over',
+    cloudCompleteMsg: 'Great job! All words are correct! 🎉',
     speechLang: 'en-US',
   }
 };
@@ -1492,6 +1570,29 @@ const SEA_ROWS = [
   [[2,false],[6,true],[5,false],[1,true],[3,false],[2,false],[6,false],[4,true]],
 ];
 
+/* ── Awan Kata (color-cloud decode game) data ──
+   Each color cloud stands for one letter; a row's colors spell a word
+   when decoded through this key. The first row is a solved example. */
+const CLOUD_COLORS = [
+  { id:'merah',  hex:'#E53935', letter:'s' },
+  { id:'ungu',   hex:'#7B1FA2', letter:'b' },
+  { id:'kuning', hex:'#FDD835', letter:'r' },
+  { id:'hijau',  hex:'#43A047', letter:'u' },
+  { id:'oranye', hex:'#FB8C00', letter:'a' },
+  { id:'biru',   hex:'#1E88E5', letter:'t' },
+];
+function cloudHex(id) { const c = CLOUD_COLORS.find(c => c.id === id); return c ? c.hex : '#fff'; }
+
+const CLOUD_ROWS = [
+  { colors:['kuning','hijau','merah','oranye'], word:'rusa', example:true },
+  { colors:['merah','oranye','biru','hijau'],    word:'satu' },
+  { colors:['ungu','oranye','kuning','hijau'],   word:'baru' },
+  { colors:['ungu','hijau','oranye','biru'],     word:'buat' },
+  { colors:['kuning','oranye','biru','hijau'],   word:'ratu' },
+  { colors:['ungu','hijau','merah','oranye'],    word:'busa' },
+  { colors:['ungu','oranye','biru','hijau'],     word:'batu' },
+];
+
 /* Spoken form of a number word */
 function numSpeak(n) {
   if (phoneticMode())   return NUM_PH[n]    || NUM_WORDS.id[n];
@@ -1646,6 +1747,8 @@ function refreshUI() {
   document.getElementById('homeWarnaDesc').textContent = t('warnaDesc');
   document.getElementById('homeSeaLabel').textContent = t('sea');
   document.getElementById('homeSeaDesc').textContent = t('seaDesc');
+  document.getElementById('homeCloudLabel').textContent = t('cloud');
+  document.getElementById('homeCloudDesc').textContent = t('cloudDesc');
 
   document.getElementById('menuReadTitle').textContent = t('menuRead');
   document.getElementById('menuCountTitle').textContent = t('menuCount');
@@ -1666,6 +1769,8 @@ function refreshUI() {
   if (!document.getElementById('screen-warna').hidden) renderWarnaBoard();
   document.getElementById('seaTitle').textContent = t('seaTitle');
   if (!document.getElementById('screen-sea').hidden) renderSeaBoard();
+  document.getElementById('cloudTitle').textContent = t('cloudTitle');
+  if (!document.getElementById('screen-cloud').hidden) renderCloudBoard();
   if (advState.locId) {
     document.getElementById('advSceneTitle').textContent = advText(advState.locId).name;
     if (!document.getElementById('screen-petualangan').hidden) renderAdvScene();
@@ -3713,6 +3818,104 @@ function makeSeaBubbles() {
     b.style.animationDelay = (Math.random()*7) + 's';
     box.appendChild(b);
   }
+}
+
+/* ═══════════════════════════════════════
+   AWAN KATA (color-cloud decode game)
+   ═══════════════════════════════════════ */
+
+let cloudState = { correct: 0, total: 0 };
+
+function startCloud() {
+  go('cloud');
+  renderCloudBoard();
+}
+
+function cloudKeyHtml() {
+  return CLOUD_COLORS.map(c => `
+    <div class="cloud-key__item">
+      <span class="cloud" style="background:${c.hex}"></span>
+      <span class="cloud-key__letter">${c.letter}</span>
+    </div>`).join('');
+}
+
+function cloudRowHtml(row, ri) {
+  const cloudsHtml = row.colors.map(c => `<span class="cloud cloud--sm" style="background:${cloudHex(c)}"></span>`).join('');
+  if (row.example) {
+    return `<div class="cloud-row cloud-row--example">
+      <div class="cloud-row__clouds">${cloudsHtml}</div>
+      <span class="cloud-arrow">➜</span>
+      <input class="cloud-input" type="text" value="${row.word}" disabled>
+      <span class="cloud-check">✅</span>
+    </div>`;
+  }
+  return `<div class="cloud-row" id="cloudRow${ri}">
+    <div class="cloud-row__clouds">${cloudsHtml}</div>
+    <span class="cloud-arrow">➜</span>
+    <input class="cloud-input" id="cloudInput${ri}" type="text" inputmode="text" maxlength="${row.word.length}"
+      autocomplete="off" placeholder="${'_'.repeat(row.word.length)}" oninput="cloudCheck(this,${ri})">
+    <span class="cloud-check" id="cloudCheckIcon${ri}"></span>
+  </div>`;
+}
+
+function renderCloudBoard() {
+  cloudState = { correct: 0, total: CLOUD_ROWS.filter(r => !r.example).length };
+  document.getElementById('cloudContent').innerHTML = `
+    <div class="cloud-board">
+      <div class="cloud-hint">${t('cloudHint')}</div>
+      <div class="cloud-key">${cloudKeyHtml()}</div>
+      <div class="cloud-score">
+        <span class="cloud-score__label">${t('cloudScoreLabel')}</span>
+        <div class="cloud-score__track"><div class="cloud-score__fill" id="cloudFill"></div></div>
+        <span class="cloud-score__count" id="cloudCount">0 / ${cloudState.total}</span>
+      </div>
+      <div id="cloudRows">${CLOUD_ROWS.map((r,ri) => cloudRowHtml(r,ri)).join('')}</div>
+      <div class="warna-feedback" id="cloudFeedback"></div>
+      <div class="cloud-reset-row">
+        <button class="trace-btn" onclick="renderCloudBoard()">🔄 ${t('cloudResetBtn')}</button>
+      </div>
+    </div>`;
+  updateCloudScore();
+}
+
+function cloudCheck(input, ri) {
+  const row = CLOUD_ROWS[ri];
+  const v = input.value.trim().toLowerCase();
+  const rowEl = document.getElementById('cloudRow' + ri);
+  const icon = document.getElementById('cloudCheckIcon' + ri);
+  if (v.length < row.word.length) { rowEl.classList.remove('correct','wrong'); icon.textContent = ''; return; }
+  if (v === row.word) {
+    sfxCorrect();
+    rowEl.classList.remove('wrong'); rowEl.classList.add('correct');
+    icon.textContent = '✅';
+    input.disabled = true;
+    cloudState.correct++;
+    updateCloudScore();
+    setTimeout(() => {
+      const next = document.querySelector('#cloudRows .cloud-input:not([disabled])');
+      if (next) next.focus();
+    }, 280);
+    if (cloudState.correct >= cloudState.total) setTimeout(cloudComplete, 550);
+  } else {
+    sfxWrong();
+    rowEl.classList.remove('correct'); rowEl.classList.add('wrong');
+    setTimeout(() => { input.value = ''; rowEl.classList.remove('wrong'); }, 700);
+  }
+}
+
+function updateCloudScore() {
+  const fill = document.getElementById('cloudFill');
+  const count = document.getElementById('cloudCount');
+  if (fill) fill.style.width = (cloudState.total ? (cloudState.correct/cloudState.total)*100 : 0) + '%';
+  if (count) count.textContent = cloudState.correct + ' / ' + cloudState.total;
+}
+
+function cloudComplete() {
+  showFeedback('🎉');
+  speak(ts('correct'));
+  saveProgress('cloud', 1);
+  const fb = document.getElementById('cloudFeedback');
+  if (fb) { fb.textContent = t('cloudCompleteMsg'); fb.className = 'warna-feedback success'; }
 }
 
 /* ═══════════════════════════════════════
