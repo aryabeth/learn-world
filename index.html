@@ -668,6 +668,107 @@ body {
 
 .cloud-reset-row { text-align: center; margin-top: 16px; }
 
+/* ── Coding Garis (dot-connect pattern game) ─ */
+.home-card--garis { border-color: #B2DFDB; grid-column: 1 / -1; }
+.home-card--garis::before { background: linear-gradient(90deg, #26A69A, #00897B); }
+
+.garis-hint { text-align: center; color: var(--text-soft); font-weight: 700; font-size: 14px; margin-bottom: 14px; }
+
+.garis-score { display: flex; align-items: center; gap: 10px; background: var(--card); border-radius: 14px; padding: 10px 14px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
+.garis-score__label { font-weight: 800; font-size: 13px; color: var(--text); }
+.garis-score__track { flex: 1; height: 10px; background: #E9ECEF; border-radius: 5px; overflow: hidden; }
+.garis-score__fill { height: 100%; width: 0%; border-radius: 5px; background: linear-gradient(90deg, #80CBC4, #26A69A); transition: width 0.45s ease; }
+.garis-score__count { font-weight: 800; font-size: 14px; color: #26A69A; min-width: 48px; text-align: right; }
+
+.garis-row {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  background: var(--card); border-radius: var(--radius-sm); padding: 12px;
+  margin-bottom: 10px; box-shadow: var(--shadow-sm); border: 2px solid transparent; transition: border-color 0.2s ease;
+}
+.garis-row.correct { border-color: var(--leaf); background: rgba(64,192,87,0.06); }
+.garis-row.wrong { animation: shake 0.4s ease; border-color: var(--berry); }
+.garis-panel { flex: 1; min-width: 100px; max-width: 140px; }
+.garis-panel__label { text-align: center; font-size: 11px; font-weight: 700; color: var(--text-soft); margin-bottom: 4px; letter-spacing: 0.03em; }
+.garis-arrow { font-size: 16px; color: var(--text-soft); flex-shrink: 0; }
+.garis-svg { width: 100%; aspect-ratio: 2 / 3; display: block; }
+.garis-line { stroke-linecap: round; stroke-width: 4; }
+.garis-line--soal { stroke: #00695C; }
+.garis-line--ans { stroke: #26A69A; cursor: pointer; transition: opacity 0.15s ease; }
+.garis-line--ans:hover { opacity: 0.6; }
+.garis-dot { transition: all 0.2s ease; }
+.garis-dot--soal { fill: #26A69A; }
+.garis-dot--ans { fill: white; stroke: #90A4AE; stroke-width: 2; stroke-dasharray: 3 2; cursor: pointer; }
+.garis-dot--ans.garis-dot--filled { fill: #26A69A; stroke: #00695C; stroke-dasharray: none; }
+.garis-dot--ans.garis-dot--selected { fill: #FFD43B; stroke: #F59F00; stroke-dasharray: none; filter: drop-shadow(0 0 4px rgba(255,212,59,0.8)); r: 11; }
+.garis-check-btn {
+  width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer;
+  background: linear-gradient(135deg, #26A69A, #00897B); color: white; font-size: 18px; font-weight: 700;
+  box-shadow: var(--shadow-sm); flex-shrink: 0; transition: transform 0.15s ease;
+}
+.garis-check-btn:active { transform: scale(0.9); }
+
+.garis-reset-row { text-align: center; margin-top: 16px; }
+
+@media (max-width: 420px) {
+  .garis-row { flex-direction: column; }
+  .garis-panel { max-width: 220px; width: 100%; }
+  .garis-arrow { transform: rotate(90deg); }
+}
+
+/* ── Coding Kotak (concentric-layer grid puzzle) ─ */
+.home-card--kotak { border-color: #FFCDD2; grid-column: 1 / -1; }
+.home-card--kotak::before { background: linear-gradient(90deg, #4CAF50, #FFC107); }
+
+.kotak-hint { text-align: center; color: var(--text-soft); font-weight: 700; font-size: 14px; margin-bottom: 14px; }
+.kotak-grid-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-top: 16px; }
+
+.kotak-card {
+  background: var(--card); border-radius: var(--radius); padding: 14px;
+  border: 4px solid var(--kc, #4CAF50); box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease;
+}
+.kotak-card--done { box-shadow: 0 0 0 3px rgba(64,192,87,0.35), var(--shadow-md); }
+.kotak-card--wrong { animation: shake 0.4s ease; }
+
+.kotak-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; aspect-ratio: 1; }
+.kotak-cell {
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 15px;
+  border-radius: 6px; border: 2px solid #E9ECEF; background: #fff; color: var(--text);
+  cursor: pointer; padding: 0; transition: all 0.15s ease;
+}
+.kotak-cell--given { background: #F1F3F5; border-style: solid; font-weight: 800; cursor: default; color: var(--kc, #4CAF50); }
+.kotak-cell--empty { border-style: dashed; color: #CED4DA; }
+.kotak-cell--filled { background: #FFF9DB; border-color: #FFE066; }
+.kotak-cell--correct { background: var(--leaf-soft); border-color: var(--leaf); color: #2B8A3E; }
+.kotak-cell--wrong { background: #FFE3E3; border-color: var(--berry); animation: shake 0.3s ease; }
+.kotak-cell:disabled { cursor: default; }
+
+.kotak-example-label { text-align: center; font-weight: 700; font-size: 12px; color: var(--kc, #4CAF50); margin-top: 8px; letter-spacing: 0.05em; }
+.kotak-actions { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 10px; }
+.kotak-hint-btn {
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 13px;
+  padding: 8px 12px; border-radius: 16px; border: 2px solid #FFE066; background: #FFF9DB;
+  color: #744210; cursor: pointer; transition: transform 0.15s ease;
+}
+.kotak-hint-btn:active { transform: scale(0.93); }
+.kotak-hint-btn:disabled { opacity: 0.4; cursor: default; }
+.kotak-check-btn {
+  width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer;
+  background: linear-gradient(135deg, var(--kc, #4CAF50), #2E7D32); color: white; font-size: 18px; font-weight: 700;
+  box-shadow: var(--shadow-sm); flex-shrink: 0; transition: transform 0.15s ease;
+}
+.kotak-check-btn:active { transform: scale(0.9); }
+
+.kotak-picker-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.kotak-picker-btn {
+  width: 48px; height: 48px; border-radius: 14px; border: 2px solid #E9ECEF;
+  background: var(--card); font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 20px;
+  color: var(--text); cursor: pointer; transition: transform 0.15s ease;
+}
+.kotak-picker-btn:active { transform: scale(0.9); }
+.kotak-picker-btn--clear { color: var(--berry-deep); border-color: #FFE3E3; }
+
 /* ── Count / Number ──────────────── */
 .count-objects { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 24px; min-height: 120px; align-items: center; }
 .count-obj { font-size: 36px; animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) backwards; }
@@ -807,6 +908,16 @@ body {
         <span class="home-card__icon">🌈</span>
         <div class="home-card__label" id="homeCloudLabel">Awan Kata</div>
         <div class="home-card__desc" id="homeCloudDesc">Terjemahkan warna jadi huruf!</div>
+      </div>
+      <div class="home-card home-card--garis" onclick="startGaris()">
+        <span class="home-card__icon">🤖</span>
+        <div class="home-card__label" id="homeGarisLabel">Coding Garis</div>
+        <div class="home-card__desc" id="homeGarisDesc">Hubungkan titik sesuai pola!</div>
+      </div>
+      <div class="home-card home-card--kotak" onclick="startKotak()">
+        <span class="home-card__icon">🧩</span>
+        <div class="home-card__label" id="homeKotakLabel">Coding Kotak</div>
+        <div class="home-card__desc" id="homeKotakDesc">Lengkapi grid dengan huruf yang tepat!</div>
       </div>
     </div>
     <div class="lang-toggle" style="position:relative;z-index:1">
@@ -1052,6 +1163,24 @@ body {
     </div>
     <div id="cloudContent"></div>
   </div>
+
+  <!-- CODING GARIS (dot-connect pattern game) -->
+  <div id="screen-garis" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('home')">‹</button>
+      <h2 class="screen-title" id="garisTitle">🤖 Coding Garis</h2>
+    </div>
+    <div id="garisContent"></div>
+  </div>
+
+  <!-- CODING KOTAK (concentric-layer grid puzzle) -->
+  <div id="screen-kotak" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('home')">‹</button>
+      <h2 class="screen-title" id="kotakTitle">🧩 Coding Kotak</h2>
+    </div>
+    <div id="kotakContent"></div>
+  </div>
 </div>
 
 <div class="feedback" id="feedbackOverlay" hidden>
@@ -1156,6 +1285,22 @@ const T = {
     cloudScoreLabel: 'Skor:',
     cloudResetBtn: 'Mulai Ulang',
     cloudCompleteMsg: 'Hebat! Semua kata benar! 🎉',
+    garis: 'Coding Garis', garisDesc: 'Hubungkan titik sesuai pola!',
+    garisTitle: '🤖 Coding Garis',
+    garisHint: 'Sambungkan titik di JAWABAN biar sama kayak SOAL, lalu tekan ✓!',
+    garisSoalLabel: 'SOAL',
+    garisJawabanLabel: 'JAWABAN',
+    garisScoreLabel: 'Skor:',
+    garisResetBtn: 'Mulai Ulang',
+    garisCompleteMsg: 'Hebat! Semua pola benar! 🎉',
+    kotak: 'Coding Kotak', kotakDesc: 'Lengkapi grid dengan huruf yang tepat!',
+    kotakTitle: '🧩 Coding Kotak',
+    kotakHint: 'Isi kotak kosong sesuai pola lapisannya, lalu tekan ✓!',
+    kotakScoreLabel: 'Skor:',
+    kotakResetBtn: 'Mulai Ulang',
+    kotakExampleLabel: 'CONTOH',
+    kotakPickHint: 'Pilih huruf untuk kotak ini',
+    kotakCompleteMsg: 'Hebat! Semua puzzle selesai! 🎉',
     speechLang: 'id-ID',
   },
   en: {
@@ -1247,6 +1392,22 @@ const T = {
     cloudScoreLabel: 'Score:',
     cloudResetBtn: 'Start Over',
     cloudCompleteMsg: 'Great job! All words are correct! 🎉',
+    garis: 'Line Coding', garisDesc: 'Connect the dots to match the pattern!',
+    garisTitle: '🤖 Line Coding',
+    garisHint: 'Connect the dots in ANSWER to match the PATTERN, then press ✓!',
+    garisSoalLabel: 'PATTERN',
+    garisJawabanLabel: 'ANSWER',
+    garisScoreLabel: 'Score:',
+    garisResetBtn: 'Start Over',
+    garisCompleteMsg: 'Great job! All patterns are correct! 🎉',
+    kotak: 'Grid Coding', kotakDesc: 'Fill the grid with the right letters!',
+    kotakTitle: '🧩 Grid Coding',
+    kotakHint: 'Fill each empty box to match the layer pattern, then press ✓!',
+    kotakScoreLabel: 'Score:',
+    kotakResetBtn: 'Start Over',
+    kotakExampleLabel: 'EXAMPLE',
+    kotakPickHint: 'Pick a letter for this box',
+    kotakCompleteMsg: 'Great job! All puzzles are complete! 🎉',
     speechLang: 'en-US',
   }
 };
@@ -1593,6 +1754,57 @@ const CLOUD_ROWS = [
   { colors:['ungu','oranye','biru','hijau'],     word:'batu' },
 ];
 
+/* ── Coding Garis (dot-connect pattern game) data ──
+   6 dots numbered 1-6 (2 columns x 3 rows) at fixed SVG coordinates.
+   A level is a set of dot-to-dot lines; direction doesn't matter, only
+   which two dots are joined. */
+const GARIS_POINTS = { 1:{x:30,y:30}, 2:{x:90,y:30}, 3:{x:30,y:90}, 4:{x:90,y:90}, 5:{x:30,y:150}, 6:{x:90,y:150} };
+function garisPt(n) { return GARIS_POINTS[n]; }
+
+const GARIS_LEVELS = [
+  [[1,3],[3,5],[2,4]],
+  [[1,3],[3,4],[4,2]],
+  [[5,4],[4,1]],
+  [[5,1],[1,6],[6,2]],
+  [[2,1],[1,5],[5,6]],
+];
+
+function garisNormalize(lines) {
+  return lines.map(([a,b]) => [Math.min(a,b), Math.max(a,b)])
+    .sort((a,b) => a[0]-b[0] || a[1]-b[1])
+    .map(l => l.join('-')).join(',');
+}
+
+/* ── Coding Kotak (concentric-layer grid puzzle) data ──
+   Each puzzle is a 5x5 answer grid; `given` lists which [row,col] cells
+   start revealed (their letter always comes from `answer`, so a clue can
+   never contradict the solution). Puzzle 0 is the fully-solved example. */
+const KOTAK_PUZZLES = [
+  { color:'#4CAF50', example:true,
+    answer: ['DDDDD','DCCCD','DCACD','DCCCD','DDDDD'].map(r => r.split('')) },
+  { color:'#E91E63',
+    answer: ['DDDDD','DCCCD','DCACD','DCCCD','DDDDD'].map(r => r.split('')),
+    given: [[0,0],[1,0],[1,2],[2,2],[3,2],[3,4],[4,1],[4,4]] },
+  { color:'#F44336',
+    answer: ['CADAC','ABDBA','DDEDD','ABDBA','CADAC'].map(r => r.split('')),
+    given: [[0,0],[0,1],[0,2],[0,4],[1,4],[2,3],[3,3],[4,0]] },
+  { color:'#FFC107',
+    answer: ['DCBCD','BAEAB','AEDEA','BAEAB','DCBCD'].map(r => r.split('')),
+    given: [[0,0],[1,0],[1,3],[2,0],[2,1],[2,4],[4,0],[4,1],[4,3],[4,4]] },
+  { color:'#03A9F4',
+    answer: ['ABCBA','BCDCB','CDEDC','BCDCB','ABCBA'].map(r => r.split('')),
+    given: [[0,0],[1,3],[2,1],[2,3],[3,1],[3,2],[4,0],[4,4]] },
+  { color:'#FF9800',
+    answer: ['DCBCD','CBABC','BAAAB','CBABC','DCBCD'].map(r => r.split('')),
+    given: [[0,0],[0,1],[1,1],[2,2],[3,1],[3,2],[3,4],[4,4]] },
+];
+
+function kotakIsGiven(pi, r, c) {
+  const p = KOTAK_PUZZLES[pi];
+  if (p.example) return true;
+  return p.given.some(([gr,gc]) => gr === r && gc === c);
+}
+
 /* Spoken form of a number word */
 function numSpeak(n) {
   if (phoneticMode())   return NUM_PH[n]    || NUM_WORDS.id[n];
@@ -1749,6 +1961,10 @@ function refreshUI() {
   document.getElementById('homeSeaDesc').textContent = t('seaDesc');
   document.getElementById('homeCloudLabel').textContent = t('cloud');
   document.getElementById('homeCloudDesc').textContent = t('cloudDesc');
+  document.getElementById('homeGarisLabel').textContent = t('garis');
+  document.getElementById('homeGarisDesc').textContent = t('garisDesc');
+  document.getElementById('homeKotakLabel').textContent = t('kotak');
+  document.getElementById('homeKotakDesc').textContent = t('kotakDesc');
 
   document.getElementById('menuReadTitle').textContent = t('menuRead');
   document.getElementById('menuCountTitle').textContent = t('menuCount');
@@ -1771,6 +1987,10 @@ function refreshUI() {
   if (!document.getElementById('screen-sea').hidden) renderSeaBoard();
   document.getElementById('cloudTitle').textContent = t('cloudTitle');
   if (!document.getElementById('screen-cloud').hidden) renderCloudBoard();
+  document.getElementById('garisTitle').textContent = t('garisTitle');
+  if (!document.getElementById('screen-garis').hidden) renderGarisBoard();
+  document.getElementById('kotakTitle').textContent = t('kotakTitle');
+  if (!document.getElementById('screen-kotak').hidden) renderKotakBoard();
   if (advState.locId) {
     document.getElementById('advSceneTitle').textContent = advText(advState.locId).name;
     if (!document.getElementById('screen-petualangan').hidden) renderAdvScene();
@@ -3916,6 +4136,339 @@ function cloudComplete() {
   saveProgress('cloud', 1);
   const fb = document.getElementById('cloudFeedback');
   if (fb) { fb.textContent = t('cloudCompleteMsg'); fb.className = 'warna-feedback success'; }
+}
+
+/* ═══════════════════════════════════════
+   CODING GARIS (dot-connect pattern game)
+   ═══════════════════════════════════════ */
+
+let garisState = { answers: [], locked: [] };
+let garisSelected = null;
+
+function startGaris() {
+  go('garis');
+  renderGarisBoard();
+}
+
+function garisSoalSvg(li) {
+  const lines = GARIS_LEVELS[li];
+  const linesHtml = lines.map(([a,b]) => {
+    const pa = garisPt(a), pb = garisPt(b);
+    return `<line x1="${pa.x}" y1="${pa.y}" x2="${pb.x}" y2="${pb.y}" class="garis-line garis-line--soal"></line>`;
+  }).join('');
+  let circles = '';
+  for (let n = 1; n <= 6; n++) {
+    const p = garisPt(n);
+    circles += `<circle cx="${p.x}" cy="${p.y}" r="7" class="garis-dot garis-dot--soal"></circle>`;
+  }
+  return `<svg viewBox="0 0 120 180" class="garis-svg">${linesHtml}${circles}</svg>`;
+}
+
+function garisAnswerSvg(li) {
+  const ans = garisState.answers[li];
+  const used = new Set(ans.flat());
+  const sel = (garisSelected && garisSelected.li === li) ? garisSelected.point : null;
+  const linesHtml = ans.map(([a,b], idx) => {
+    const pa = garisPt(a), pb = garisPt(b);
+    return `<line x1="${pa.x}" y1="${pa.y}" x2="${pb.x}" y2="${pb.y}" class="garis-line garis-line--ans" onclick="garisDeleteLine(${li},${idx})"></line>`;
+  }).join('');
+  let circles = '';
+  for (let n = 1; n <= 6; n++) {
+    const p = garisPt(n);
+    const cls = ['garis-dot', 'garis-dot--ans'];
+    if (used.has(n)) cls.push('garis-dot--filled');
+    if (sel === n) cls.push('garis-dot--selected');
+    circles += `<circle cx="${p.x}" cy="${p.y}" r="9" class="${cls.join(' ')}" onclick="garisPickPoint(${li},${n})"></circle>`;
+  }
+  return `<svg viewBox="0 0 120 180" class="garis-svg garis-svg--ans" id="garisAnsSvg${li}">${linesHtml}${circles}</svg>`;
+}
+
+function garisRowHtml(li) {
+  return `<div class="garis-row" id="garisRow${li}">
+    <div class="garis-panel">
+      <div class="garis-panel__label">${t('garisSoalLabel')}</div>
+      ${garisSoalSvg(li)}
+    </div>
+    <span class="garis-arrow">➜</span>
+    <div class="garis-panel">
+      <div class="garis-panel__label">${t('garisJawabanLabel')}</div>
+      ${garisAnswerSvg(li)}
+    </div>
+    <button class="garis-check-btn" id="garisCheckBtn${li}" onclick="garisCheck(${li})">✓</button>
+  </div>`;
+}
+
+function renderGarisBoard() {
+  garisState = { answers: GARIS_LEVELS.map(() => []), locked: GARIS_LEVELS.map(() => false) };
+  garisSelected = null;
+  document.getElementById('garisContent').innerHTML = `
+    <div class="garis-hint">${t('garisHint')}</div>
+    <div class="garis-score">
+      <span class="garis-score__label">${t('garisScoreLabel')}</span>
+      <div class="garis-score__track"><div class="garis-score__fill" id="garisFill"></div></div>
+      <span class="garis-score__count" id="garisCount">0 / ${GARIS_LEVELS.length}</span>
+    </div>
+    <div id="garisRows">${GARIS_LEVELS.map((_,li) => garisRowHtml(li)).join('')}</div>
+    <div class="warna-feedback" id="garisFeedback"></div>
+    <div class="garis-reset-row">
+      <button class="trace-btn" onclick="garisReset()">🔄 ${t('garisResetBtn')}</button>
+    </div>`;
+  updateGarisScore();
+}
+
+function garisPickPoint(li, n) {
+  if (garisState.locked[li]) return;
+  sfxTap();
+  if (!garisSelected || garisSelected.li !== li) {
+    garisSelected = { li, point: n };
+  } else if (garisSelected.point === n) {
+    garisSelected = null;
+  } else {
+    const a = garisSelected.point, b = n;
+    const exists = garisState.answers[li].some(([x,y]) => (x===a&&y===b) || (x===b&&y===a));
+    if (!exists) garisState.answers[li].push([a, b]);
+    garisSelected = null;
+  }
+  const svgEl = document.getElementById('garisAnsSvg' + li);
+  if (svgEl) svgEl.outerHTML = garisAnswerSvg(li);
+}
+
+function garisDeleteLine(li, idx) {
+  if (garisState.locked[li]) return;
+  sfxTap();
+  garisState.answers[li].splice(idx, 1);
+  const svgEl = document.getElementById('garisAnsSvg' + li);
+  if (svgEl) svgEl.outerHTML = garisAnswerSvg(li);
+}
+
+function garisCheck(li) {
+  if (garisState.locked[li]) return;
+  sfxTap();
+  const rowEl = document.getElementById('garisRow' + li);
+  const correct = garisState.answers[li].length > 0 &&
+    garisNormalize(garisState.answers[li]) === garisNormalize(GARIS_LEVELS[li]);
+  if (correct) {
+    sfxCorrect();
+    rowEl.classList.remove('wrong'); rowEl.classList.add('correct');
+    garisState.locked[li] = true;
+    document.getElementById('garisCheckBtn' + li).textContent = '✅';
+    showFeedback('✨');
+    updateGarisScore();
+    if (garisState.locked.filter(Boolean).length >= GARIS_LEVELS.length) setTimeout(garisComplete, 500);
+  } else {
+    sfxWrong();
+    rowEl.classList.remove('correct'); rowEl.classList.add('wrong');
+    setTimeout(() => rowEl.classList.remove('wrong'), 500);
+  }
+}
+
+function updateGarisScore() {
+  const done = garisState.locked.filter(Boolean).length;
+  const fill = document.getElementById('garisFill');
+  const count = document.getElementById('garisCount');
+  if (fill) fill.style.width = (done / GARIS_LEVELS.length * 100) + '%';
+  if (count) count.textContent = done + ' / ' + GARIS_LEVELS.length;
+}
+
+function garisComplete() {
+  showFeedback('🎉');
+  speak(ts('correct'));
+  saveProgress('garis', 1);
+  const fb = document.getElementById('garisFeedback');
+  if (fb) { fb.textContent = t('garisCompleteMsg'); fb.className = 'warna-feedback success'; }
+}
+
+function garisReset() {
+  sfxTap();
+  renderGarisBoard();
+}
+
+/* ═══════════════════════════════════════
+   CODING KOTAK (concentric-layer grid puzzle)
+   ═══════════════════════════════════════ */
+
+let kotakState = { values: [], locked: [], hints: [] };
+let kotakActiveCell = null;
+
+function kotakInitValues(pi) {
+  const p = KOTAK_PUZZLES[pi];
+  const grid = [];
+  for (let r = 0; r < 5; r++) {
+    const row = [];
+    for (let c = 0; c < 5; c++) row.push(kotakIsGiven(pi,r,c) ? p.answer[r][c] : null);
+    grid.push(row);
+  }
+  return grid;
+}
+
+function startKotak() {
+  go('kotak');
+  renderKotakBoard();
+}
+
+function kotakGridHtml(pi) {
+  const vals = kotakState.values[pi];
+  let html = '';
+  for (let r = 0; r < 5; r++) {
+    for (let c = 0; c < 5; c++) {
+      const given = kotakIsGiven(pi,r,c);
+      const v = vals[r][c];
+      const cls = ['kotak-cell'];
+      if (given) cls.push('kotak-cell--given');
+      else if (v) cls.push('kotak-cell--filled');
+      else cls.push('kotak-cell--empty');
+      const disabled = given || kotakState.locked[pi];
+      html += `<button class="${cls.join(' ')}" ${disabled ? 'disabled' : ''} onclick="kotakOpenPicker(${pi},${r},${c})">${v || ''}</button>`;
+    }
+  }
+  return html;
+}
+
+function kotakCardHtml(pi) {
+  const p = KOTAK_PUZZLES[pi];
+  return `<div class="kotak-card${kotakState.locked[pi] && !p.example ? ' kotak-card--done' : ''}" id="kotakCard${pi}" style="--kc:${p.color}">
+    <div class="kotak-grid" id="kotakGrid${pi}">${kotakGridHtml(pi)}</div>
+    ${p.example
+      ? `<div class="kotak-example-label">${t('kotakExampleLabel')}</div>`
+      : `<div class="kotak-actions">
+          <button class="kotak-hint-btn" id="kotakHintBtn${pi}" onclick="kotakHint(${pi})" ${kotakState.hints[pi] >= 3 || kotakState.locked[pi] ? 'disabled' : ''}>💡 ${kotakState.hints[pi]}/3</button>
+          <button class="kotak-check-btn" id="kotakCheckBtn${pi}" onclick="kotakCheck(${pi})">${kotakState.locked[pi] ? '✅' : '✓'}</button>
+        </div>`}
+  </div>`;
+}
+
+function renderKotakBoard() {
+  kotakState = {
+    values: KOTAK_PUZZLES.map((_,pi) => kotakInitValues(pi)),
+    locked: KOTAK_PUZZLES.map(p => !!p.example),
+    hints: KOTAK_PUZZLES.map(() => 0),
+  };
+  kotakActiveCell = null;
+  const total = KOTAK_PUZZLES.filter(p => !p.example).length;
+  document.getElementById('kotakContent').innerHTML = `
+    <div class="kotak-hint">${t('kotakHint')}</div>
+    <div class="garis-score">
+      <span class="garis-score__label">${t('kotakScoreLabel')}</span>
+      <div class="garis-score__track"><div class="garis-score__fill" id="kotakFill"></div></div>
+      <span class="garis-score__count" id="kotakCount">0 / ${total}</span>
+    </div>
+    <div class="kotak-grid-wrap">${KOTAK_PUZZLES.map((_,pi) => kotakCardHtml(pi)).join('')}</div>
+    <div class="warna-feedback" id="kotakFeedback"></div>
+    <div class="garis-reset-row">
+      <button class="trace-btn" onclick="renderKotakBoard()">🔄 ${t('kotakResetBtn')}</button>
+    </div>
+    <div id="kotakPicker" hidden></div>`;
+  updateKotakScore();
+}
+
+function kotakRefreshPuzzle(pi) {
+  const el = document.getElementById('kotakCard' + pi);
+  if (el) el.outerHTML = kotakCardHtml(pi);
+}
+
+function kotakOpenPicker(pi, r, c) {
+  if (kotakState.locked[pi] || kotakIsGiven(pi,r,c)) return;
+  sfxTap();
+  kotakActiveCell = { pi, r, c };
+  const popup = document.getElementById('kotakPicker');
+  popup.hidden = false; popup.className = 'syllable-popup';
+  const letters = ['A','B','C','D','E'];
+  popup.innerHTML = `<div class="syllable-popup__inner">
+    <button class="syllable-popup__close" onclick="event.stopPropagation();kotakClosePicker()">✕</button>
+    <div class="trace-hint">${t('kotakPickHint')}</div>
+    <div class="kotak-picker-row">
+      ${letters.map(L => `<button class="kotak-picker-btn" onclick="event.stopPropagation();kotakChoose('${L}')">${L}</button>`).join('')}
+      <button class="kotak-picker-btn kotak-picker-btn--clear" onclick="event.stopPropagation();kotakChoose(null)">✕</button>
+    </div>
+  </div>`;
+  popup.onclick = (e) => { if (e.target === popup) kotakClosePicker(); };
+}
+
+function kotakClosePicker() {
+  const popup = document.getElementById('kotakPicker');
+  if (popup) popup.hidden = true;
+  kotakActiveCell = null;
+}
+
+function kotakChoose(letter) {
+  const cell = kotakActiveCell;
+  if (!cell) return;
+  sfxTap();
+  kotakState.values[cell.pi][cell.r][cell.c] = letter;
+  kotakClosePicker();
+  kotakRefreshPuzzle(cell.pi);
+}
+
+function kotakCheck(pi) {
+  if (kotakState.locked[pi]) return;
+  sfxTap();
+  const p = KOTAK_PUZZLES[pi];
+  const vals = kotakState.values[pi];
+  const cellEls = document.querySelectorAll('#kotakGrid' + pi + ' .kotak-cell');
+  let allCorrect = true, allFilled = true;
+  for (let r = 0; r < 5; r++) {
+    for (let c = 0; c < 5; c++) {
+      if (kotakIsGiven(pi,r,c)) continue;
+      const el = cellEls[r*5 + c];
+      const v = (vals[r][c] || '').toUpperCase();
+      if (!v) { allFilled = false; el.classList.remove('kotak-cell--correct','kotak-cell--wrong'); continue; }
+      if (v === p.answer[r][c]) {
+        el.classList.add('kotak-cell--correct'); el.classList.remove('kotak-cell--wrong');
+      } else {
+        el.classList.add('kotak-cell--wrong'); el.classList.remove('kotak-cell--correct');
+        allCorrect = false;
+      }
+    }
+  }
+  if (allFilled && allCorrect) {
+    sfxCorrect();
+    kotakState.locked[pi] = true;
+    showFeedback('✨');
+    updateKotakScore();
+    kotakRefreshPuzzle(pi);
+    if (kotakState.locked.filter(Boolean).length >= KOTAK_PUZZLES.length) setTimeout(kotakComplete, 500);
+  } else {
+    sfxWrong();
+    const card = document.getElementById('kotakCard' + pi);
+    card.classList.add('kotak-card--wrong');
+    setTimeout(() => card.classList.remove('kotak-card--wrong'), 500);
+  }
+}
+
+function kotakHint(pi) {
+  if (kotakState.locked[pi] || kotakState.hints[pi] >= 3) return;
+  const p = KOTAK_PUZZLES[pi];
+  const vals = kotakState.values[pi];
+  const targets = [];
+  for (let r = 0; r < 5; r++) {
+    for (let c = 0; c < 5; c++) {
+      if (kotakIsGiven(pi,r,c)) continue;
+      if ((vals[r][c] || '').toUpperCase() !== p.answer[r][c]) targets.push([r,c]);
+    }
+  }
+  if (!targets.length) return;
+  sfxTap();
+  const [r,c] = targets[Math.floor(Math.random()*targets.length)];
+  vals[r][c] = p.answer[r][c];
+  kotakState.hints[pi]++;
+  kotakRefreshPuzzle(pi);
+}
+
+function updateKotakScore() {
+  const total = KOTAK_PUZZLES.filter(p => !p.example).length;
+  const done = kotakState.locked.filter(Boolean).length - 1;
+  const fill = document.getElementById('kotakFill');
+  const count = document.getElementById('kotakCount');
+  if (fill) fill.style.width = (done/total*100) + '%';
+  if (count) count.textContent = done + ' / ' + total;
+}
+
+function kotakComplete() {
+  showFeedback('🎉');
+  speak(ts('correct'));
+  saveProgress('kotak', 1);
+  const fb = document.getElementById('kotakFeedback');
+  if (fb) { fb.textContent = t('kotakCompleteMsg'); fb.className = 'warna-feedback success'; }
 }
 
 /* ═══════════════════════════════════════
