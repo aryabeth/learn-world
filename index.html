@@ -732,15 +732,17 @@ body {
 
 .kotak-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; aspect-ratio: 1; }
 .kotak-cell {
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 15px;
-  border-radius: 6px; border: 2px solid #E9ECEF; background: #fff; color: var(--text);
-  cursor: pointer; padding: 0; transition: all 0.15s ease;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 9px;
+  border-radius: 6px; border: 2px solid #E9ECEF; background: #fff; color: var(--text-soft);
+  cursor: pointer; padding: 2px; transition: all 0.15s ease;
 }
-.kotak-cell--given { background: #F1F3F5; border-style: solid; font-weight: 800; cursor: default; color: var(--kc, #4CAF50); }
+.kotak-cell__line { width: 70%; height: 5px; border-radius: 3px; background: var(--lc, transparent); }
+.kotak-cell__letter { line-height: 1; }
+.kotak-cell--given { background: #F1F3F5; border-style: solid; font-weight: 800; cursor: default; }
 .kotak-cell--empty { border-style: dashed; color: #CED4DA; }
 .kotak-cell--filled { background: #FFF9DB; border-color: #FFE066; }
-.kotak-cell--correct { background: var(--leaf-soft); border-color: var(--leaf); color: #2B8A3E; }
+.kotak-cell--correct { background: var(--leaf-soft); border-color: var(--leaf); }
 .kotak-cell--wrong { background: #FFE3E3; border-color: var(--berry); animation: shake 0.3s ease; }
 .kotak-cell:disabled { cursor: default; }
 
@@ -762,10 +764,12 @@ body {
 
 .kotak-picker-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
 .kotak-picker-btn {
-  width: 48px; height: 48px; border-radius: 14px; border: 2px solid #E9ECEF;
-  background: var(--card); font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 20px;
-  color: var(--text); cursor: pointer; transition: transform 0.15s ease;
+  width: 52px; height: 52px; border-radius: 14px; border: 2px solid #E9ECEF;
+  background: var(--card); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 11px;
+  color: var(--text-soft); cursor: pointer; transition: transform 0.15s ease;
 }
+.kotak-picker-btn__line { width: 70%; height: 8px; border-radius: 5px; background: var(--pc, transparent); }
 .kotak-picker-btn:active { transform: scale(0.9); }
 .kotak-picker-btn--clear { color: var(--berry-deep); border-color: #FFE3E3; }
 
@@ -1804,6 +1808,11 @@ function kotakIsGiven(pi, r, c) {
   if (p.example) return true;
   return p.given.some(([gr,gc]) => gr === r && gc === c);
 }
+
+/* Each layer letter is shown as a colored line, matching the spec's
+   "kunci lapisan" (D=red outer, C=blue, B=yellow, A=black center; E=purple
+   for puzzles that add a fifth inner layer). */
+const KOTAK_LAYER_COLOR = { A:'#212529', B:'#FFC107', C:'#1E88E5', D:'#F44336', E:'#7B1FA2' };
 
 /* Spoken form of a number word */
 function numSpeak(n) {
@@ -4318,7 +4327,10 @@ function kotakGridHtml(pi) {
       else if (v) cls.push('kotak-cell--filled');
       else cls.push('kotak-cell--empty');
       const disabled = given || kotakState.locked[pi];
-      html += `<button class="${cls.join(' ')}" ${disabled ? 'disabled' : ''} onclick="kotakOpenPicker(${pi},${r},${c})">${v || ''}</button>`;
+      const inner = v
+        ? `<span class="kotak-cell__line" style="--lc:${KOTAK_LAYER_COLOR[v.toUpperCase()] || '#ccc'}"></span><span class="kotak-cell__letter">${v}</span>`
+        : '';
+      html += `<button class="${cls.join(' ')}" ${disabled ? 'disabled' : ''} onclick="kotakOpenPicker(${pi},${r},${c})">${inner}</button>`;
     }
   }
   return html;
@@ -4377,7 +4389,7 @@ function kotakOpenPicker(pi, r, c) {
     <button class="syllable-popup__close" onclick="event.stopPropagation();kotakClosePicker()">✕</button>
     <div class="trace-hint">${t('kotakPickHint')}</div>
     <div class="kotak-picker-row">
-      ${letters.map(L => `<button class="kotak-picker-btn" onclick="event.stopPropagation();kotakChoose('${L}')">${L}</button>`).join('')}
+      ${letters.map(L => `<button class="kotak-picker-btn" onclick="event.stopPropagation();kotakChoose('${L}')"><span class="kotak-picker-btn__line" style="--pc:${KOTAK_LAYER_COLOR[L]}"></span><span>${L}</span></button>`).join('')}
       <button class="kotak-picker-btn kotak-picker-btn--clear" onclick="event.stopPropagation();kotakChoose(null)">✕</button>
     </div>
   </div>`;
