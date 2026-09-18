@@ -40,7 +40,7 @@ body {
   min-height: 100vh; overflow-x: hidden;
   -webkit-tap-highlight-color: transparent; user-select: none;
 }
-.app { max-width: 520px; margin: 0 auto; padding: 16px 20px 80px; min-height: 100vh; position: relative; }
+.app { max-width: 1024px; margin: 0 auto; padding: 16px 20px 80px; min-height: 100vh; position: relative; }
 
 /* ── Background decoration ───────── */
 .bg-blobs { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
@@ -451,6 +451,171 @@ body {
 @keyframes papanSpin   { 0%{ transform: rotate(0deg); } 100%{ transform: rotate(360deg); } }
 @keyframes papanPulse  { 0%,100%{ transform: scale(1); } 50%{ transform: scale(1.3); } }
 
+/* ── Coding Anak (kids coding puzzle) ─ */
+.home-card--coding { border-color: #99E9F2; grid-column: 1 / -1; }
+.home-card--coding::before { background: linear-gradient(90deg, #15AABF, #4DABF7); }
+
+.coding-level-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.coding-level-card {
+  aspect-ratio: 1; border-radius: var(--radius-sm); border: 3px solid #99E9F2;
+  background: var(--card); box-shadow: var(--shadow-sm); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; position: relative;
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 28px; color: var(--text);
+  transition: transform 0.15s ease;
+}
+.coding-level-card:active { transform: scale(0.93); }
+.coding-level-card--done { border-color: var(--leaf); background: var(--leaf-soft); color: #2B8A3E; }
+.coding-level-card__check { position: absolute; top: 6px; right: 8px; font-size: 15px; color: var(--leaf); }
+
+.coding-hint { text-align: center; font-size: 14px; color: var(--text-soft); font-weight: 700; margin-bottom: 14px; }
+.coding-board {
+  position: relative; display: grid; margin: 0 auto; width: 100%; max-width: 300px;
+  aspect-ratio: 1 / 1; background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow-md); border: 3px solid #99E9F2; overflow: hidden;
+}
+.coding-cell { border: 1px solid #F1F3F5; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+.coding-cell--goal { background: #FFF9DB; }
+.coding-cell--rock { background: #F1F3F5; }
+.coding-avatar {
+  position: absolute; display: flex; align-items: center; justify-content: center;
+  font-size: 26px; transition: left 0.35s ease, top 0.35s ease; pointer-events: none;
+}
+.coding-avatar--bump { animation: shake 0.35s ease; }
+.coding-avatar--win { animation: popCorrect 0.5s ease; }
+
+.coding-queue {
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+  min-height: 52px; align-items: center; margin: 16px 0 4px;
+}
+.coding-queue__empty { font-size: 13px; color: var(--text-soft); font-weight: 600; }
+.coding-block {
+  width: 44px; height: 44px; border-radius: 12px; border: 2px solid var(--sky-soft);
+  background: var(--sky-soft); font-size: 20px; cursor: pointer; transition: transform 0.15s ease;
+}
+.coding-block:active { transform: scale(0.9); }
+
+.coding-pad {
+  display: grid; grid-template-columns: repeat(3, 64px); grid-template-rows: repeat(2, 64px);
+  gap: 8px; justify-content: center; margin-top: 18px;
+}
+.coding-dir {
+  border-radius: 16px; border: none; background: linear-gradient(135deg, #15AABF, #4DABF7);
+  color: white; font-size: 26px; cursor: pointer; box-shadow: var(--shadow-sm);
+  transition: transform 0.15s ease;
+}
+.coding-dir:active { transform: scale(0.9); }
+
+.coding-actions { display: flex; justify-content: center; gap: 12px; margin-top: 20px; }
+.coding-run-btn {
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 16px;
+  padding: 12px 24px; border-radius: 22px; border: none; cursor: pointer; color: white;
+  background: linear-gradient(135deg, var(--leaf), #37B24D); box-shadow: var(--shadow-md);
+}
+.coding-run-btn:disabled { opacity: 0.4; cursor: default; }
+.coding-run-btn:active { transform: scale(0.95); }
+
+/* ── Angka ke Warna (number-color matching) ─ */
+.home-card--warna { border-color: #FFD8E8; grid-column: 1 / -1; }
+.home-card--warna::before { background: linear-gradient(90deg, #E33752, #80429A); }
+
+.warna-sub { text-align: center; font-size: 14px; color: var(--text-soft); font-weight: 700; margin-bottom: 16px; }
+.warna-legend { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px; }
+.warna-legend-circle {
+  width: 52px; height: 52px; border-radius: 50%; border: 3px solid rgba(0,0,0,0.08);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 22px; color: #000;
+  box-shadow: var(--shadow-sm);
+}
+.warna-stats {
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px;
+  margin-bottom: 14px; font-weight: 700; color: var(--text-soft); font-size: 14px;
+}
+.warna-row {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  background: var(--card); border-radius: var(--radius-sm); padding: 12px 14px;
+  margin-bottom: 10px; box-shadow: var(--shadow-sm);
+}
+.warna-row--example { border: 2px solid #FFE066; background: #FFFDF3; }
+.warna-seq { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: 1px; min-width: 84px; }
+.warna-arrow { font-size: 18px; color: var(--text-soft); }
+.warna-slots { display: flex; gap: 8px; flex-wrap: wrap; }
+.warna-slot {
+  width: 40px; height: 40px; border-radius: 50%; border: 3px dashed #E9ECEF;
+  background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 15px; color: white;
+  transition: transform 0.15s ease;
+}
+.warna-slot.filled { border-style: solid; }
+.warna-slot.correct { border-color: var(--leaf); box-shadow: 0 0 0 3px rgba(64,192,87,0.35); }
+.warna-slot.wrong { border-color: var(--berry); animation: shake 0.4s ease; }
+.warna-slot:active { transform: scale(0.9); }
+.warna-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 18px; }
+.warna-feedback { text-align: center; font-weight: 700; margin-top: 14px; font-size: 15px; min-height: 20px; }
+.warna-feedback.success { color: var(--leaf); }
+.warna-feedback.error { color: var(--berry-deep); }
+
+/* ── Coding Angka (sea-creature number puzzle) ─ */
+.home-card--sea { border-color: #B8E4F0; grid-column: 1 / -1; }
+.home-card--sea::before { background: linear-gradient(90deg, #1580B8, #0B4D6E); }
+
+.sea-board {
+  position: relative; overflow: hidden; border-radius: var(--radius);
+  padding: 20px 14px 24px; box-shadow: var(--shadow-md);
+  background: linear-gradient(170deg, #7EC8E3 0%, #1580B8 55%, #0B4D6E 100%);
+}
+.sea-bubbles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.sea-bubble {
+  position: absolute; bottom: -20px; border-radius: 50%;
+  background: rgba(255,255,255,0.18); animation: seaRise linear infinite;
+}
+@keyframes seaRise {
+  0% { transform: translateY(0) scale(1); opacity: 0.5; }
+  50% { opacity: 0.22; }
+  100% { transform: translateY(-320px) scale(0.4); opacity: 0; }
+}
+.sea-hint { position: relative; z-index: 1; text-align: center; color: #FFF8E7; font-weight: 700; font-size: 14px; margin-bottom: 14px; }
+.sea-score {
+  position: relative; z-index: 1; display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.95); border-radius: 14px; padding: 10px 14px;
+  margin-bottom: 14px; box-shadow: var(--shadow-sm);
+}
+.sea-score__label { font-weight: 800; font-size: 13px; color: var(--text); }
+.sea-score__track { flex: 1; height: 10px; background: #E9ECEF; border-radius: 5px; overflow: hidden; }
+.sea-score__fill { height: 100%; width: 0%; border-radius: 5px; background: linear-gradient(90deg, var(--leaf-soft), var(--leaf)); transition: width 0.45s ease; }
+.sea-score__count { font-weight: 800; font-size: 14px; color: #1580B8; min-width: 48px; text-align: right; }
+
+.sea-key { position: relative; z-index: 1; background: rgba(255,255,255,0.95); border-radius: 16px; padding: 12px 10px 14px; margin-bottom: 14px; box-shadow: var(--shadow-sm); }
+.sea-key__title { text-align: center; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 13px; color: #1580B8; margin-bottom: 8px; }
+.sea-key__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.sea-key__item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 7px 2px 8px; border-radius: 12px; background: #FFF8E7; border: 2px solid #E9ECEF; }
+.sea-key__emoji { font-size: 26px; line-height: 1; }
+.sea-key__num { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 14px; color: #fff; background: #1580B8; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.sea-key__name { font-size: 10px; font-weight: 700; color: #1580B8; text-align: center; line-height: 1.1; }
+
+.sea-puzzle { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 6px; }
+.sea-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+.sea-cell {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 6px 2px 5px; border-radius: 12px; background: rgba(255,255,255,0.92);
+  border: 2.5px solid rgba(11,77,110,0.15); min-height: 58px; justify-content: center;
+  transition: all 0.25s ease;
+}
+.sea-cell__emoji { font-size: 22px; line-height: 1; }
+.sea-cell__num { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 14px; color: #fff; background: #1580B8; width: 23px; height: 21px; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+.sea-cell__input {
+  width: 28px; height: 24px; border: 2px dashed #7EC8E3; border-radius: 7px; background: transparent;
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 14px; text-align: center;
+  color: var(--text); outline: none;
+}
+.sea-cell__input:focus { border-style: solid; border-color: #1580B8; background: rgba(255,255,255,0.5); }
+.sea-cell.correct { border-color: var(--leaf); background: rgba(64,192,87,0.12); }
+.sea-cell.correct .sea-cell__input { border-color: var(--leaf); border-style: solid; color: #2B8A3E; font-weight: 800; }
+.sea-cell.correct .sea-cell__emoji { animation: popCorrect 0.4s ease; }
+.sea-cell.wrong { border-color: var(--berry); background: rgba(255,107,107,0.08); animation: shake 0.4s ease; }
+.sea-cell.wrong .sea-cell__input { border-color: var(--berry); border-style: solid; color: var(--berry-deep); }
+
+.sea-reset-row { position: relative; z-index: 1; text-align: center; margin-top: 16px; }
+
 /* ── Count / Number ──────────────── */
 .count-objects { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 24px; min-height: 120px; align-items: center; }
 .count-obj { font-size: 36px; animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) backwards; }
@@ -570,6 +735,21 @@ body {
         <span class="home-card__icon">🪄</span>
         <div class="home-card__label" id="homePapanLabel">Papan Tulis Ajaib</div>
         <div class="home-card__desc" id="homePapanDesc">Tulis huruf, lihat ia hidup!</div>
+      </div>
+      <div class="home-card home-card--coding" onclick="go('coding-menu')">
+        <span class="home-card__icon">🤖</span>
+        <div class="home-card__label" id="homeCodingLabel">Coding Anak</div>
+        <div class="home-card__desc" id="homeCodingDesc">Susun langkah, capai tujuan!</div>
+      </div>
+      <div class="home-card home-card--warna" onclick="startWarna()">
+        <span class="home-card__icon">🎨</span>
+        <div class="home-card__label" id="homeWarnaLabel">Angka ke Warna</div>
+        <div class="home-card__desc" id="homeWarnaDesc">Cocokkan angka dengan warnanya!</div>
+      </div>
+      <div class="home-card home-card--sea" onclick="startSea()">
+        <span class="home-card__icon">🐠</span>
+        <div class="home-card__label" id="homeSeaLabel">Coding Angka</div>
+        <div class="home-card__desc" id="homeSeaDesc">Tulis angka sesuai hewan lautnya!</div>
       </div>
     </div>
     <div class="lang-toggle" style="position:relative;z-index:1">
@@ -770,6 +950,42 @@ body {
     </div>
     <div id="papanContent"></div>
   </div>
+
+  <!-- CODING ANAK: level picker -->
+  <div id="screen-coding-menu" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('home')">‹</button>
+      <h2 class="screen-title" id="codingMenuTitle">🤖 Coding Anak</h2>
+    </div>
+    <div class="coding-level-grid" id="codingMenuGrid"></div>
+  </div>
+
+  <!-- CODING ANAK: level play -->
+  <div id="screen-coding" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('coding-menu')">‹</button>
+      <h2 class="screen-title" id="codingScreenTitle">Level 1</h2>
+    </div>
+    <div id="codingContent"></div>
+  </div>
+
+  <!-- ANGKA KE WARNA (number-color matching) -->
+  <div id="screen-warna" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('home')">‹</button>
+      <h2 class="screen-title" id="warnaTitle">🎨 Angka ke Warna</h2>
+    </div>
+    <div id="warnaContent"></div>
+  </div>
+
+  <!-- CODING ANGKA (sea-creature number puzzle) -->
+  <div id="screen-sea" class="screen" hidden>
+    <div class="screen-header">
+      <button class="back-btn" onclick="go('home')">‹</button>
+      <h2 class="screen-title" id="seaTitle">🐠 Coding Angka</h2>
+    </div>
+    <div id="seaContent"></div>
+  </div>
 </div>
 
 <div class="feedback" id="feedbackOverlay" hidden>
@@ -841,6 +1057,33 @@ const T = {
     papanTitle: '🪄 Papan Tulis Ajaib',
     papanHint: 'Pilih huruf, lalu tulis dengan jarimu!',
     papanReveal: '✨ Hidupkan!',
+    coding: 'Coding Anak', codingDesc: 'Susun langkah, capai tujuan!',
+    codingMenuTitle: '🤖 Coding Anak',
+    codingLevel: 'Level',
+    codingHint: 'Susun panah, lalu tekan Jalankan!',
+    codingRunBtn: 'Jalankan',
+    codingEmptyQueue: 'Ketuk panah untuk menambah langkah',
+    codingDone: 'selesai!',
+    codingNext: 'Level Berikutnya',
+    warna: 'Angka ke Warna', warnaDesc: 'Cocokkan angka dengan warnanya!',
+    warnaTitle: '🎨 Angka ke Warna',
+    warnaSub: 'Cocokkan angka dengan warna yang tepat!',
+    warnaCheckBtn: 'Cocokkan Jawaban',
+    warnaResetBtn: 'Atur Ulang',
+    warnaNextBtn: 'Soal Berikutnya',
+    warnaScore: 'Skor',
+    warnaProgress: 'baris selesai',
+    warnaSuccessMsg: 'Hebat! Semua jawaban benar! 🎉',
+    warnaErrorMsg: 'Hampir benar! Coba lagi lingkaran yang ditandai.',
+    warnaIncompleteMsg: 'Isi semua lingkaran dulu, ya!',
+    warnaPickHint: 'Pilih warna untuk angka ini',
+    sea: 'Coding Angka', seaDesc: 'Tulis angka sesuai hewan lautnya!',
+    seaTitle: '🐠 Coding Angka',
+    seaHint: 'Tuliskan angka yang sesuai dengan gambar hewan laut!',
+    seaKeyTitle: '📋 Petunjuk Angka',
+    seaScoreLabel: 'Skor:',
+    seaResetBtn: 'Mulai Ulang',
+    seaCompleteMsg: 'Hebat! Kamu berhasil! Semua jawaban benar! 🎉',
     speechLang: 'id-ID',
   },
   en: {
@@ -899,6 +1142,33 @@ const T = {
     papanTitle: '🪄 Magic Whiteboard',
     papanHint: 'Pick a letter, then write it with your finger!',
     papanReveal: '✨ Bring it to Life!',
+    coding: 'Kids Coding', codingDesc: 'Arrange steps, reach the goal!',
+    codingMenuTitle: '🤖 Kids Coding',
+    codingLevel: 'Level',
+    codingHint: 'Arrange the arrows, then press Run!',
+    codingRunBtn: 'Run',
+    codingEmptyQueue: 'Tap an arrow to add a step',
+    codingDone: 'complete!',
+    codingNext: 'Next Level',
+    warna: 'Number to Color', warnaDesc: 'Match numbers with their colors!',
+    warnaTitle: '🎨 Number to Color',
+    warnaSub: 'Match the numbers with the right colors!',
+    warnaCheckBtn: 'Check Answers',
+    warnaResetBtn: 'Reset Puzzle',
+    warnaNextBtn: 'Next Puzzle',
+    warnaScore: 'Score',
+    warnaProgress: 'rows completed',
+    warnaSuccessMsg: 'Great job! All answers are correct! 🎉',
+    warnaErrorMsg: 'Almost there! Check the highlighted circles and try again.',
+    warnaIncompleteMsg: 'Fill in every circle first!',
+    warnaPickHint: 'Pick a color for this number',
+    sea: 'Number Coding', seaDesc: 'Write the number for each sea creature!',
+    seaTitle: '🐠 Number Coding',
+    seaHint: 'Write the number that matches each sea creature!',
+    seaKeyTitle: '📋 Number Key',
+    seaScoreLabel: 'Score:',
+    seaResetBtn: 'Start Over',
+    seaCompleteMsg: 'Great job! You did it! All answers are correct! 🎉',
     speechLang: 'en-US',
   }
 };
@@ -1173,6 +1443,55 @@ function karaokeStory(id) { return karaokeStories().find(s => s.id === id); }
 const PAPAN_POOL = ['A','B','C','D','E','G','H','I','J','K','L','M','N','O','P','R','S','T','U'];
 const PAPAN_ANIMS = ['bounce','wiggle','spin','pulse'];
 
+/* ── Coding Anak (kids coding puzzle) data ──
+   Grid coords: x = column, y = row, (0,0) top-left. Kids arrange up/down/
+   left/right arrow blocks to walk the turtle from start to the house,
+   without landing on a rock. */
+const CODING_LEVELS = [
+  { n:4, start:{x:0,y:1}, goal:{x:3,y:1}, obstacles:[] },
+  { n:4, start:{x:0,y:0}, goal:{x:3,y:3}, obstacles:[] },
+  { n:5, start:{x:0,y:0}, goal:{x:4,y:0}, obstacles:[{x:2,y:0}] },
+  { n:5, start:{x:4,y:4}, goal:{x:0,y:0}, obstacles:[{x:2,y:2},{x:2,y:3}] },
+  { n:5, start:{x:0,y:4}, goal:{x:4,y:0}, obstacles:[{x:1,y:2},{x:3,y:2}] },
+  { n:6, start:{x:0,y:5}, goal:{x:5,y:0}, obstacles:[{x:2,y:2},{x:2,y:3},{x:3,y:1}] },
+];
+const CODING_MAX_QUEUE = 12;
+const CODING_DELTA = { up:{x:0,y:-1}, down:{x:0,y:1}, left:{x:-1,y:0}, right:{x:1,y:0} };
+const CODING_KEY = 'learnWorldCodingProgress_v1';
+
+/* ── Angka ke Warna (number-color matching) data ──
+   Each digit 1-5 maps to a fixed color; a row is correct when the color
+   picked for a slot has the same number as the digit at that position. */
+const WARNA_COLORS = [
+  { n:1, hex:'#80429A' },
+  { n:2, hex:'#FFD21A' },
+  { n:3, hex:'#27A6D5' },
+  { n:4, hex:'#83C442' },
+  { n:5, hex:'#E33752' },
+];
+const WARNA_EXAMPLE = '51432';
+const WARNA_POOL = ['35124','35421','24351','15342','45321','13524','42153','53142','21435','41523'];
+const WARNA_ROWS_COUNT = 5;
+
+function warnaHex(n) { const c = WARNA_COLORS.find(c => c.n === n); return c ? c.hex : '#fff'; }
+
+/* ── Coding Angka (sea-creature number puzzle) data ──
+   Each puzzle row is 8 cells of [creatureId, revealed]. Revealed cells show
+   the number as a worked example; the rest need the matching digit typed in. */
+const SEA_CREATURES = {
+  id: { 1:{n:'Ikan Badut',e:'🐠'}, 2:{n:'Kepiting',e:'🦀'}, 3:{n:'Bintang Laut',e:'⭐'}, 4:{n:'Paus',e:'🐋'}, 5:{n:'Kura-kura',e:'🐢'}, 6:{n:'Gurita',e:'🐙'} },
+  en: { 1:{n:'Clownfish',e:'🐠'}, 2:{n:'Crab',e:'🦀'}, 3:{n:'Starfish',e:'⭐'}, 4:{n:'Whale',e:'🐋'}, 5:{n:'Turtle',e:'🐢'}, 6:{n:'Octopus',e:'🐙'} },
+};
+function seaCreatures() { return SEA_CREATURES[lang]; }
+
+const SEA_ROWS = [
+  [[1,true],[2,false],[6,false],[4,false],[5,true],[1,false],[6,false],[3,true]],
+  [[3,true],[5,false],[4,true],[6,false],[2,false],[4,false],[1,false],[2,true]],
+  [[6,false],[3,true],[2,false],[5,true],[1,false],[4,false],[3,false],[5,false]],
+  [[4,true],[1,false],[3,false],[2,true],[6,false],[5,false],[4,false],[1,false]],
+  [[2,false],[6,true],[5,false],[1,true],[3,false],[2,false],[6,false],[4,true]],
+];
+
 /* Spoken form of a number word */
 function numSpeak(n) {
   if (phoneticMode())   return NUM_PH[n]    || NUM_WORDS.id[n];
@@ -1321,17 +1640,32 @@ function refreshUI() {
   document.getElementById('homeKaraokeDesc').textContent = t('karaokeDesc');
   document.getElementById('homePapanLabel').textContent = t('papan');
   document.getElementById('homePapanDesc').textContent = t('papanDesc');
+  document.getElementById('homeCodingLabel').textContent = t('coding');
+  document.getElementById('homeCodingDesc').textContent = t('codingDesc');
+  document.getElementById('homeWarnaLabel').textContent = t('warna');
+  document.getElementById('homeWarnaDesc').textContent = t('warnaDesc');
+  document.getElementById('homeSeaLabel').textContent = t('sea');
+  document.getElementById('homeSeaDesc').textContent = t('seaDesc');
 
   document.getElementById('menuReadTitle').textContent = t('menuRead');
   document.getElementById('menuCountTitle').textContent = t('menuCount');
   document.getElementById('advMenuTitle').textContent = t('advMenuTitle');
   document.getElementById('karaokeMenuTitle').textContent = t('karaokeMenuTitle');
   document.getElementById('papanTitle').textContent = t('papanTitle');
+  document.getElementById('codingMenuTitle').textContent = t('codingMenuTitle');
 
   buildReadMenu();
   buildCountMenu();
   buildAdvMenu();
   buildKaraokeMenu();
+  buildCodingMenu();
+  if (!document.getElementById('screen-coding').hidden) {
+    document.getElementById('codingScreenTitle').textContent = t('codingLevel') + ' ' + (codingState.level+1);
+  }
+  document.getElementById('warnaTitle').textContent = t('warnaTitle');
+  if (!document.getElementById('screen-warna').hidden) renderWarnaBoard();
+  document.getElementById('seaTitle').textContent = t('seaTitle');
+  if (!document.getElementById('screen-sea').hidden) renderSeaBoard();
   if (advState.locId) {
     document.getElementById('advSceneTitle').textContent = advText(advState.locId).name;
     if (!document.getElementById('screen-petualangan').hidden) renderAdvScene();
@@ -2924,6 +3258,464 @@ function checkKurang(btn, correct, a, b) {
 }
 
 /* ═══════════════════════════════════════
+   CODING ANAK
+   ═══════════════════════════════════════ */
+
+let codingState = { level:0, queue:[], pos:{x:0,y:0}, running:false };
+
+function loadCodingDone() {
+  try { return JSON.parse(localStorage.getItem(CODING_KEY)) || []; }
+  catch (e) { return []; }
+}
+
+function markCodingDone(idx) {
+  const done = loadCodingDone();
+  done[idx] = true;
+  try { localStorage.setItem(CODING_KEY, JSON.stringify(done)); } catch (e) {}
+  saveProgress('coding', done.filter(Boolean).length);
+  buildCodingMenu();
+}
+
+function buildCodingMenu() {
+  const grid = document.getElementById('codingMenuGrid');
+  if (!grid) return;
+  const done = loadCodingDone();
+  grid.innerHTML = CODING_LEVELS.map((lv,i) => `
+    <div class="coding-level-card${done[i] ? ' coding-level-card--done' : ''}" onclick="startCoding(${i})">
+      ${i+1}
+      ${done[i] ? '<span class="coding-level-card__check">✓</span>' : ''}
+    </div>`).join('');
+}
+
+function codingIsBlocked(lv, x, y) {
+  if (x < 0 || y < 0 || x >= lv.n || y >= lv.n) return true;
+  return lv.obstacles.some(o => o.x === x && o.y === y);
+}
+
+function startCoding(levelIdx) {
+  const lv = CODING_LEVELS[levelIdx];
+  codingState = { level: levelIdx, queue: [], pos: {...lv.start}, running: false };
+  go('coding');
+  renderCodingScreen();
+}
+
+function renderCodingScreen() {
+  document.getElementById('codingScreenTitle').textContent = t('codingLevel') + ' ' + (codingState.level+1);
+  document.getElementById('codingContent').innerHTML = `
+    <div class="coding-hint">${t('codingHint')}</div>
+    <div class="coding-board" id="codingBoard"></div>
+    <div class="coding-queue" id="codingQueue"></div>
+    <div class="coding-pad">
+      <span></span>
+      <button class="coding-dir" onclick="codingAdd('up')">⬆️</button>
+      <span></span>
+      <button class="coding-dir" onclick="codingAdd('left')">⬅️</button>
+      <button class="coding-dir" onclick="codingAdd('down')">⬇️</button>
+      <button class="coding-dir" onclick="codingAdd('right')">➡️</button>
+    </div>
+    <div class="coding-actions">
+      <button class="trace-btn" onclick="codingClear()">🧹 ${t('clearBtn')}</button>
+      <button class="coding-run-btn" id="codingRunBtn" disabled onclick="codingRun()">▶️ ${t('codingRunBtn')}</button>
+    </div>`;
+  renderCodingBoard();
+}
+
+function renderCodingBoard() {
+  const lv = CODING_LEVELS[codingState.level];
+  const board = document.getElementById('codingBoard');
+  board.style.gridTemplateColumns = `repeat(${lv.n}, 1fr)`;
+  board.style.gridTemplateRows = `repeat(${lv.n}, 1fr)`;
+  let html = '';
+  for (let y = 0; y < lv.n; y++) {
+    for (let x = 0; x < lv.n; x++) {
+      const isGoal = lv.goal.x === x && lv.goal.y === y;
+      const isRock = lv.obstacles.some(o => o.x === x && o.y === y);
+      html += `<div class="coding-cell${isGoal ? ' coding-cell--goal' : ''}${isRock ? ' coding-cell--rock' : ''}">${isGoal ? '🏠' : isRock ? '🪨' : ''}</div>`;
+    }
+  }
+  html += `<div class="coding-avatar" id="codingAvatar">🐢</div>`;
+  board.innerHTML = html;
+  codingPositionAvatar();
+  renderCodingQueue();
+}
+
+function codingPositionAvatar() {
+  const lv = CODING_LEVELS[codingState.level];
+  const el = document.getElementById('codingAvatar');
+  if (!el) return;
+  const sz = 100 / lv.n;
+  el.style.width = sz + '%';
+  el.style.height = sz + '%';
+  el.style.left = (codingState.pos.x * sz) + '%';
+  el.style.top = (codingState.pos.y * sz) + '%';
+}
+
+function renderCodingQueue() {
+  const wrap = document.getElementById('codingQueue');
+  const icons = { up:'⬆️', down:'⬇️', left:'⬅️', right:'➡️' };
+  wrap.innerHTML = codingState.queue.length
+    ? codingState.queue.map((d,i) => `<button class="coding-block" onclick="codingRemove(${i})">${icons[d]}</button>`).join('')
+    : `<span class="coding-queue__empty">${t('codingEmptyQueue')}</span>`;
+  const runBtn = document.getElementById('codingRunBtn');
+  if (runBtn) runBtn.disabled = codingState.running || !codingState.queue.length;
+}
+
+function codingAdd(dir) {
+  if (codingState.running || codingState.queue.length >= CODING_MAX_QUEUE) return;
+  sfxTap();
+  codingState.queue.push(dir);
+  renderCodingQueue();
+}
+
+function codingRemove(i) {
+  if (codingState.running) return;
+  sfxTap();
+  codingState.queue.splice(i, 1);
+  renderCodingQueue();
+}
+
+function codingClear() {
+  if (codingState.running) return;
+  sfxTap();
+  const lv = CODING_LEVELS[codingState.level];
+  codingState.queue = [];
+  codingState.pos = {...lv.start};
+  codingPositionAvatar();
+  renderCodingQueue();
+}
+
+function codingRun() {
+  if (codingState.running || !codingState.queue.length) return;
+  const lv = CODING_LEVELS[codingState.level];
+  codingState.running = true;
+  document.getElementById('codingRunBtn').disabled = true;
+  codingRunStep(lv, 0);
+}
+
+function codingRunStep(lv, i) {
+  if (i >= codingState.queue.length) { codingState.running = false; renderCodingQueue(); return; }
+  const d = CODING_DELTA[codingState.queue[i]];
+  const nx = codingState.pos.x + d.x, ny = codingState.pos.y + d.y;
+  setTimeout(() => {
+    if (codingIsBlocked(lv, nx, ny)) {
+      sfxWrong();
+      const av = document.getElementById('codingAvatar');
+      av.classList.add('coding-avatar--bump');
+      setTimeout(() => {
+        av.classList.remove('coding-avatar--bump');
+        codingState.running = false;
+        renderCodingQueue();
+      }, 350);
+      return;
+    }
+    codingState.pos = { x: nx, y: ny };
+    codingPositionAvatar();
+    sfxTap();
+    if (lv.goal.x === nx && lv.goal.y === ny) { setTimeout(codingWin, 380); return; }
+    setTimeout(() => codingRunStep(lv, i+1), 380);
+  }, 120);
+}
+
+function codingWin() {
+  sfxCorrect();
+  showFeedback('🎉');
+  markCodingDone(codingState.level);
+  speak(ts('correct'));
+  const av = document.getElementById('codingAvatar');
+  if (av) av.classList.add('coding-avatar--win');
+  setTimeout(showCodingComplete, 500);
+}
+
+function showCodingComplete() {
+  codingState.running = false;
+  const isLast = codingState.level >= CODING_LEVELS.length - 1;
+  document.getElementById('codingContent').innerHTML = `
+    <div class="complete-card">
+      <span class="complete-card__emoji">🏆</span>
+      <div class="complete-card__title">${t('great')}</div>
+      <div class="complete-card__score">${t('codingLevel')} ${codingState.level+1} ${t('codingDone')}</div>
+      <button class="complete-card__btn" onclick="${isLast ? "go('coding-menu')" : 'codingNextLevel()'}">${isLast ? t('back') : t('codingNext')}</button>
+    </div>`;
+}
+
+function codingNextLevel() { startCoding(codingState.level + 1); }
+
+/* ═══════════════════════════════════════
+   ANGKA KE WARNA
+   ═══════════════════════════════════════ */
+
+let warnaState = { rows: [], answers: [], locked: [], score: 0, activeSlot: null };
+
+function warnaPickRows() { return shuffle(WARNA_POOL).slice(0, WARNA_ROWS_COUNT); }
+
+function startWarna() {
+  const rows = warnaPickRows();
+  warnaState = {
+    rows,
+    answers: rows.map(() => Array(5).fill(null)),
+    locked: rows.map(() => false),
+    score: 0,
+    activeSlot: null,
+  };
+  go('warna');
+  renderWarnaBoard();
+}
+
+function warnaCompletedCount() { return warnaState.locked.filter(Boolean).length; }
+
+function warnaLegendHtml(picker) {
+  return WARNA_COLORS.map(c => picker
+    ? `<button class="warna-legend-circle" style="background:${c.hex};cursor:pointer" onclick="event.stopPropagation();warnaChoose(${c.n})" aria-label="${c.n}"></button>`
+    : `<div class="warna-legend-circle" style="background:${c.hex}">${c.n}</div>`
+  ).join('');
+}
+
+function warnaRowHtml(seq, ri) {
+  const ans = warnaState.answers[ri];
+  const slots = seq.split('').map((d, pos) => {
+    const val = ans[pos];
+    const filled = val !== null;
+    return `<button class="warna-slot${filled ? ' filled' : ''}" style="${filled ? `background:${warnaHex(val)};color:#fff` : ''}"
+      onclick="warnaOpenPicker(${ri},${pos})" aria-label="${t('warnaPickHint')}">${filled ? val : ''}</button>`;
+  }).join('');
+  return `<div class="warna-row" id="warnaRow${ri}">
+    <div class="warna-seq">${seq}</div>
+    <span class="warna-arrow">➜</span>
+    <div class="warna-slots">${slots}</div>
+  </div>`;
+}
+
+function renderWarnaBoard() {
+  document.getElementById('warnaContent').innerHTML = `
+    <div class="warna-sub">${t('warnaSub')}</div>
+    <div class="warna-legend">${warnaLegendHtml(false)}</div>
+    <div class="warna-stats">
+      <span>⭐ ${t('warnaScore')}: <span id="warnaScoreVal">${warnaState.score}</span></span>
+      <span id="warnaProgressVal">${warnaCompletedCount()}/${WARNA_ROWS_COUNT} ${t('warnaProgress')}</span>
+    </div>
+    <div class="warna-row warna-row--example">
+      <div class="warna-seq">${WARNA_EXAMPLE}</div>
+      <span class="warna-arrow">➜</span>
+      <div class="warna-slots">${WARNA_EXAMPLE.split('').map(d => `<div class="warna-slot filled correct" style="background:${warnaHex(+d)};color:#fff">${d}</div>`).join('')}</div>
+    </div>
+    <div id="warnaRows">${warnaState.rows.map((seq,ri) => warnaRowHtml(seq,ri)).join('')}</div>
+    <div class="warna-actions">
+      <button class="trace-btn" onclick="warnaReset()">🔄 ${t('warnaResetBtn')}</button>
+      <button class="coding-run-btn" onclick="warnaCheck()">✅ ${t('warnaCheckBtn')}</button>
+      <button class="coding-run-btn" id="warnaNextBtn" onclick="startWarna()" ${warnaCompletedCount() < WARNA_ROWS_COUNT ? 'hidden' : ''}>➡️ ${t('warnaNextBtn')}</button>
+    </div>
+    <div class="warna-feedback" id="warnaFeedback"></div>
+    <div id="warnaPicker" hidden></div>`;
+}
+
+function warnaOpenPicker(ri, pos) {
+  if (warnaState.locked[ri]) return;
+  sfxTap();
+  warnaState.activeSlot = { ri, pos };
+  const popup = document.getElementById('warnaPicker');
+  popup.hidden = false; popup.className = 'syllable-popup';
+  popup.innerHTML = `<div class="syllable-popup__inner">
+    <button class="syllable-popup__close" onclick="event.stopPropagation();warnaClosePicker()">✕</button>
+    <div class="trace-hint">${t('warnaPickHint')}</div>
+    <div class="warna-legend">${warnaLegendHtml(true)}</div>
+  </div>`;
+  popup.onclick = (e) => { if (e.target === popup) warnaClosePicker(); };
+}
+
+function warnaClosePicker() {
+  const popup = document.getElementById('warnaPicker');
+  if (popup) popup.hidden = true;
+  warnaState.activeSlot = null;
+}
+
+function warnaChoose(n) {
+  const slot = warnaState.activeSlot;
+  if (!slot) return;
+  sfxTap();
+  warnaState.answers[slot.ri][slot.pos] = n;
+  warnaClosePicker();
+  document.getElementById('warnaRow' + slot.ri).outerHTML = warnaRowHtml(warnaState.rows[slot.ri], slot.ri);
+}
+
+function warnaCheck() {
+  sfxTap();
+  let anyIncomplete = false, anyWrong = false, newlyCompleted = false;
+  warnaState.rows.forEach((seq, ri) => {
+    if (warnaState.locked[ri]) return;
+    const ans = warnaState.answers[ri];
+    if (ans.some(v => v === null)) { anyIncomplete = true; return; }
+    const slotEls = document.querySelectorAll('#warnaRow' + ri + ' .warna-slot');
+    let allCorrect = true;
+    seq.split('').forEach((d, pos) => {
+      if (ans[pos] === +d) {
+        slotEls[pos].classList.add('correct'); slotEls[pos].classList.remove('wrong');
+      } else {
+        slotEls[pos].classList.add('wrong'); slotEls[pos].classList.remove('correct');
+        allCorrect = false;
+      }
+    });
+    if (allCorrect) { warnaState.locked[ri] = true; warnaState.score += 10; newlyCompleted = true; }
+    else anyWrong = true;
+  });
+
+  document.getElementById('warnaScoreVal').textContent = warnaState.score;
+  document.getElementById('warnaProgressVal').textContent = warnaCompletedCount() + '/' + WARNA_ROWS_COUNT + ' ' + t('warnaProgress');
+
+  const fb = document.getElementById('warnaFeedback');
+  if (newlyCompleted) showFeedback('⭐');
+  if (warnaCompletedCount() >= WARNA_ROWS_COUNT) {
+    fb.textContent = t('warnaSuccessMsg'); fb.className = 'warna-feedback success';
+    sfxCorrect(); speak(ts('correct')); showFeedback('🎉');
+    document.getElementById('warnaNextBtn').hidden = false;
+  } else if (anyIncomplete) {
+    fb.textContent = t('warnaIncompleteMsg'); fb.className = 'warna-feedback';
+  } else if (anyWrong) {
+    fb.textContent = t('warnaErrorMsg'); fb.className = 'warna-feedback error';
+    sfxWrong(); speak(ts('tryAgain'));
+  } else {
+    fb.textContent = ''; fb.className = 'warna-feedback';
+  }
+}
+
+function warnaReset() {
+  sfxTap();
+  warnaState.answers = warnaState.rows.map(() => Array(5).fill(null));
+  warnaState.locked = warnaState.rows.map(() => false);
+  warnaState.score = 0;
+  renderWarnaBoard();
+}
+
+/* ═══════════════════════════════════════
+   CODING ANGKA (sea-creature number puzzle)
+   ═══════════════════════════════════════ */
+
+let seaState = { total: 0, correct: 0 };
+
+function startSea() {
+  go('sea');
+  renderSeaBoard();
+}
+
+function seaKeyHtml() {
+  const cr = seaCreatures();
+  let html = '';
+  for (let i = 1; i <= 6; i++) {
+    html += `<div class="sea-key__item">
+      <span class="sea-key__emoji">${cr[i].e}</span>
+      <span class="sea-key__num">${i}</span>
+      <span class="sea-key__name">${cr[i].n}</span>
+    </div>`;
+  }
+  return html;
+}
+
+function seaCellHtml(ri, ci, id, revealed) {
+  const cr = seaCreatures();
+  if (revealed) {
+    return `<div class="sea-cell">
+      <span class="sea-cell__emoji">${cr[id].e}</span>
+      <span class="sea-cell__num">${id}</span>
+    </div>`;
+  }
+  seaState.total++;
+  return `<div class="sea-cell" id="seaCell${ri}_${ci}">
+    <span class="sea-cell__emoji">${cr[id].e}</span>
+    <input type="tel" inputmode="numeric" autocomplete="off" maxlength="1" placeholder="?"
+      class="sea-cell__input" oninput="seaCheck(this,${ri},${ci},${id})">
+  </div>`;
+}
+
+function seaRowsHtml() {
+  return SEA_ROWS.map((row, ri) =>
+    `<div class="sea-row">${row.map((pair,ci) => seaCellHtml(ri,ci,pair[0],pair[1])).join('')}</div>`
+  ).join('');
+}
+
+function renderSeaBoard() {
+  seaState = { total: 0, correct: 0 };
+  const rowsHtml = seaRowsHtml();
+  document.getElementById('seaContent').innerHTML = `
+    <div class="sea-board">
+      <div class="sea-bubbles" id="seaBubbles"></div>
+      <div class="sea-hint">${t('seaHint')}</div>
+      <div class="sea-score">
+        <span class="sea-score__label">${t('seaScoreLabel')}</span>
+        <div class="sea-score__track"><div class="sea-score__fill" id="seaFill"></div></div>
+        <span class="sea-score__count" id="seaCount">0 / ${seaState.total}</span>
+      </div>
+      <div class="sea-key">
+        <div class="sea-key__title">${t('seaKeyTitle')}</div>
+        <div class="sea-key__grid">${seaKeyHtml()}</div>
+      </div>
+      <div class="sea-puzzle">${rowsHtml}</div>
+      <div class="warna-feedback" id="seaFeedback"></div>
+      <div class="sea-reset-row">
+        <button class="trace-btn" onclick="renderSeaBoard()">🔄 ${t('seaResetBtn')}</button>
+      </div>
+    </div>`;
+  updateSeaScore();
+  makeSeaBubbles();
+}
+
+function seaCheck(input, ri, ci, ans) {
+  const v = input.value.replace(/[^1-6]/g, '');
+  input.value = v;
+  const cell = document.getElementById('seaCell' + ri + '_' + ci);
+  if (!v) { cell.classList.remove('correct','wrong'); return; }
+  if (parseInt(v, 10) === ans) {
+    if (!cell.classList.contains('correct')) {
+      sfxCorrect();
+      cell.classList.remove('wrong');
+      cell.classList.add('correct');
+      seaState.correct++;
+      updateSeaScore();
+      input.readOnly = true;
+      setTimeout(() => {
+        const next = document.querySelector('#seaContent .sea-cell__input:not([readonly])');
+        if (next) next.focus();
+      }, 280);
+      if (seaState.correct >= seaState.total) setTimeout(seaComplete, 550);
+    }
+  } else {
+    sfxWrong();
+    cell.classList.remove('correct','wrong');
+    void cell.offsetWidth;
+    cell.classList.add('wrong');
+    setTimeout(() => { input.value = ''; cell.classList.remove('wrong'); }, 700);
+  }
+}
+
+function updateSeaScore() {
+  const fill = document.getElementById('seaFill');
+  const count = document.getElementById('seaCount');
+  if (fill) fill.style.width = (seaState.total ? (seaState.correct/seaState.total)*100 : 0) + '%';
+  if (count) count.textContent = seaState.correct + ' / ' + seaState.total;
+}
+
+function seaComplete() {
+  showFeedback('🎉');
+  speak(ts('correct'));
+  saveProgress('sea', 1);
+  const fb = document.getElementById('seaFeedback');
+  if (fb) { fb.textContent = t('seaCompleteMsg'); fb.className = 'warna-feedback success'; }
+}
+
+function makeSeaBubbles() {
+  const box = document.getElementById('seaBubbles');
+  if (!box) return;
+  for (let i = 0; i < 12; i++) {
+    const b = document.createElement('span');
+    b.className = 'sea-bubble';
+    const sz = 8 + Math.random()*20;
+    b.style.width = sz + 'px'; b.style.height = sz + 'px';
+    b.style.left = (Math.random()*100) + '%';
+    b.style.animationDuration = (7+Math.random()*9) + 's';
+    b.style.animationDelay = (Math.random()*7) + 's';
+    box.appendChild(b);
+  }
+}
+
+/* ═══════════════════════════════════════
    COMPLETION
    ═══════════════════════════════════════ */
 
@@ -3014,6 +3806,7 @@ buildReadMenu();
 buildCountMenu();
 buildAdvMenu();
 buildKaraokeMenu();
+buildCodingMenu();
 updateHomeStars();
 </script>
 </body>
